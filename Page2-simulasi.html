@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AR EM Waves - Page 2</title>
+<style>
+  /* ─── PENGATURAN DASAR ─── */
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+  :root {
+    --bg-main: #050810;
+    --bg-panel: #0a0e1a;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --accent-cyan: #06b6d4;
+    --accent-blue: #3b82f6;
+    --text-main: #e2e8f0;
+    --text-muted: #64748b;
+  }
+  body { background-color: var(--bg-main); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+  /* ─── NAVBAR ─── */
+  .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background-color: var(--bg-panel); border-bottom: 1px solid var(--border-color); }
+  .nav-title { font-size: 16px; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+  .ar-badge { background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan)); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+  .nav-links a { color: var(--text-muted); text-decoration: none; margin-left: 20px; font-size: 13px; font-weight: 600; transition: 0.3s; }
+  .nav-links a.active, .nav-links a:hover { color: var(--accent-cyan); }
+
+  /* ─── LAYOUT UTAMA ─── */
+  .main-container { display: flex; flex: 1; height: calc(100vh - 60px); }
+  
+  /* ─── PANEL KIRI ─── */
+  .left-panel { width: 280px; background-color: var(--bg-panel); border-right: 1px solid var(--border-color); padding: 20px; overflow-y: auto; }
+  .panel-title { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; margin-bottom: 15px; text-transform: uppercase; }
+  .wave-card { display: flex; align-items: center; gap: 12px; padding: 12px; border: 1px solid var(--border-color); border-radius: 10px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; background: rgba(255,255,255,0.02); }
+  .wave-card:hover { border-color: rgba(255,255,255,0.2); }
+  .wave-card.active { border-color: var(--accent-cyan); background: rgba(6, 182, 212, 0.1); }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .card-info { flex: 1; }
+  .card-name { font-size: 13px; font-weight: bold; }
+  .card-freq { font-size: 11px; color: var(--text-muted); }
+  
+  /* ─── PANEL TENGAH ─── */
+  .center-panel { flex: 1; position: relative; display: flex; flex-direction: column; }
+  .canvas-container { flex: 1; position: relative; display: flex; justify-content: center; align-items: center; }
+  canvas { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+  
+  .hud-top { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.6); border: 1px solid var(--border-color); padding: 6px 15px; border-radius: 20px; font-size: 11px; color: var(--accent-cyan); display: flex; gap: 15px; backdrop-filter: blur(5px); }
+  .floating-badge { position: absolute; background: rgba(6,182,212,0.1); border: 1px solid rgba(6,182,212,0.3); padding: 10px 15px; border-radius: 10px; font-size: 12px; backdrop-filter: blur(5px); }
+  .badge-left { top: 20%; left: 5%; }
+  .badge-right { top: 20%; right: 5%; }
+  .floating-badge span { display: block; font-size: 10px; color: var(--text-muted); margin-bottom: 4px; }
+  .floating-badge strong { color: var(--accent-cyan); font-size: 14px; }
+
+  .controls { background: linear-gradient(to top, rgba(10,14,26,1), transparent); padding: 20px 40px; position: absolute; bottom: 0; width: 100%; display: flex; gap: 30px; justify-content: space-between; align-items: center; z-index: 10; }
+  .slider-group { flex: 1; }
+  .slider-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 8px; }
+  .slider-label span { color: var(--accent-cyan); font-weight: bold; }
+  input[type=range] { width: 100%; -webkit-appearance: none; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; outline: none; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--accent-cyan); box-shadow: 0 0 10px var(--accent-cyan); cursor: pointer; }
+
+  /* ─── PANEL KANAN ─── */
+  .right-panel { width: 280px; background-color: var(--bg-panel); border-left: 1px solid var(--border-color); padding: 20px; overflow-y: auto; }
+  .info-box { background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 15px; border-radius: 10px; margin-bottom: 15px; }
+  .formula-box { text-align: center; background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3); color: var(--accent-blue); padding: 15px; border-radius: 10px; font-size: 18px; font-weight: bold; margin-bottom: 15px; }
+  .reading-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px; }
+  .reading-row:last-child { border: none; margin: 0; padding: 0; }
+  .reading-label { color: var(--text-muted); }
+  .reading-val { font-weight: bold; }
+</style>
+</head>
+<body>
+
+<div class="navbar">
+  <div class="nav-title">
+    <div class="ar-badge">AR</div>
+    Electromagnetic Waves Simulation
+  </div>
+  <div class="nav-links">
+    <a href="#">Page 1 (Intro)</a>
+    <a href="#" class="active">Page 2 (Simulasi)</a>
+    <a href="#">Page 3 (AR View)</a>
+  </div>
+</div>
+
+<div class="main-container">
+  
+  <div class="left-panel">
+    <div class="panel-title">EM Spectrum</div>
+    
+    <div class="wave-card active" onclick="changeWave(event, 'Radio', '< 3 GHz', '> 0.1 m', '#ef4444', 2)">
+      <div class="dot" style="background: #ef4444;"></div>
+      <div class="card-info">
+        <div class="card-name">Radio Waves</div>
+        <div class="card-freq">f &lt; 3 GHz</div>
+      </div>
+    </div>
+    
+    <div class="wave-card" onclick="changeWave(event, 'Microwave', '3-300 GHz', '1mm - 0.1m', '#f97316', 4)">
+      <div class="dot" style="background: #f97316;"></div>
+      <div class="card-info">
+        <div class="card-name">Microwave</div>
+        <div class="card-freq">3 - 300 GHz</div>
+      </div>
+    </div>
+
+    <div class="wave-card" onclick="changeWave(event, 'Visible Light', '430-750 THz', '400-700 nm', '#22c55e', 7)">
+      <div class="dot" style="background: #22c55e;"></div>
+      <div class="card-info">
+        <div class="card-name">Visible Light</div>
+        <div class="card-freq">430 - 750 THz</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="center-panel">
+    <div class="canvas-container">
+      <div class="hud-top">
+        <span style="color:red;">●</span> AR ACTIVE &nbsp;|&nbsp; TRACKING ✓ &nbsp;|&nbsp; <span id="hud-name">RADIO</span>
+      </div>
+      <div class="floating-badge badge-left">
+        <span>λ Wavelength</span>
+        <strong id="badge-wl">&gt; 0.1 m</strong>
+      </div>
+      <div class="floating-badge badge-right">
+        <span>f Frequency</span>
+        <strong id="badge-freq">&lt; 3 GHz</strong>
+      </div>
+      <canvas id="waveCanvas"></canvas>
+    </div>
+
+    <div class="controls">
+      <div class="slider-group">
+        <div class="slider-label">Frequency <span id="val-freq">5.0</span></div>
+        <input type="range" id="slider-freq" min="1" max="10" step="0.1" value="5">
+      </div>
+      <div class="slider-group">
+        <div class="slider-label">Amplitude <span id="val-amp">1.0</span></div>
+        <input type="range" id="slider-amp" min="0.2" max="2" step="0.1" value="1">
+      </div>
+      <div class="slider-group">
+        <div class="slider-label">Wave Speed <span id="val-speed">1.0</span></div>
+        <input type="range" id="slider-speed" min="0.1" max="3" step="0.1" value="1">
+      </div>
+    </div>
+  </div>
+
+  <div class="right-panel">
+    <div class="panel-title">Core Formula</div>
+    <div class="formula-box">c = f × λ</div>
+    
+    <div class="panel-title" style="margin-top: 20px;">Live Readings</div>
+    <div class="info-box">
+      <div class="reading-row">
+        <span class="reading-label">Wave Type</span>
+        <span class="reading-val" id="read-type">Radio</span>
+      </div>
+      <div class="reading-row">
+        <span class="reading-label">Frequency</span>
+        <span class="reading-val" id="read-freq">&lt; 3 GHz</span>
+      </div>
+      <div class="reading-row">
+        <span class="reading-label">Wavelength</span>
+        <span class="reading-val" id="read-wl">&gt; 0.1 m</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const canvas = document.getElementById('waveCanvas');
+  const ctx = canvas.getContext('2d');
+  
+  const sliderFreq = document.getElementById('slider-freq');
+  const sliderAmp = document.getElementById('slider-amp');
+  const sliderSpeed = document.getElementById('slider-speed');
+  
+  const valFreq = document.getElementById('val-freq');
+  const valAmp = document.getElementById('val-amp');
+  const valSpeed = document.getElementById('val-speed');
+
+  let time = 0;
+
+  function resizeCanvas() {
+    canvas.width = canvas.parentElement.clientWidth;
+    canvas.height = canvas.parentElement.clientHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  function drawWaves() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const f = parseFloat(sliderFreq.value);
+    const a = parseFloat(sliderAmp.value);
+    const s = parseFloat(sliderSpeed.value);
+
+    valFreq.innerText = f.toFixed(1);
+    valAmp.innerText = a.toFixed(1);
+    valSpeed.innerText = s.toFixed(1);
+
+    const centerY1 = canvas.height * 0.4; 
+    const centerY2 = canvas.height * 0.6; 
+    const baseAmplitude = 50; 
+
+    ctx.beginPath();
+    ctx.moveTo(0, centerY1);
+    for (let x = 0; x < canvas.width; x++) {
+      const y = centerY1 + Math.sin((x * 0.01 * f) - (time * s)) * (baseAmplitude * a);
+      ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = '#ef4444'; 
+    ctx.lineWidth = 3;
+    ctx.shadowBlur = 15; 
+    ctx.shadowColor = '#ef4444';
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(0, centerY2);
+    for (let x = 0; x < canvas.width; x++) {
+      const y = centerY2 + Math.sin((x * 0.01 * f) - (time * s)) * (baseAmplitude * a);
+      ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = '#3b82f6'; 
+    ctx.lineWidth = 3;
+    ctx.shadowBlur = 15; 
+    ctx.shadowColor = '#3b82f6';
+    ctx.stroke();
+
+    time += 0.05;
+    requestAnimationFrame(drawWaves); 
+  }
+
+  drawWaves();
+
+  function changeWave(event, name, freq, wl, color, defaultFreq) {
+    document.getElementById('hud-name').innerText = name.toUpperCase();
+    document.getElementById('badge-freq').innerText = freq;
+    document.getElementById('badge-wl').innerText = wl;
+    document.getElementById('read-type').innerText = name;
+    document.getElementById('read-freq').innerText = freq;
+    document.getElementById('read-wl').innerText = wl;
+
+    sliderFreq.value = defaultFreq;
+
+    const cards = document.querySelectorAll('.wave-card');
+    cards.forEach(card => card.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+  }
+</script>
+
+</body>
+</html>

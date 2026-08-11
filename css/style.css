@@ -1,0 +1,283 @@
+/* ─── PENGATURAN DASAR UTAMA ─── */
+* { 
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+}
+
+:root {
+  --bg-main: #050810;
+  --bg-panel: #0a0e1a;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --accent-cyan: #06b6d4;
+  --accent-blue: #3b82f6;
+  --text-main: #e2e8f0;
+  --text-muted: #64748b;
+}
+
+body { 
+  background-color: var(--bg-main); 
+  color: var(--text-main); 
+  height: 100vh; 
+  display: flex; 
+  flex-direction: column; 
+  overflow: hidden; 
+}
+
+/* ─── NAVBAR (HEADER KOMPONEN) ─── */
+.navbar { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  padding: 15px 25px; 
+  background-color: var(--bg-panel); 
+  border-bottom: 1px solid var(--border-color); 
+}
+.nav-title { 
+  font-size: 16px; 
+  font-weight: bold; 
+  display: flex; 
+  align-items: center; 
+  gap: 10px; 
+}
+.ar-badge { 
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan)); 
+  padding: 4px 10px; 
+  border-radius: 20px; 
+  font-size: 11px; 
+  font-weight: bold; 
+}
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+.nav-links a { 
+  color: var(--text-muted); 
+  text-decoration: none; 
+  font-size: 13px; 
+  font-weight: 600; 
+  transition: 0.3s; 
+}
+.nav-links a.active, .nav-links a:hover { 
+  color: var(--accent-cyan); 
+}
+
+/* ─── LAYOUT UTAMA (GRID / KOLOM) ─── */
+.main-container { 
+  display: flex; 
+  flex: 1; 
+  height: calc(100vh - 60px); 
+  gap: 10px; 
+  padding: 10px; 
+  background: var(--bg-main); 
+}
+
+/* ─── PANEL UMUM (KOTAK) ─── */
+.left-panel, .right-panel { 
+  width: 280px; 
+  background-color: var(--bg-panel); 
+  border: 1px solid var(--border-color); 
+  border-radius: 12px; 
+  padding: 20px; 
+  overflow-y: auto; 
+  display: flex; 
+  flex-direction: column; 
+}
+.center-panel { 
+  flex: 1; 
+  position: relative; 
+  display: flex; 
+  flex-direction: column; 
+  background-color: var(--bg-panel); 
+  border: 1px solid var(--border-color); 
+  border-radius: 12px; 
+  overflow: hidden;
+}
+.box { 
+  background-color: var(--bg-panel); 
+  border: 1px solid var(--border-color); 
+  border-radius: 12px; 
+  padding: 15px; 
+  overflow: hidden; 
+  position: relative; 
+}
+.panel-title, .box-title { 
+  font-size: 11px; 
+  color: var(--text-muted); 
+  letter-spacing: 1px; 
+  margin-bottom: 15px; 
+  text-transform: uppercase; 
+  font-weight: bold; 
+}
+
+/* ─── KOMPONEN KIRI (LIST GELOMBANG) ─── */
+.wave-card, .wave-item { 
+  display: flex; 
+  align-items: center; 
+  gap: 12px; 
+  padding: 12px; 
+  border: 1px solid var(--border-color); 
+  border-radius: 10px; 
+  margin-bottom: 10px; 
+  cursor: pointer; 
+  transition: 0.2s; 
+  background: rgba(255,255,255,0.02); 
+  font-size: 13px; 
+  font-weight: 600;
+}
+.wave-card:hover, .wave-item:hover { 
+  border-color: rgba(255,255,255,0.2); 
+}
+.wave-card.active, .wave-item.active { 
+  border-color: var(--accent-cyan); 
+  background: rgba(6, 182, 212, 0.1); 
+  color: var(--accent-cyan); 
+}
+.dot, .wave-dot { 
+  width: 10px; 
+  height: 10px; 
+  border-radius: 50%; 
+  background: var(--text-muted); 
+}
+.wave-card.active .dot, .wave-item.active .wave-dot { 
+  background: var(--accent-cyan); 
+  box-shadow: 0 0 8px var(--accent-cyan); 
+}
+.card-info { flex: 1; }
+.card-name { font-size: 13px; font-weight: bold; }
+.card-freq { font-size: 11px; color: var(--text-muted); }
+
+/* ─── KOMPONEN TENGAH (KANVAS & HUD) ─── */
+.canvas-container, .canvas-wrap-top, .canvas-wrap-tv { 
+  flex: 1; 
+  position: relative; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  width: 100%; 
+  height: 100%; 
+}
+canvas { 
+  width: 100%; 
+  height: 100%; 
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+}
+.hud-top { 
+  position: absolute; 
+  top: 20px; 
+  left: 50%; 
+  transform: translateX(-50%); 
+  background: rgba(0,0,0,0.6); 
+  border: 1px solid var(--border-color); 
+  padding: 6px 15px; 
+  border-radius: 20px; 
+  font-size: 11px; 
+  color: var(--accent-cyan); 
+  display: flex; 
+  gap: 15px; 
+  backdrop-filter: blur(5px); 
+  z-index: 5; 
+}
+.floating-badge { 
+  position: absolute; 
+  background: rgba(6,182,212,0.1); 
+  border: 1px solid rgba(6,182,212,0.3); 
+  padding: 10px 15px; 
+  border-radius: 10px; 
+  font-size: 12px; 
+  backdrop-filter: blur(5px); 
+  z-index: 5; 
+}
+.badge-left { top: 20%; left: 5%; }
+.badge-right { top: 20%; right: 5%; }
+.floating-badge span { display: block; font-size: 10px; color: var(--text-muted); margin-bottom: 4px; }
+.floating-badge strong { color: var(--accent-cyan); font-size: 14px; }
+.ar-overlay-text { 
+  position: absolute; 
+  top: 15px; 
+  left: 15px; 
+  color: rgba(255,255,255,0.5); 
+  font-size: 11px; 
+  letter-spacing: 2px; 
+  z-index: 5; 
+}
+
+/* ─── SLIDER CONTROLS (KHUSUS PAGE 2) ─── */
+.controls { 
+  background: linear-gradient(to top, rgba(10,14,26,1), transparent); 
+  padding: 20px 40px; 
+  position: absolute; 
+  bottom: 0; 
+  width: 100%; 
+  display: flex; 
+  gap: 30px; 
+  justify-content: space-between; 
+  align-items: center; 
+  z-index: 10; 
+}
+.slider-group { flex: 1; }
+.slider-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 8px; }
+.slider-label span { color: var(--accent-cyan); font-weight: bold; }
+input[type=range] { width: 100%; -webkit-appearance: none; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; outline: none; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--accent-cyan); box-shadow: 0 0 10px var(--accent-cyan); cursor: pointer; }
+
+/* ─── KOMPONEN KANAN (STATISTIK, FORMULA, FUN FACT) ─── */
+.info-box { 
+  background: rgba(255,255,255,0.02); 
+  border: 1px solid var(--border-color); 
+  padding: 15px; 
+  border-radius: 10px; 
+  margin-bottom: 15px; 
+}
+.formula-box { 
+  text-align: center; 
+  background: rgba(59,130,246,0.1); 
+  border: 1px solid rgba(59,130,246,0.3); 
+  color: var(--accent-blue); 
+  padding: 15px; 
+  border-radius: 10px; 
+  font-size: 18px; 
+  font-weight: bold; 
+  margin-bottom: 15px; 
+}
+.reading-row, .stat-row { 
+  display: flex; 
+  justify-content: space-between; 
+  font-size: 12px; 
+  margin-bottom: 8px; 
+  border-bottom: 1px solid rgba(255,255,255,0.05); 
+  padding-bottom: 8px; 
+}
+.reading-row:last-child, .stat-row:last-child { border: none; margin: 0; padding: 0; }
+.reading-label, .stat-label { color: var(--text-muted); }
+.reading-val, .stat-val { font-weight: bold; color: var(--text-main); }
+.stat-highlight { 
+  font-size: 24px; 
+  color: var(--accent-blue); 
+  font-weight: bold; 
+  margin: 10px 0 20px; 
+  text-align: center; 
+  text-shadow: 0 0 10px rgba(59,130,246,0.5); 
+}
+
+.fact-card { 
+  background: rgba(6, 182, 212, 0.05); 
+  border: 1px solid rgba(6, 182, 212, 0.2); 
+  padding: 12px; 
+  border-radius: 8px; 
+  margin-bottom: 12px; 
+}
+.fact-title { color: var(--accent-cyan); font-size: 12px; font-weight: bold; margin-bottom: 5px; }
+.fact-desc { color: var(--text-muted); font-size: 11px; line-height: 1.5; }
+
+/* ─── TATA LETAK SPESIFIK PAGE 3 (5 KOTAK) ─── */
+.left-col { width: 260px; display: flex; flex-direction: column; }
+.center-col { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+.right-col { width: 280px; display: flex; flex-direction: column; gap: 10px; }
+.box-top-wave { height: 25%; display: flex; flex-direction: column; }
+.box-tv-scene { flex: 1; display: flex; flex-direction: column; background: #03050a; border-color: rgba(6, 182, 212, 0.3); }
+.box-stats { height: 45%; }
+.box-funfact { flex: 1; overflow-y: auto; }

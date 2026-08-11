@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AR EM Waves - Page 3 (AR View)</title>
+<style>
+  /* ─── PENGATURAN DASAR ─── */
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+  :root {
+    --bg-main: #050810;
+    --bg-panel: #0a0e1a;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --accent-cyan: #06b6d4;
+    --accent-blue: #3b82f6;
+    --text-main: #e2e8f0;
+    --text-muted: #64748b;
+  }
+  body { background-color: var(--bg-main); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+  /* ─── NAVBAR ─── */
+  .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background-color: var(--bg-panel); border-bottom: 1px solid var(--border-color); }
+  .nav-title { font-size: 16px; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+  .ar-badge { background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan)); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+  .nav-links a { color: var(--text-muted); text-decoration: none; margin-left: 20px; font-size: 13px; font-weight: 600; transition: 0.3s; }
+  .nav-links a.active, .nav-links a:hover { color: var(--accent-cyan); }
+
+  /* ─── LAYOUT UTAMA (3 KOLOM) ─── */
+  .main-container { display: flex; flex: 1; height: calc(100vh - 60px); gap: 10px; padding: 10px; background: var(--bg-main); }
+  
+  /* Bentuk Kotak Universal */
+  .box { background-color: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; overflow: hidden; position: relative; }
+  .box-title { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; margin-bottom: 15px; text-transform: uppercase; font-weight: bold; }
+
+  /* ─── KOLOM KIRI (1 KOTAK) ─── */
+  .left-col { width: 260px; display: flex; flex-direction: column; }
+  .box-list { flex: 1; overflow-y: auto; }
+  
+  .wave-item { padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+  .wave-item:hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.02); }
+  .wave-item.active { border-color: var(--accent-cyan); background: rgba(6, 182, 212, 0.1); color: var(--accent-cyan); }
+  .wave-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); }
+  .wave-item.active .wave-dot { background: var(--accent-cyan); box-shadow: 0 0 8px var(--accent-cyan); }
+
+  /* ─── KOLOM TENGAH (2 KOTAK) ─── */
+  .center-col { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+  
+  /* Kotak Tengah Atas: Gelombang Bergerak */
+  .box-top-wave { height: 25%; display: flex; flex-direction: column; }
+  .canvas-wrap-top { flex: 1; position: relative; width: 100%; }
+  
+  /* Kotak Tengah Bawah: Animasi TV (AR Scene) */
+  .box-tv-scene { flex: 1; display: flex; flex-direction: column; background: #03050a; /* Lebih gelap untuk kesan AR/kamera */ border-color: rgba(6, 182, 212, 0.3); }
+  .canvas-wrap-tv { flex: 1; position: relative; width: 100%; }
+  .ar-overlay-text { position: absolute; top: 15px; left: 15px; color: rgba(255,255,255,0.5); font-size: 11px; letter-spacing: 2px; }
+
+  canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+  /* ─── KOLOM KANAN (2 KOTAK) ─── */
+  .right-col { width: 280px; display: flex; flex-direction: column; gap: 10px; }
+  
+  /* Kotak Kanan Atas: Statistik */
+  .box-stats { height: 45%; }
+  .stat-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 12px; }
+  .stat-row:last-child { border-bottom: none; }
+  .stat-label { color: var(--text-muted); }
+  .stat-val { color: var(--text-main); font-weight: bold; }
+  .stat-highlight { font-size: 24px; color: var(--accent-blue); font-weight: bold; margin: 10px 0 20px; text-align: center; text-shadow: 0 0 10px rgba(59,130,246,0.5); }
+
+  /* Kotak Kanan Bawah: Fun Fact */
+  .box-funfact { flex: 1; overflow-y: auto; }
+  .fact-card { background: rgba(6, 182, 212, 0.05); border: 1px solid rgba(6, 182, 212, 0.2); padding: 12px; border-radius: 8px; margin-bottom: 12px; }
+  .fact-title { color: var(--accent-cyan); font-size: 12px; font-weight: bold; margin-bottom: 5px; }
+  .fact-desc { color: var(--text-muted); font-size: 11px; line-height: 1.5; }
+
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="nav-title">
+    <div class="ar-badge">AR</div>
+    Electromagnetic Waves Simulation
+  </div>
+  <div class="nav-links">
+    <a href="#">Page 1 (Intro)</a>
+    <a href="#">Page 2 (Simulasi)</a>
+    <a href="#" class="active">Page 3 (AR View)</a>
+  </div>
+</div>
+
+<!-- LAYOUT UTAMA 5 KOTAK -->
+<div class="main-container">
+  
+  <!-- KOTAK 1: LIST GELOMBANG -->
+  <div class="left-col">
+    <div class="box box-list">
+      <div class="box-title">List Gelombang</div>
+      <div class="wave-item active"><div class="wave-dot"></div>Radio Waves</div>
+      <div class="wave-item"><div class="wave-dot"></div>Microwaves</div>
+      <div class="wave-item"><div class="wave-dot"></div>Infrared</div>
+      <div class="wave-item"><div class="wave-dot"></div>Visible Light</div>
+      <div class="wave-item"><div class="wave-dot"></div>Ultraviolet</div>
+      <div class="wave-item"><div class="wave-dot"></div>X-Rays</div>
+      <div class="wave-item"><div class="wave-dot"></div>Gamma Rays</div>
+    </div>
+  </div>
+
+  <!-- TENGAH -->
+  <div class="center-col">
+    <!-- KOTAK 2: GELOMBANG ATAS -->
+    <div class="box box-top-wave">
+      <div class="box-title">Waveform Signal</div>
+      <div class="canvas-wrap-top">
+        <canvas id="topWaveCanvas"></canvas>
+      </div>
+    </div>
+
+    <!-- KOTAK 3: AR TV SCENE BAWAH -->
+    <div class="box box-tv-scene">
+      <div class="ar-overlay-text">[ AR ENVIRONMENT CAMERA ]</div>
+      <div class="canvas-wrap-tv">
+        <canvas id="tvCanvas"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- KANAN -->
+  <div class="right-col">
+    <!-- KOTAK 4: STATISTIK -->
+    <div class="box box-stats">
+      <div class="box-title">Statistik Sinyal</div>
+      <div class="stat-highlight">c = 3×10⁸ m/s</div>
+      <div class="stat-row">
+        <span class="stat-label">Tipe Sinyal</span>
+        <span class="stat-val">Radio (UHF)</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Frekuensi (f)</span>
+        <span class="stat-val">600 MHz</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Panjang Gelombang (λ)</span>
+        <span class="stat-val">0.5 Meter</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Status</span>
+        <span class="stat-val" style="color: #22c55e;">Terhubung</span>
+      </div>
+    </div>
+
+    <!-- KOTAK 5: FUN FACT -->
+    <div class="box box-funfact">
+      <div class="box-title">Fun Facts</div>
+      
+      <div class="fact-card">
+        <div class="fact-title">Kecepatan Universal</div>
+        <div class="fact-desc">Semua gelombang EM, dari radio hingga Gamma, merambat dengan kecepatan cahaya (c). Tidak ada yang lebih lambat atau lebih cepat di ruang hampa!</div>
+      </div>
+      
+      <div class="fact-card" style="border-color: rgba(59, 130, 246, 0.2); background: rgba(59, 130, 246, 0.05);">
+        <div class="fact-title" style="color: var(--accent-blue);">Sinyal TV itu Radio?</div>
+        <div class="fact-desc">Benar! Transmisi televisi dan WiFi rumah Anda sebenarnya menggunakan bagian dari spektrum gelombang radio dan gelombang mikro.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/page3-ar.js"></script>
+
+</body>
+</html>
