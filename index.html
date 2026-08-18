@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EM WAVE LAB - Interactive Lab</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Card Utama Wrapper -->
+  <div class="app-card-wrapper">
+
+    <!-- Header & Navbar -->
+    <header class="app-header">
+      <div class="logo-group">
+        <div class="logo-icon">
+          <svg width="28" height="20" viewBox="0 0 28 20" fill="none">
+            <path d="M2 10H6L9 2L13 18L17 6L20 12L23 10H26" stroke="#00d2ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <span class="title">EM WAVE LAB</span>
+          <span class="subtitle">Eksplorasi · Eksperimen · Pahami.</span>
+        </div>
+      </div>
+
+      <nav class="nav-tabs">
+        <button class="tab-btn active" data-page="1">
+          <span class="tab-num">1</span> Intro
+        </button>
+        <button class="tab-btn" data-page="2">
+          <span class="tab-num">2</span> Wave Lab
+        </button>
+        <button class="tab-btn" data-page="3">
+          <span class="tab-num">3</span> Spectrum (AR)
+        </button>
+        <button class="tab-btn" data-page="4">
+          <span class="tab-num">4</span> Challenge
+        </button>
+      </nav>
+    </header>
+
+    <!-- Content Area -->
+    <main class="content-container">
+      
+      <!-- Canvas 2D (Background Visualization) -->
+      <div id="canvas-container">
+        <canvas id="waveCanvas"></canvas>
+      </div>
+
+      <!-- PAGE 1: INTRODUCTION -->
+      <section id="page-1" class="page-view active">
+        <!-- Top Badges -->
+        <div class="badge-group">
+          <span class="badge badge-filled">PAGE 1</span>
+          <span class="badge badge-outline">INTRODUCTION</span>
+        </div>
+
+        <!-- Main Title & Desc -->
+        <div class="intro-header">
+          <h1>APA ITU<br><span class="text-cyan">GELOMBANG ELEKTROMAGNETIK?</span></h1>
+          <p class="description">
+            Gelombang yang dihasilkan oleh getaran medan listrik dan medan magnet yang dapat merambat tanpa medium.
+          </p>
+        </div>
+
+        <!-- Feature List -->
+        <div class="features-list">
+          <div class="feature-item">
+            <div class="icon-box icon-blue">⚡</div>
+            <div class="feature-text">
+              <strong>Medan Listrik (E)</strong>
+              <p>Bergetar naik turun</p>
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <div class="icon-box icon-orange">🎧</div>
+            <div class="feature-text">
+              <strong>Medan Magnet (B)</strong>
+              <p>Bergetar tegak lurus terhadap E</p>
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <div class="icon-box icon-green">⚛</div>
+            <div class="feature-text">
+              <strong>Tanpa Medium</strong>
+              <p>Dapat merambat di ruang hampa</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fact Box (Bottom Left) -->
+        <div class="fact-card">
+          <div class="fact-header">
+            <div class="icon-box icon-yellow">💡</div>
+            <strong>Tahukah Kamu?</strong>
+          </div>
+          <p>
+            Teori elektromagnetik dikembangkan oleh <strong>James Clerk Maxwell (1862–1864)</strong> yang membuktikan bahwa perubahan medan listrik dan magnet dapat merambat sebagai gelombang.
+          </p>
+        </div>
+
+        <!-- Formula Card (Bottom Right) -->
+        <div class="formula-card">
+          <h4>Hubungan Dasar</h4>
+          <p class="formula-sub">Kecepatan (c), frekuensi (f), dan panjang gelombang (λ) saling berhubungan.</p>
+          <div class="formula-equation">
+            <i>c</i> = <i>f</i> × <i>λ</i>
+          </div>
+          <div class="formula-legend">
+            <div><span>c =</span> kecepatan cahaya (m/s)</div>
+            <div><span>f =</span> frekuensi (Hz)</div>
+            <div><span>λ =</span> panjang gelombang (m)</div>
+          </div>
+        </div>
+
+        <!-- Main CTA Button -->
+        <button class="btn-start" id="btn-start-exp">
+          MULAI <span>→</span>
+        </button>
+      </section>
+
+      <!-- PAGE 2: WAVE LAB -->
+      <section id="page-2" class="page-view">
+        <div class="top-bar-page2">
+          <h2>WAVE LAB (SIMULASI)</h2>
+          <p>Manipulasi frekuensi dan amplitudo secara langsung.</p>
+        </div>
+      </section>
+
+      <!-- PAGE 3: SPECTRUM -->
+      <section id="page-3" class="page-view">
+        <div class="center-card">
+          <h2>SPEKTRUM & WEBAR</h2>
+        </div>
+      </section>
+
+      <!-- PAGE 4: CHALLENGE -->
+      <section id="page-4" class="page-view">
+        <div class="center-card">
+          <h2>CHALLENGE & KUIS</h2>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

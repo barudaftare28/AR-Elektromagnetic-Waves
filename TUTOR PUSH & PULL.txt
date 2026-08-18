@@ -1,0 +1,39 @@
+
+
+User@MSI MINGW64 ~/AR Elekromagnetik
+$ git init
+Initialized empty Git repository in C:/Users/User/AR Elekromagnetik/.git/
+i
+User@MSI MINGW64 ~/AR Elekromagnetik (master)
+$ git add .
+
+User@MSI MINGW64 ~/AR Elekromagnetik (master)
+$ git branch -M main
+
+User@MSI MINGW64 ~/AR Elekromagnetik (main)
+$ git remote add origin https://github.com/barudaftare28/AR-Elektromagnetic-Waves.git
+
+User@MSI MINGW64 ~/AR Elekromagnetik (main)
+$ git commit -m "Initial commit: Coba-coba"
+[main (root-commit) bb38505] Initial commit: Coba-coba
+ 8 files changed, 985 insertions(+)
+ create mode 100644 Page2-simulasi.html
+ create mode 100644 components/navbar.html
+ create mode 100644 css/style.css
+ create mode 100644 js/components.js
+ create mode 100644 js/page2-simulasi.js
+ create mode 100644 js/page3-ar.js
+ create mode 100644 page1-intro.html
+ create mode 100644 page3-ar-view.html
+
+User@MSI MINGW64 ~/AR Elekromagnetik (main)
+$ git push -u origin main
+Enumerating objects: 13, done.
+Counting objects: 100% (13/13), done.
+Delta compression using up to 12 threads
+Compressing objects: 100% (11/11), done.
+Writing objects: 100% (13/13), 11.50 KiB | 255.00 KiB/s, done.
+Total 13 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+To https://github.com/barudaftare28/AR-Elektromagnetic-Waves.git
+ * [new branch]      main -> main
+branch 'main' set up to track 'origin/main'.
