@@ -1,139 +1,259 @@
-let canvas, ctx;
-let time = 0;
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.module.js';
 
-export function initEngine() {
-  canvas = document.getElementById('waveCanvas');
-  ctx = canvas.getContext('2d');
+window.WaveApp = {
+    lastFrameTime: 0,
+    p1: {
+        scene: null, camera: null, renderer: null, time: 0,
+        geoE: null, geoB: null, axisMat: null,
+        init: function() {
+            const container = document.getElementById('wave-container-1');
+            if (!container) return;
+            
+            this.scene = new THREE.Scene();
+            this.camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 100);
+            this.camera.position.set(6, 3, 7);
+            this.camera.lookAt(0, 0, 0);
 
-  resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
-  requestAnimationFrame(renderLoop);
-}
+            this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            this.renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(this.renderer.domElement);
 
-function resizeCanvas() {
-  const container = document.getElementById('canvas-container');
-  canvas.width = container.clientWidth;
-  canvas.height = container.clientHeight;
-}
+            this.axisMat = new THREE.LineBasicMaterial({ color: 0xffffff, opacity: 0.5, transparent: true });
+            this.scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-6,0,0), new THREE.Vector3(6,0,0)]), this.axisMat));
 
-function renderLoop() {
-  time += 0.03;
-  drawScene();
-  requestAnimationFrame(renderLoop);
-}
+            const matE = new THREE.LineBasicMaterial({ color: 0x06B6D4, linewidth: 3 });
+            const matB = new THREE.LineBasicMaterial({ color: 0x8B5CF6, linewidth: 3 });
 
-function drawScene() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+            this.geoE = new THREE.BufferGeometry();
+            this.geoB = new THREE.BufferGeometry();
+            this.geoE.setAttribute('position', new THREE.BufferAttribute(new Float32Array(150 * 3), 3));
+            this.geoB.setAttribute('position', new THREE.BufferAttribute(new Float32Array(150 * 3), 3));
+            
+            this.scene.add(new THREE.Line(this.geoE, matE));
+            this.scene.add(new THREE.Line(this.geoB, matB));
+            
+            this.linesE = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0x06B6D4, opacity: 0.4, transparent: true }));
+            this.linesB = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0x8B5CF6, opacity: 0.4, transparent: true }));
+            this.linesE.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(150 * 6), 3));
+            this.linesB.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(150 * 6), 3));
+            this.scene.add(this.linesE);
+            this.scene.add(this.linesB);
 
-  const width = canvas.width;
-  const height = canvas.height;
-  
-  // Titik pusat koordinat gelombang
-  const originX = width * 0.42;
-  const originY = height * 0.42;
+            window.addEventListener('themeChanged', () => {
+                const isLight = document.body.classList.contains('light-mode');
+                this.axisMat.color.setHex(isLight ? 0x000000 : 0xffffff);
+                this.axisMat.opacity = isLight ? 0.3 : 0.5;
+            });
+        },
+        update: function() {
+            if(!this.scene) return;
+            this.time += 0.04;
+            const posE = this.geoE.attributes.position.array;
+            const posB = this.geoB.attributes.position.array;
+            const lE = this.linesE.geometry.attributes.position.array;
+            const lB = this.linesB.geometry.attributes.position.array;
+            
+            let peakE = new THREE.Vector3(), peakB = new THREE.Vector3();
+            
+            // Koordinat Arah Rambat ditarik sedikit ke belakang (Z=4.0) dan ke atas (Y=0.8) 
+            // agar melayang manis di pojok kanan atas panah tanpa nabrak.
+            let endZ = new THREE.Vector3(4.0, 2.0, 0); 
 
-  // Draw Grid Perspektif Dasar (Lantai)
-  drawPerspectiveGrid(originX, originY, width, height);
+            for(let i=0; i<150; i++) {
+                const x = (i/150)*11 - 5.5; 
+                const y = Math.sin(x*1.5 - this.time) * 1.5;
+                const z = Math.sin(x*1.5 - this.time) * 1.5;
+                
+                posE[i*3] = x; posE[i*3+1] = y; posE[i*3+2] = 0;
+                posB[i*3] = x; posB[i*3+1] = 0; posB[i*3+2] = z;
+                
+                lE[i*6] = x; lE[i*6+1] = 0; lE[i*6+2] = 0;
+                lE[i*6+3] = x; lE[i*6+4] = y; lE[i*6+5] = 0;
+                
+                lB[i*6] = x; lB[i*6+1] = 0; lB[i*6+2] = 0;
+                lB[i*6+3] = x; lB[i*6+4] = 0; lB[i*6+5] = z;
+                
+                if(i === 70) peakE.set(x, y + 0.8, 0); 
+                if(i === 35) peakB.set(x, 0, z + 0.8); 
+            }
+            this.geoE.attributes.position.needsUpdate = true;
+            this.geoB.attributes.position.needsUpdate = true;
+            this.linesE.geometry.attributes.position.needsUpdate = true;
+            this.linesB.geometry.attributes.position.needsUpdate = true;
+            this.renderer.render(this.scene, this.camera);
+            
+            this.updateLabels(peakE, peakB, endZ);
+        },
+        updateLabels: function(pE, pB, pZ) {
+            const container = document.getElementById('wave-container-1');
+            if(!container || container.offsetParent === null) return;
+            const w = container.clientWidth, h = container.clientHeight;
+            
+            const to2D = (vec, el, isDir) => {
+                vec.project(this.camera);
+                let x = (vec.x * .5 + .5) * w;
+                let y = (vec.y * -.5 + .5) * h;
+                
+                if(isDir) {
+                    // PENCEGAH TERPOTONG (CLAMPING)
+                    // Jika titik koordinat x sudah mendekati pinggir layar (kurang dari 140px dari ujung kanan), 
+                    // paksa berhenti di sana.
+                    if (x > w - 140) x = w - 140;
+                    
+                    el.style.left = `${x}px`; 
+                    el.style.top = `${y}px`;
+                } else {
+                    el.style.left = `${x}px`;
+                    el.style.top = `${y}px`;
+                }
+                el.style.opacity = 1;
+            };
+            
+            to2D(pE, document.getElementById('label-e'), false);
+            to2D(pB, document.getElementById('label-b'), false);
+            to2D(pZ, document.getElementById('label-dir'), true);
+        }
+    },
 
-  // Parameter Gelombang
-  const wavelength = 180;
-  const k = (2 * Math.PI) / wavelength;
-  const ampE = 65;
-  const ampB = 50;
-  const isoAngle = Math.PI / 5; // Sudut Isometric Medan Magnet B
+    p2: {
+        canvas: null, ctx: null, time: 0, zoom: 1, isPaused: false, axisColor: "rgba(255,255,255,0.4)",
+        init: function() {
+            this.canvas = document.getElementById('wave-canvas-2d');
+            if(!this.canvas) return;
+            this.ctx = this.canvas.getContext('2d');
+            this.resize();
+            this.setupControls();
 
-  // 1. Draw Sumbu Arah Rambat (Panah)
-  ctx.beginPath();
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
-  ctx.lineWidth = 1.5;
-  ctx.moveTo(originX - 180, originY + 60);
-  ctx.lineTo(originX + 320, originY - 60);
-  ctx.stroke();
+            window.addEventListener('themeChanged', () => {
+                const isLight = document.body.classList.contains('light-mode');
+                this.axisColor = isLight ? "rgba(0,0,0,0.3)" : "rgba(255,255,255,0.4)";
+            });
+        },
+        resize: function() {
+            if(!this.canvas) return;
+            const parent = this.canvas.parentElement;
+            this.canvas.width = parent.clientWidth;
+            this.canvas.height = parent.clientHeight;
+        },
+        setupControls: function() {
+            const setZoom = (val, btnId) => {
+                this.zoom = val;
+                document.querySelectorAll('.zoom-presets .zoom-btn').forEach(b => b.classList.remove('active'));
+                if(btnId) document.getElementById(btnId).classList.add('active');
+            };
+            document.getElementById('z-05').onclick = () => setZoom(0.5, 'z-05');
+            document.getElementById('z-1').onclick = () => setZoom(1, 'z-1');
+            document.getElementById('z-2').onclick = () => setZoom(2, 'z-2');
+            
+            document.getElementById('z-in').onclick = () => { if(this.zoom < 3) setZoom(this.zoom + 0.5, null); };
+            document.getElementById('z-out').onclick = () => { if(this.zoom > 0.5) setZoom(this.zoom - 0.5, null); };
+            
+            const btnPause = document.getElementById('btn-pause');
+            btnPause.onclick = () => {
+                this.isPaused = !this.isPaused;
+                const isEn = document.getElementById('btn-lang').innerText === 'EN';
+                const playText = isEn ? "PLAY" : "PLAY"; // can localize
+                const pauseText = isEn ? "PAUSE" : "PAUSE";
+                
+                btnPause.innerHTML = this.isPaused ? `▶ ${playText}` : `⏸ ${pauseText}`;
+                btnPause.style.borderColor = this.isPaused ? "var(--cyan)" : "var(--border-light)";
+                btnPause.style.color = this.isPaused ? "var(--cyan)" : "var(--text-main)";
+            };
+            
+            document.getElementById('btn-reset').onclick = () => {
+                this.time = 0; setZoom(1, 'z-1'); this.isPaused = false;
+                btnPause.innerHTML = "⏸ PAUSE";
+                btnPause.style.borderColor = "var(--border-light)";
+                btnPause.style.color = "var(--text-main)";
+            };
+        },
+        update: function() {
+            if(!this.canvas || this.canvas.offsetParent === null) return;
+            if(!this.isPaused) this.time += 0.05;
+            
+            const w = this.canvas.width, h = this.canvas.height;
+            const midY = h / 2;
+            const amp = (h / 4) * this.zoom;
+            const freq = 0.02 * this.zoom;
+            
+            const rtE = Math.sin(-this.time) * (2.0 * this.zoom); 
+            const rtB = Math.sin(-this.time) * (2.0 * this.zoom);
+            
+            const elE = document.getElementById('rt-e');
+            const elB = document.getElementById('rt-b');
+            if(elE && elB) {
+                const signE = rtE >= 0 ? '+' : '';
+                const signB = rtB >= 0 ? '+' : '';
+                elE.innerHTML = `${signE}${rtE.toFixed(2)} <span class="val-unit">V/m</span>`;
+                elB.innerHTML = `${signB}${rtB.toFixed(2)} <span class="val-unit">T</span>`;
+            }
 
-  // Label Arah Rambat
-  ctx.fillStyle = '#fff';
-  ctx.font = '11px sans-serif';
-  ctx.fillText('Arah', originX + 330, originY - 70);
-  ctx.fillText('Rambat', originX + 330, originY - 58);
+            this.ctx.clearRect(0, 0, w, h);
+            
+            this.ctx.beginPath();
+            this.ctx.moveTo(0, midY);
+            this.ctx.lineTo(w, midY);
+            this.ctx.strokeStyle = this.axisColor;
+            this.ctx.lineWidth = 2;
+            this.ctx.stroke();
 
-  // 2. Medan Magnet B (Orange Wave)
-  ctx.beginPath();
-  ctx.strokeStyle = '#ff6a00';
-  ctx.lineWidth = 2.5;
+            this.ctx.lineWidth = 3.5;
+            
+            this.ctx.beginPath();
+            for(let x=0; x<w; x+=2) {
+                const y = midY + Math.sin(x*freq - this.time) * amp;
+                if(x===0) this.ctx.moveTo(x,y); else this.ctx.lineTo(x,y);
+            }
+            this.ctx.strokeStyle = "#06B6D4";
+            this.ctx.stroke();
 
-  for (let x = -180; x <= 300; x += 2) {
-    const bVal = ampB * Math.sin(k * x - time);
-    const screenX = originX + x + bVal * Math.cos(isoAngle);
-    const screenY = originY - (x * 0.18) + bVal * Math.sin(isoAngle);
+            this.ctx.beginPath();
+            for(let x=0; x<w; x+=2) {
+                const y = midY - Math.sin(x*freq - this.time) * (amp * 0.5); 
+                if(x===0) this.ctx.moveTo(x,y); else this.ctx.lineTo(x,y);
+            }
+            this.ctx.strokeStyle = "#8B5CF6";
+            this.ctx.stroke();
+            
+            this.ctx.beginPath();
+            this.ctx.moveTo(w-12, midY-8);
+            this.ctx.lineTo(w, midY);
+            this.ctx.lineTo(w-12, midY+8);
+            const isLight = document.body.classList.contains('light-mode');
+            this.ctx.fillStyle = isLight ? "#000" : "#fff";
+            this.ctx.fill();
+        }
+    },
+    
+    animate: function(timestamp) {
+        requestAnimationFrame((ts) => this.animate(ts));
+        
+        // FPS Limiter
+        const fpsInterval = 1000 / window.fpsLimit;
+        const elapsed = timestamp - this.lastFrameTime;
+        
+        if (elapsed > fpsInterval) {
+            this.lastFrameTime = timestamp - (elapsed % fpsInterval);
+            this.p1.update();
+            this.p2.update();
+        }
+    }
+};
 
-    if (x === -180) ctx.moveTo(screenX, screenY);
-    else ctx.lineTo(screenX, screenY);
-  }
-  ctx.stroke();
+window.addEventListener('load', () => {
+    window.WaveApp.p1.init();
+    window.WaveApp.p2.init();
+    requestAnimationFrame((ts) => window.WaveApp.animate(ts));
+});
 
-  // Garis Vertical Hatched Fill B
-  for (let x = -180; x <= 300; x += 12) {
-    const bVal = ampB * Math.sin(k * x - time);
-    const baseX = originX + x;
-    const baseY = originY - (x * 0.18);
-    const targetX = baseX + bVal * Math.cos(isoAngle);
-    const targetY = baseY + bVal * Math.sin(isoAngle);
-
-    ctx.beginPath();
-    ctx.strokeStyle = 'rgba(255, 106, 0, 0.35)';
-    ctx.lineWidth = 1;
-    ctx.moveTo(baseX, baseY);
-    ctx.lineTo(targetX, targetY);
-    ctx.stroke();
-  }
-
-  // 3. Medan Listrik E (Cyan Wave)
-  ctx.beginPath();
-  ctx.strokeStyle = '#00d2ff';
-  ctx.lineWidth = 2.5;
-
-  for (let x = -180; x <= 300; x += 2) {
-    const eVal = ampE * Math.sin(k * x - time);
-    const screenX = originX + x;
-    const screenY = originY - (x * 0.18) - eVal;
-
-    if (x === -180) ctx.moveTo(screenX, screenY);
-    else ctx.lineTo(screenX, screenY);
-  }
-  ctx.stroke();
-
-  // Garis Vertical Hatched Fill E
-  for (let x = -180; x <= 300; x += 12) {
-    const eVal = ampE * Math.sin(k * x - time);
-    const baseX = originX + x;
-    const baseY = originY - (x * 0.18);
-
-    ctx.beginPath();
-    ctx.strokeStyle = 'rgba(0, 210, 255, 0.35)';
-    ctx.lineWidth = 1;
-    ctx.moveTo(baseX, baseY);
-    ctx.lineTo(baseX, baseY - eVal);
-    ctx.stroke();
-  }
-
-  // Label & Annotations
-  ctx.fillStyle = '#00d2ff';
-  ctx.font = 'bold 12px sans-serif';
-  ctx.fillText('Medan Listrik (E)', originX + 30, originY - 120);
-
-  ctx.fillStyle = '#ff6a00';
-  ctx.fillText('Medan', originX + 220, originY + 60);
-  ctx.fillText('Magnet (B)', originX + 220, originY + 74);
-}
-
-function drawPerspectiveGrid(ox, oy, w, h) {
-  ctx.strokeStyle = 'rgba(0, 162, 255, 0.06)';
-  ctx.lineWidth = 1;
-
-  for (let i = -10; i <= 10; i++) {
-    ctx.beginPath();
-    ctx.moveTo(ox + i * 40 - 200, oy + 120);
-    ctx.lineTo(ox + i * 20 + 200, oy - 150);
-    ctx.stroke();
-  }
-}
+window.addEventListener('resize', () => {
+    if(window.WaveApp.p1.renderer) {
+        const c1 = document.getElementById('wave-container-1');
+        if(c1) {
+            window.WaveApp.p1.camera.aspect = c1.clientWidth / c1.clientHeight;
+            window.WaveApp.p1.camera.updateProjectionMatrix();
+            window.WaveApp.p1.renderer.setSize(c1.clientWidth, c1.clientHeight);
+        }
+    }
+    window.WaveApp.p2.resize();
+});

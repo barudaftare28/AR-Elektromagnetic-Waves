@@ -1,4 +1,4 @@
-
+$ cd "C:\Users\ASUS-PC\AR ElectroMagnetic"
 
 User@MSI MINGW64 ~/AR Elekromagnetik
 $ git init
@@ -37,3 +37,44 @@ Total 13 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
 To https://github.com/barudaftare28/AR-Elektromagnetic-Waves.git
  * [new branch]      main -> main
 branch 'main' set up to track 'origin/main'.
+
+
+ASUS-PC@ASUS MINGW64 ~/AR ElectroMagnetic (master)
+$ cd C:\Users\ASUS-PC\AR ElectroMagnetic
+bash: cd: too many arguments
+
+ASUS-PC@ASUS MINGW64 ~/AR ElectroMagnetic (master)
+$ cd C:\Users\ASUS-PC\AR ElectroMagnetic
+bash: cd: too many arguments
+
+ASUS-PC@ASUS MINGW64 ~/AR ElectroMagnetic (master)
+$ ^C
+
+ASUS-PC@ASUS MINGW64 ~/AR ElectroMagnetic (master)
+$ cd "C:\Users\ASUS-PC\AR ElectroMagnetic"
+
+ASUS-PC@ASUS MINGW64 ~/AR ElectroMagnetic (master)
+$ git clone https://github.com/barudaftare28/AR-Elektromagnetic-Waves.git       Cloning into 'AR-Elektromagnetic-Waves'...
+remote: Enumerating objects: 28, done.
+remote: Counting objects: 100% (28/28), done.
+remote: Compressing objects: 100% (25/25), done.
+remote: Total 28 (delta 0), reused 28 (delta 0), pack-reused 0 (from 0)
+Receiving objects: 100% (28/28), 19.82 KiB | 1.65 MiB/s, done.
+
+ASUS-PC@ASUS MINGW64 ~/AR ElectroMagnetic (master)
+$ git pull
+remote: Enumerating objects: 57, done.
+remote: Counting objects: 100% (34/34), done.
+remote: Compressing objects: 100% (25/25), done.
+Unpacking objects:  38% (22/57), 5.00 MiB | 555.00 KiB/s
+
+ASUS-PC@ASUS MINGW64 ~/AR ElectroMagnetic (master)
+$ git init
+Initialized empty Git repository in C:/Users/ASUS-PC/AR ElectroMagnetic/.git/
+
+ASUS-PC@ASUS MINGW64 ~/AR ElectroMagnetic (master)
+$ git remote add origin https://github.com/barudaftare28/AR-Elektromagnetic-Waves.git
+
+ASUS-PC@ASUS MINGW64 ~/AR ElectroMagnetic (master)
+$ git pull origin main
+
