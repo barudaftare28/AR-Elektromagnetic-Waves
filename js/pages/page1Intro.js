@@ -1,6 +1,8 @@
-import { initEngine, setOffset } from '../waveEngine.js';
-
-export function setupPage1() {
-  setScale(1.0);
-  setOffset(0);
-}
+document.addEventListener('DOMContentLoaded', () => {
+    const btnMulai = document.getElementById('btn-mulai');
+    if (btnMulai) {
+        btnMulai.addEventListener('click', () => {
+            if (typeof window.navigateToPage === 'function') window.navigateToPage(2);
+        });
+    }
+});

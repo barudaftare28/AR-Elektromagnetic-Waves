@@ -1,153 +1,284 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EM WAVE LAB - Interactive Lab</title>
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EM WAVE LAB - Interactive</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
-  <!-- Card Utama Wrapper -->
-  <div class="app-card-wrapper">
-
-    <!-- Header & Navbar -->
-    <header class="app-header">
-      <div class="logo-group">
-        <div class="logo-icon">
-          <svg width="28" height="20" viewBox="0 0 28 20" fill="none">
-            <path d="M2 10H6L9 2L13 18L17 6L20 12L23 10H26" stroke="#00d2ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+    <header class="top-header">
+        <div class="logo">
+            <svg class="pulse-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+            </svg>
+            <div class="logo-text">
+                <h1>EM WAVE LAB</h1>
+                <p data-i18n="logo_sub">Eksplorasi. Eksperimen. Pahami.</p>
+            </div>
         </div>
-        <div class="logo-text">
-          <span class="title">EM WAVE LAB</span>
-          <span class="subtitle">Eksplorasi · Eksperimen · Pahami.</span>
-        </div>
-      </div>
+        
+        <nav class="nav-links">
+            <button class="nav-btn active" id="nav-page1"><span class="badge">1</span> <span data-i18n="nav_intro">Intro</span></button>
+            <button class="nav-btn" id="nav-page2"><span class="badge">2</span> <span data-i18n="nav_lab">Wave Lab</span></button>
+            <button class="nav-btn disabled"><span class="badge">3</span> Spectrum (AR)</button>
+            <button class="nav-btn disabled"><span class="badge">4</span> Challenge</button>
+        </nav>
 
-      <nav class="nav-tabs">
-        <button class="tab-btn active" data-page="1">
-          <span class="tab-num">1</span> Intro
-        </button>
-        <button class="tab-btn" data-page="2">
-          <span class="tab-num">2</span> Wave Lab
-        </button>
-        <button class="tab-btn" data-page="3">
-          <span class="tab-num">3</span> Spectrum (AR)
-        </button>
-        <button class="tab-btn" data-page="4">
-          <span class="tab-num">4</span> Challenge
-        </button>
-      </nav>
+        <div class="top-actions">
+            <button class="action-btn" onclick="openModal('modal-panduan')"><span>?</span> <span data-i18n="btn_guide">Panduan</span></button>
+            <button class="action-btn" onclick="openModal('modal-glosarium')"><span>📖</span> <span data-i18n="btn_glossary">Glosarium</span></button>
+            <button class="action-btn" onclick="openModal('modal-pengaturan')"><span>⚙️</span> <span data-i18n="btn_settings">Pengaturan</span></button>
+        </div>
     </header>
 
-    <!-- Content Area -->
-    <main class="content-container">
-      
-      <!-- Canvas 2D (Background Visualization) -->
-      <div id="canvas-container">
-        <canvas id="waveCanvas"></canvas>
-      </div>
-
-      <!-- PAGE 1: INTRODUCTION -->
-      <section id="page-1" class="page-view active">
-        <!-- Top Badges -->
-        <div class="badge-group">
-          <span class="badge badge-filled">PAGE 1</span>
-          <span class="badge badge-outline">INTRODUCTION</span>
-        </div>
-
-        <!-- Main Title & Desc -->
-        <div class="intro-header">
-          <h1>APA ITU<br><span class="text-cyan">GELOMBANG ELEKTROMAGNETIK?</span></h1>
-          <p class="description">
-            Gelombang yang dihasilkan oleh getaran medan listrik dan medan magnet yang dapat merambat tanpa medium.
-          </p>
-        </div>
-
-        <!-- Feature List -->
-        <div class="features-list">
-          <div class="feature-item">
-            <div class="icon-box icon-blue">⚡</div>
-            <div class="feature-text">
-              <strong>Medan Listrik (E)</strong>
-              <p>Bergetar naik turun</p>
+    <div id="modal-panduan" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>? <span data-i18n="modal_guide_title">Panduan Penggunaan</span></h3>
+                <button class="close-btn" onclick="closeModal('modal-panduan')">✕</button>
             </div>
-          </div>
-
-          <div class="feature-item">
-            <div class="icon-box icon-orange">🎧</div>
-            <div class="feature-text">
-              <strong>Medan Magnet (B)</strong>
-              <p>Bergetar tegak lurus terhadap E</p>
+            <div class="modal-body">
+                <p><strong data-i18n="modal_guide_p1">Page 1 (Intro):</strong> <span data-i18n="modal_guide_d1">Pahami konsep dasar, arah rambat, dan komponen medan listrik & magnet secara 3D.</span></p>
+                <p><strong data-i18n="modal_guide_p2">Page 2 (Wave Lab):</strong> <span data-i18n="modal_guide_d2">Observasi gelombang 2D. Gunakan fitur Pause, Zoom, dan perhatikan sensor nilai simpangan secara real-time.</span></p>
             </div>
-          </div>
-
-          <div class="feature-item">
-            <div class="icon-box icon-green">⚛</div>
-            <div class="feature-text">
-              <strong>Tanpa Medium</strong>
-              <p>Dapat merambat di ruang hampa</p>
+        </div>
+    </div>
+    
+    <div id="modal-glosarium" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📖 <span data-i18n="btn_glossary">Glosarium</span></h3>
+                <button class="close-btn" onclick="closeModal('modal-glosarium')">✕</button>
             </div>
-          </div>
+            <div class="modal-body">
+                <ul>
+                    <li><strong data-i18n="glo_freq_title">Frekuensi (f):</strong> <span data-i18n="glo_freq_desc">Jumlah siklus gelombang penuh yang melewati suatu titik dalam satu detik (Hertz).</span></li>
+                    <li><strong data-i18n="glo_wave_title">Panjang Gelombang (λ):</strong> <span data-i18n="glo_wave_desc">Jarak spasial antara satu puncak ke puncak berikutnya (Meter).</span></li>
+                    <li><strong data-i18n="glo_amp_title">Amplitudo (A):</strong> <span data-i18n="glo_amp_desc">Besar simpangan maksimum medan listrik atau magnet dari titik setimbangnya.</span></li>
+                </ul>
+            </div>
         </div>
-
-        <!-- Fact Box (Bottom Left) -->
-        <div class="fact-card">
-          <div class="fact-header">
-            <div class="icon-box icon-yellow">💡</div>
-            <strong>Tahukah Kamu?</strong>
-          </div>
-          <p>
-            Teori elektromagnetik dikembangkan oleh <strong>James Clerk Maxwell (1862–1864)</strong> yang membuktikan bahwa perubahan medan listrik dan magnet dapat merambat sebagai gelombang.
-          </p>
+    </div>
+    
+    <div id="modal-pengaturan" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>⚙️ <span data-i18n="btn_settings">Pengaturan</span></h3>
+                <button class="close-btn" onclick="closeModal('modal-pengaturan')">✕</button>
+            </div>
+            <div class="modal-body settings-body">
+                <div class="setting-item">
+                    <div>
+                        <strong data-i18n="set_lang">Bahasa / Language</strong>
+                        <p class="text-sm" data-i18n="set_lang_desc">Pilih bahasa antarmuka.</p>
+                    </div>
+                    <button class="toggle-btn" id="btn-lang" onclick="toggleLang()">ID</button>
+                </div>
+                <div class="setting-item">
+                    <div>
+                        <strong data-i18n="set_theme">Tema Tampilan</strong>
+                        <p class="text-sm" data-i18n="set_theme_desc">Pilih mode gelap atau terang.</p>
+                    </div>
+                    <button class="toggle-btn" id="btn-theme" onclick="toggleTheme()">🌙 Dark</button>
+                </div>
+                <div class="setting-item">
+                    <div>
+                        <strong data-i18n="set_perf">Kualitas Animasi</strong>
+                        <p class="text-sm" data-i18n="set_perf_desc">Gunakan 30 FPS untuk hemat baterai.</p>
+                    </div>
+                    <button class="toggle-btn" id="btn-fps" onclick="toggleFPS()">60 FPS</button>
+                </div>
+            </div>
         </div>
+    </div>
 
-        <!-- Formula Card (Bottom Right) -->
-        <div class="formula-card">
-          <h4>Hubungan Dasar</h4>
-          <p class="formula-sub">Kecepatan (c), frekuensi (f), dan panjang gelombang (λ) saling berhubungan.</p>
-          <div class="formula-equation">
-            <i>c</i> = <i>f</i> × <i>λ</i>
-          </div>
-          <div class="formula-legend">
-            <div><span>c =</span> kecepatan cahaya (m/s)</div>
-            <div><span>f =</span> frekuensi (Hz)</div>
-            <div><span>λ =</span> panjang gelombang (m)</div>
-          </div>
+    <section id="page-1" class="page active">
+        <div class="container">
+            <div class="content-left">
+                <div class="tag-header">
+                    <span class="tag bg-blue">PAGE 1</span>
+                    <span class="tag-text">INTRODUCTION</span>
+                </div>
+                
+                <h2 class="main-title" data-i18n="p1_title">APA ITU <br><span class="highlight">GELOMBANG ELEKTROMAGNETIK?</span></h2>
+                <p class="description" data-i18n="p1_desc">Gelombang yang terdiri dari medan listrik dan medan magnet yang berosilasi dan merambat melintasi ruang, membawa energi. Gelombang ini tidak memerlukan medium rambat.</p>
+                
+                <ul class="feature-list">
+                    <li>
+                        <div class="icon cyan">⚡</div>
+                        <div>
+                            <strong data-i18n="p1_e_title">Medan Listrik (E)</strong>
+                            <p data-i18n="p1_e_desc">Berosilasi secara sinusoidal</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="icon purple">🧲</div>
+                        <div>
+                            <strong data-i18n="p1_b_title">Medan Magnet (B)</strong>
+                            <p data-i18n="p1_b_desc">Tegak lurus terhadap E dan sefase</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="icon orange">🌌</div>
+                        <div>
+                            <strong data-i18n="p1_med_title">Merambat di Ruang Hampa</strong>
+                            <p data-i18n="p1_med_desc">Bergerak dengan kecepatan cahaya (c)</p>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="info-card maxwell-card">
+                    <img src="assets/images.jpg" alt="James Clerk Maxwell" class="maxwell-img">
+                    <div>
+                        <div class="info-header">💡 <span data-i18n="p1_fact_title">Tahukah Kamu?</span></div>
+                        <p data-i18n="p1_fact_desc">Pada tahun 1865, <strong>James Clerk Maxwell</strong> menerbitkan <em>'A Dynamical Theory of the Electromagnetic Field'</em>, yang membuktikan secara matematis bahwa cahaya adalah gelombang elektromagnetik.</p>
+                        <p style="margin-top: 10px; font-size: 0.8rem; color: var(--cyan); border-top: 1px solid var(--border); padding-top: 5px;">
+                            📚 <em>Referensi: <a href="https://id.wikipedia.org/wiki/Gelombang_elektromagnetik" target="_blank" style="color: var(--orange); text-decoration: none;">Wikipedia - Gelombang Elektromagnetik</a></em>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-right">
+                <div class="wave-visual-container">
+                    <div id="wave-container-1" class="wave-container"></div>
+                    <div id="label-e" class="floating-label cyan-text" data-i18n="lbl_e">Medan Listrik (E)</div>
+                    <div id="label-b" class="floating-label purple-text" data-i18n="lbl_b">Medan Magnet (B)</div>
+                    <div id="label-dir" class="floating-label highlight-text"><span data-i18n="lbl_dir">Arah Rambat (c)</span> ➔</div>
+                </div>
+                
+                <div class="formula-card">
+                    <h3 data-i18n="p1_form_title">Hubungan Matematis</h3>
+                    <p data-i18n="p1_form_desc">Kecepatan rambat (c) merupakan hasil kali antara frekuensi (f) dan panjang gelombang (λ).</p>
+                    <div class="formula">c = f &times; &lambda;</div>
+                    <div class="formula-legend">
+                        <p><strong>c</strong> = <span data-i18n="form_c">kecepatan cahaya</span> (3×10⁸ m/s)</p>
+                        <p><strong>f</strong> = <span data-i18n="form_f">frekuensi osilasi</span> (Hz)</p>
+                        <p><strong>λ</strong> = <span data-i18n="form_l">panjang gelombang</span> (m)</p>
+                    </div>
+                    <button class="btn-primary full-width" id="btn-mulai"><span data-i18n="btn_start">MULAI EKSPLORASI</span> ➔</button>
+                </div>
+            </div>
         </div>
+    </section>
 
-        <!-- Main CTA Button -->
-        <button class="btn-start" id="btn-start-exp">
-          MULAI <span>→</span>
-        </button>
-      </section>
+    <section id="page-2" class="page">
+        <div class="container container-p2">
+            
+            <div class="p2-header">
+                <div class="tag-header no-margin">
+                    <span class="tag bg-blue">PAGE 2</span>
+                    <div>
+                        <h2 class="p2-title">WAVE LAB <span class="dim-text" data-i18n="p2_sim">(OBSERVASI)</span></h2>
+                        <p class="p2-subtitle" data-i18n="p2_desc">Amati grafik sinusoidal E dan B pada gelombang elektromagnetik.</p>
+                    </div>
+                </div>
+                <div class="p2-controls">
+                    <button id="btn-reset" class="btn-outline">🔄 <span data-i18n="btn_reset">RESET</span></button>
+                    <button id="btn-pause" class="btn-outline">⏸ <span data-i18n="btn_pause">PAUSE</span></button>
+                </div>
+            </div>
 
-      <!-- PAGE 2: WAVE LAB -->
-      <section id="page-2" class="page-view">
-        <div class="top-bar-page2">
-          <h2>WAVE LAB (SIMULASI)</h2>
-          <p>Manipulasi frekuensi dan amplitudo secara langsung.</p>
+            <div class="p2-body">
+                <div class="p2-main">
+                    <div class="canvas-card">
+                        <div class="canvas-header">
+                            <span><span data-i18n="p2_observe">Grafik Transversal 2D</span> <span class="dim-text" data-i18n="p2_cant_change">(Konstan)</span></span>
+                            <div class="tooltip-container">
+                                <span class="icon-info">i</span>
+                                <div class="tooltip" data-i18n="p2_tt">Proyeksi 2D dari medan listrik dan magnet yang berosilasi sefase.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="canvas-wrapper">
+                            <div class="y-labels">
+                                <span class="cyan-text font-bold">E (y)</span>
+                                <span class="purple-text font-bold">B (z) ➔</span>
+                            </div>
+                            <canvas id="wave-canvas-2d"></canvas>
+                        </div>
+
+                        <div class="zoom-controls">
+                            <span class="zoom-label">ZOOM SUMBU:</span>
+                            <button class="zoom-btn action" id="z-in">🔍 + <span data-i18n="btn_zin">Zoom In</span></button>
+                            <div class="zoom-presets">
+                                <button class="zoom-btn" id="z-05">0.5x</button>
+                                <button class="zoom-btn active" id="z-1">1x</button>
+                                <button class="zoom-btn" id="z-2">2x</button>
+                            </div>
+                            <button class="zoom-btn action" id="z-out">🔍 - <span data-i18n="btn_zout">Zoom Out</span></button>
+                        </div>
+                    </div>
+
+                    <div class="info-card colored-bg">
+                        <h4 class="cyan-text mb-2" data-i18n="p2_short">Penjelasan Fisika</h4>
+                        <p class="text-lg" data-i18n="p2_short_desc">Medan listrik (E) dan medan magnet (B) berosilasi secara <strong>sefase</strong> (mencapai puncak dan nol bersamaan), saling tegak lurus, dan arah rambatnya tegak lurus terhadap kedua medan tersebut.</p>
+                    </div>
+                </div>
+
+                <div class="p2-sidebar">
+                    <div class="values-card dynamic-card">
+                        <h4 class="mb-4"><span data-i18n="p2_sensor">Sensor Real-time</span> 📡</h4>
+                        <div class="value-item">
+                            <span class="val-label" data-i18n="p2_rt_e">Simpangan Medan Listrik (E)</span>
+                            <span class="val-number cyan-text" id="rt-e">0.00 <span class="val-unit">V/m</span></span>
+                        </div>
+                        <div class="value-item">
+                            <span class="val-label" data-i18n="p2_rt_b">Simpangan Medan Magnet (B)</span>
+                            <span class="val-number purple-text" id="rt-b">0.00 <span class="val-unit">T</span></span>
+                        </div>
+                    </div>
+
+                    <div class="values-card">
+                        <h4 class="mb-4" data-i18n="p2_const">Identitas Gelombang</h4>
+                        <div class="value-item-inline">
+                            <span class="val-label" data-i18n="form_f">Frekuensi (f)</span>
+                            <span class="val-number-small">5.00 Hz</span>
+                        </div>
+                        <div class="value-item-inline">
+                            <span class="val-label" data-i18n="form_l">Panjang Gelombang (λ)</span>
+                            <span class="val-number-small">60.00 m</span>
+                        </div>
+                        <div class="value-item-inline">
+                            <span class="val-label" data-i18n="p2_amp">Amplitudo (E₀)</span>
+                            <span class="val-number-small">2.00 V/m</span>
+                        </div>
+                        <div class="value-item-inline">
+                            <span class="val-label" data-i18n="form_c">Kecepatan (c)</span>
+                            <span class="val-number-small">3×10⁸ m/s</span>
+                        </div>
+                    </div>
+
+                    <div class="locked-card">
+                        <h4 class="mb-2" data-i18n="p2_why">Mengapa tidak bisa diubah?</h4>
+                        <p class="text-sm" data-i18n="p2_why_desc">Kecepatan gelombang (c) mutlak konstan di ruang hampa. Nilai yang bergerak pada sensor real-time di atas hanyalah simpangan sesaat dari E dan B yang berosilasi, bukan nilai maksimum (amplitudo)-nya.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-nav">
+                <button class="btn-text" id="btn-back">⬅ <span data-i18n="btn_back">Kembali ke Intro</span></button>
+                <div class="pagination">
+                    <span class="dot active">1</span>
+                    <span class="line active"></span>
+                    <span class="dot active current">2</span>
+                    <span class="line dim"></span>
+                    <span class="dot dim">3</span>
+                    <span class="line dim"></span>
+                    <span class="dot dim">4</span>
+                </div>
+                <button class="btn-text" id="btn-next"><span data-i18n="btn_next">Lanjut ke Spectrum (AR)</span> ➔</button>
+            </div>
         </div>
-      </section>
+    </section>
 
-      <!-- PAGE 3: SPECTRUM -->
-      <section id="page-3" class="page-view">
-        <div class="center-card">
-          <h2>SPEKTRUM & WEBAR</h2>
-        </div>
-      </section>
-
-      <!-- PAGE 4: CHALLENGE -->
-      <section id="page-4" class="page-view">
-        <div class="center-card">
-          <h2>CHALLENGE & KUIS</h2>
-        </div>
-      </section>
-
-    </main>
-  </div>
-
-  <script type="module" src="js/main.js"></script>
+    <script type="module" src="js/waveEngine.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/pages/page1Intro.js"></script>
+    <script src="js/pages/page2Lab.js"></script>
+    <script src="js/pages/page3Spectrum.js"></script>
+    <script src="js/pages/page4Challenge.js"></script>
 </body>
 </html>

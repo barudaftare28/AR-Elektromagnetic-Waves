@@ -1,0 +1,1 @@
+Pastikan file foto bernama images.jpg ditaruh di dalam folder ini.
