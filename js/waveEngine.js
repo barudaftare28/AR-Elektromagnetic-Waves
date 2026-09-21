@@ -21,8 +21,8 @@ window.WaveApp = {
             this.axisMat = new THREE.LineBasicMaterial({ color: 0x94a3b8, opacity: 0.3, transparent: true });
             this.scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-6,0,0), new THREE.Vector3(6,0,0)]), this.axisMat));
 
-            const matE = new THREE.LineBasicMaterial({ color: 0x38bdf8, linewidth: 3 });
-            const matB = new THREE.LineBasicMaterial({ color: 0xa78bfa, linewidth: 3 });
+            const matE = new THREE.LineBasicMaterial({ color: 0x7DA2A9, linewidth: 3 });
+            const matB = new THREE.LineBasicMaterial({ color: 0x9B8EA2, linewidth: 3 });
 
             this.geoE = new THREE.BufferGeometry();
             this.geoB = new THREE.BufferGeometry();
@@ -32,8 +32,8 @@ window.WaveApp = {
             this.scene.add(new THREE.Line(this.geoE, matE));
             this.scene.add(new THREE.Line(this.geoB, matB));
             
-            this.linesE = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0x38bdf8, opacity: 0.3, transparent: true }));
-            this.linesB = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0xa78bfa, opacity: 0.3, transparent: true }));
+            this.linesE = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0x7DA2A9, opacity: 0.3, transparent: true }));
+            this.linesB = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0x9B8EA2, opacity: 0.3, transparent: true }));
             this.linesE.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(150 * 6), 3));
             this.linesB.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(150 * 6), 3));
             this.scene.add(this.linesE);
@@ -198,7 +198,7 @@ window.WaveApp = {
                 const y = midY + Math.sin(phase) * amp;
                 if(x===0) this.ctx.moveTo(x,y); else this.ctx.lineTo(x,y);
             }
-            this.ctx.strokeStyle = "#38bdf8"; 
+            this.ctx.strokeStyle = "#7DA2A9"; 
             this.ctx.stroke();
 
             this.ctx.beginPath();
@@ -207,7 +207,7 @@ window.WaveApp = {
                 const y = midY - Math.sin(phase) * (amp * 0.5); 
                 if(x===0) this.ctx.moveTo(x,y); else this.ctx.lineTo(x,y);
             }
-            this.ctx.strokeStyle = "#a78bfa"; 
+            this.ctx.strokeStyle = "#9B8EA2"; 
             this.ctx.stroke();
             
             this.ctx.beginPath();
