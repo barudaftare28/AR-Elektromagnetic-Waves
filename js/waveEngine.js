@@ -21,8 +21,8 @@ window.WaveApp = {
             this.axisMat = new THREE.LineBasicMaterial({ color: 0x94a3b8, opacity: 0.3, transparent: true });
             this.scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-6,0,0), new THREE.Vector3(6,0,0)]), this.axisMat));
 
-            const matE = new THREE.LineBasicMaterial({ color: 0x7DA2A9, linewidth: 3 });
-            const matB = new THREE.LineBasicMaterial({ color: 0x9B8EA2, linewidth: 3 });
+            const matE = new THREE.LineBasicMaterial({ color: 0xFFA500 , linewidth: 3 });
+            const matB = new THREE.LineBasicMaterial({ color: 0xc76ef7, linewidth: 3 });
 
             this.geoE = new THREE.BufferGeometry();
             this.geoB = new THREE.BufferGeometry();
@@ -32,8 +32,8 @@ window.WaveApp = {
             this.scene.add(new THREE.Line(this.geoE, matE));
             this.scene.add(new THREE.Line(this.geoB, matB));
             
-            this.linesE = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0x7DA2A9, opacity: 0.3, transparent: true }));
-            this.linesB = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0x9B8EA2, opacity: 0.3, transparent: true }));
+            this.linesE = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0xFFA500, opacity: 0.3, transparent: true }));
+            this.linesB = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0xc76ef7, opacity: 0.3, transparent: true }));
             this.linesE.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(150 * 6), 3));
             this.linesB.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(150 * 6), 3));
             this.scene.add(this.linesE);
