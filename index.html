@@ -41,11 +41,11 @@
         <button class="nav-btn" id="nav-page2">
           <span class="badge">2</span> <span data-i18n="nav_lab">Wave Lab</span>
         </button>
-        <button class="nav-btn disabled">
-          <span class="badge">3</span> Spectrum (AR)
+        <button id="nav-page3" class="nav-btn">
+          <span class="badge">3</span> <span data-i18n="nav_spec">Spectrum (AR)</span>
         </button>
-        <button class="nav-btn disabled">
-          <span class="badge">4</span> Challenge
+        <button id="nav-page4" class="nav-btn">
+          <span class="badge">4</span> <span data-i18n="nav_challenge">Challenge</span>
         </button>
       </nav>
 
@@ -464,22 +464,304 @@
             ⬅ <span data-i18n="btn_back">Kembali ke Intro</span>
           </button>
           <div class="pagination">
-            <span class="dot active">1</span>
+            <span class="dot active" data-goto="1">1</span>
             <span class="line"></span>
-            <span class="dot active current">2</span>
+            <span class="dot active current" data-goto="2">2</span>
             <span class="line dim"></span>
-            <span class="dot dim"></span>
+            <span class="dot dim" data-goto="3">3</span>
             <span class="line dim"></span>
-            <span class="dot dim"></span>
+            <span class="dot dim" data-goto="4">4</span>
           </div>
-          <button class="btn-text" id="btn-next">
+          <button class="btn-text" id="btn-p2-next">
             <span data-i18n="btn_next">Lanjut ke Spectrum (AR)</span> ➔
           </button>
         </div>
       </div>
     </section>
 
+<!-- PAGE 3: SPECTRUM (AR) -->
+<section id="page-3" class="page">
+  <div class="p3-wrapper">
+
+    <!-- HEADER PAGE 3 -->
+    <div class="p2-header">
+      <div class="tag-header no-margin">
+        <span class="tag bg-blue">PAGE 3</span>
+        <div>
+          <h2 class="p2-title">
+            SPECTRUM <span class="dim-text">(AR)</span>
+          </h2>
+          <p class="p2-subtitle" data-i18n="p3_sub">Eksplorasi spektrum gelombang elektromagnetik dan ubah frekuensinya!</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="p3-container">
+    
+    <!-- LEFT SIDEBAR: PILIH SPEKTRUM -->
+    <aside class="spectrum-sidebar">
+      <h3 class="sidebar-title" data-i18n="p3_choose">Pilih Jenis Gelombang</h3>
+      <div class="spectrum-menu">
+        <button class="spec-btn active" data-type="radio">
+          <span class="spec-dot radio"></span>
+          <div class="spec-info">
+            <strong>Radio Waves</strong>
+            <small>&lt; 3 GHz</small>
+          </div>
+        </button>
+        <button class="spec-btn" data-type="microwave">
+          <span class="spec-dot microwave"></span>
+          <div class="spec-info">
+            <strong>Microwave</strong>
+            <small>300 MHz - 300 GHz</small>
+          </div>
+        </button>
+        <button class="spec-btn" data-type="infrared">
+          <span class="spec-dot infrared"></span>
+          <div class="spec-info">
+            <strong>Infrared</strong>
+            <small>300 GHz - 430 THz</small>
+          </div>
+        </button>
+        <button class="spec-btn" data-type="visible">
+          <span class="spec-dot visible"></span>
+          <div class="spec-info">
+            <strong>Visible Light</strong>
+            <small>430 - 790 THz</small>
+          </div>
+        </button>
+        <button class="spec-btn" data-type="ultraviolet">
+          <span class="spec-dot ultraviolet"></span>
+          <div class="spec-info">
+            <strong>Ultraviolet</strong>
+            <small>790 THz - 30 PHz</small>
+          </div>
+        </button>
+        <button class="spec-btn" data-type="xray">
+          <span class="spec-dot xray"></span>
+          <div class="spec-info">
+            <strong>X-Ray</strong>
+            <small>30 PHz - 30 EHz</small>
+          </div>
+        </button>
+        <button class="spec-btn" data-type="gamma">
+          <span class="spec-dot gamma"></span>
+          <div class="spec-info">
+            <strong>Gamma Ray</strong>
+            <small>&gt; 30 EHz</small>
+          </div>
+        </button>
+      </div>
+    </aside>
+
+    <!-- MIDDLE AREA: VIEW & SLIDERS -->
+    <div class="spectrum-main">
+      <div class="view-toggle">
+        <h3 class="view-title" data-i18n="p3_view">AR VIEW</h3>
+      </div>
+
+      <!-- VISUAL CANVAS / DISPLAY AREA -->
+      <div class="visual-viewport">
+        <div class="ar-status-badge" data-i18n="p3_active">● AR Aktif</div>
+        
+        <!-- Canvas Simulasi Visual -->
+        <canvas id="spectrum-canvas"></canvas>
+
+      </div>
+
+      <!-- SLIDERS CONTROL -->
+      <div class="parameter-card">
+        <h4 data-i18n="p3_params">UBAH PARAMETER GELOMBANG</h4>
+        <div class="sliders-grid">
+          
+          <!-- Slider Frekuensi -->
+          <div class="slider-box">
+            <div class="slider-header">
+              <span class="param-label" data-i18n="p3_freq">Frekuensi (f)</span>
+              <!-- Ubah teks default dari 50 Hz menjadi 1.50 GHz -->
+              <span id="val-f" class="param-value red-text">1.50 GHz</span>
+            </div>
+            <div class="slider-control">
+              <button type="button" class="step-btn" id="btn-f-minus">−</button>
+              <!-- Ubah min, max, dan value di HTML -->
+              <input type="range" id="slider-freq" class="custom-slider slider-red" min="0" max="12" step="any" value="6">
+              <button type="button" class="step-btn" id="btn-f-plus">+</button>
+            </div>
+            <div class="slider-range-labels">
+              <span>1 Hz</span>
+              <span>3 GHz</span>
+            </div>
+          </div>
+
+          <!-- Slider Amplitudo -->
+          <div class="slider-box">
+            <div class="slider-header">
+              <span class="param-label" data-i18n="p3_amp">Amplitudo (A)</span>
+              <span id="val-a" class="param-value green-text">2.00 m</span>
+            </div>
+            <div class="slider-control">
+              <button type="button" class="step-btn" id="btn-a-minus">−</button>
+              <input type="range" id="slider-amp" class="custom-slider slider-green" min="0.1" max="10" step="0.1" value="2.0">
+              <button type="button" class="step-btn" id="btn-a-plus">+</button>
+            </div>
+            <div class="slider-range-labels">
+              <span>0.1 m</span>
+              <span>10 m</span>
+            </div>
+          </div>
+
+          <!-- Display Kecepatan -->
+          <div class="slider-box readonly-box">
+            <span class="param-label" data-i18n="p3_amp">Kecepatan (c)</span>
+            <div class="constant-val">3.00 × 10⁸ m/s</div>
+            <small class="sub-text" data-i18n="p3_vacuum">(Tetap di ruang hampa)</small>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: REAL-TIME INFO -->
+    <aside class="spectrum-info-panel">
+      <div class="info-card">
+        <h3 data-i18n="p3_info">Informasi Real-time</h3>
+        <div class="info-item">
+          <span class="label" data-i18n="p3_type">Jenis Gelombang</span>
+          <span id="info-name" class="val highlight-red">Radio Waves</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Frekuensi ($f$)</span>
+          <span id="info-freq" class="val highlight-green">100 MHz</span>
+        </div>
+        <div class="info-item">
+          <span class="label" data-i18n="p3_lambda">Panjang Gelombang ($\lambda$)</span>
+          <span id="info-lambda" class="val highlight-blue">3.00 m</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Amplitudo ($A$)</span>
+          <span id="info-amp" class="val highlight-green">2.00 m</span>
+        </div>
+        <div class="info-item">
+          <span class="label" data-i18n="p3_energy">Energi ($E$)</span>
+          <span id="info-energy" class="val">4.14 × 10⁻⁷ eV</span>
+        </div>
+      </div>
+
+      <div class="fact-card">
+        <h4 data-i18n="p3_fact">💡 Fun Fact & Pengaplikasian</h4>
+        <p id="info-fact">
+          Gelombang radio digunakan untuk komunikasi, siaran TV, radio FM, hingga sinyal WiFi dan Bluetooth.
+        </p>
+      </div>
+    </aside>
+    </div>
+
+    <!-- FOOTER PAGE 3 -->
+    <div class="bottom-nav">
+      <button class="btn-text" id="btn-p3-back" data-i18n="p3_back">⬅ Kembali ke Wave Lab</button>
+        <div class="pagination">
+          <span class="dot active" data-goto="1">1</span>
+          <span class="line"></span>
+          <span class="dot active" data-goto="2">2</span>
+          <span class="line"></span>
+          <span class="dot active current" data-goto="3">3</span>
+          <span class="line dim"></span>
+          <span class="dot dim" data-goto="4">4</span>
+        </div>
+      <button class="btn-text" id="btn-p3-next" data-i18n="p3_next">Lanjut ke Challenge ➔</button>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- PAGE 4: CHALLENGE / QUIZ -->
+<section id="page-4" class="page">
+  <div class="q-container">
+
+   <div class="p2-header">
+      <div class="tag-header no-margin">
+        <span class="tag bg-blue">PAGE 4</span>
+        <div>
+          <h2 class="p2-title">
+            CHALLENGE <span class="dim-text">(QUIZ)</span>
+          </h2>
+          <p class="p2-subtitle" data-i18n="p3_sub">Uji pemahamanmu tentang gelombang elektromagnetik!</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="q-layout">
+
+      <!-- KIRI: PROGRES -->
+      <aside class="q-progress-card">
+        <div class="q-progress-title" data-i18n="p4_progress">PROGRESS</div>
+        <div class="q-progress" id="q-progress"></div>
+      </aside>
+
+      <!-- TENGAH: SOAL + PENJELASAN -->
+      <div class="q-center">
+        <div class="q-card">
+          <div class="q-num" id="q-num">SOAL 1 / 5</div>
+          <p class="q-text" id="q-text"></p>
+          <div class="q-options" id="q-options"></div>
+          <div class="q-result" id="q-result"></div>
+          <button type="button" id="q-action" class="q-btn-main" disabled>Cek Jawaban</button>
+        </div>
+
+        <div class="q-card lockable locked" id="q-explain-card">
+          <div class="lock-overlay" data-i18n="p4_lock_exp">🔒 Jawab soal ini untuk membuka penjelasan</div>
+          <h4 class="cyan-text" data-i18n="p4_explain">Penjelasan</h4>
+          <div class="q-explain-body">
+            <ol id="q-explain" class="q-steps"></ol>
+            <div id="q-chip" class="q-chip"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KANAN: VISUALISASI + SKOR -->
+      <div class="q-right">
+        <div class="q-card lockable locked" id="q-viz-card">
+          <div class="lock-overlay" data-i18n="p4_lock_viz">🔒 Jawab soal ini untuk membuka visualisasi</div>
+          <h4 data-i18n="p4_viz">Visualisasi Hasil</h4>
+          <canvas id="q-canvas"></canvas>
+        </div>
+
+        <div class="q-card">
+          <h4 data-i18n="p4_score">Skor Kamu</h4>
+          <div class="q-score-row">
+            <span class="q-star">★</span>
+            <span><span id="q-score" class="q-score">0</span> <span class="dim-text">/ 100</span></span>
+          </div>
+          <p class="q-score-msg" id="q-score-msg">Jawab semua soal ya!</p>
+          <div class="q-score-btns">
+            <button type="button" id="q-retry" class="q-btn-sec" data-i18n="p4_retry">Ulangi Quiz</button>
+            <button type="button" id="q-finish" class="q-btn-done" disabled data-i18n="p4_finish">Selesai</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <div class="bottom-nav">
+        <button type="button" class="btn-text" id="btn-p4-back" data-i18n="p4_back">⬅ Kembali ke Spectrum</button>
+        <div class="pagination">
+          <span class="dot active" data-goto="1">1</span>
+          <span class="line"></span>
+          <span class="dot active" data-goto="2">2</span>
+          <span class="line"></span>
+          <span class="dot active" data-goto="3">3</span>
+          <span class="line"></span>
+          <span class="dot active current" data-goto="4">4</span>
+        </div>
+      <button type="button" class="btn-text" id="btn-p4-intro" data-i18n="p4_intro">Kembali ke Introduction ➔</button>
+    </div>
+  </div>
+</section>
+
+
+
     <script type="module" src="js/waveEngine.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/quiz.js"></script>
   </body>
 </html>
