@@ -1,0 +1,72 @@
+<!-- PAGE 4: CHALLENGE / QUIZ -->
+<section id="page-4" class="page">
+  <div class="q-container">
+    <div class="p2-header">
+      <div class="tag-header no-margin">
+        <span class="tag bg-blue">PAGE 4</span>
+        <div>
+          <h2 class="p2-title">CHALLENGE <span class="dim-text">(QUIZ)</span></h2>
+          <p class="p2-subtitle" data-i18n="p4_sub">Uji pemahamanmu tentang gelombang elektromagnetik!</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="q-layout">
+      <aside class="q-progress-card">
+        <div class="q-progress-title" data-i18n="p4_progress">PROGRESS</div>
+        <div class="q-progress" id="q-progress"></div>
+      </aside>
+
+      <div class="q-center">
+        <div class="q-card">
+          <div class="q-num" id="q-num"></div>
+          <p class="q-text" id="q-text"></p>
+          <div class="q-options" id="q-options"></div>
+          <div class="q-result" id="q-result"></div>
+          <button type="button" id="q-action" class="q-btn-main" disabled></button>
+        </div>
+
+        <div class="q-card lockable locked" id="q-explain-card">
+          <div class="lock-overlay" data-i18n="p4_lock_exp">🔒 Jawab soal ini untuk membuka penjelasan</div>
+          <h4 class="cyan-text" data-i18n="p4_explain">Penjelasan</h4>
+          <div class="q-explain-body">
+            <ol id="q-explain" class="q-steps"></ol>
+            <div id="q-chip" class="q-chip"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-right">
+        <div class="q-card lockable locked" id="q-viz-card">
+          <div class="lock-overlay" data-i18n="p4_lock_viz">🔒 Jawab soal ini untuk membuka visualisasi</div>
+          <h4 data-i18n="p4_viz">Visualisasi Hasil</h4>
+          <canvas id="q-canvas"></canvas>
+        </div>
+
+        <div class="q-card">
+          <h4 data-i18n="p4_score">Skor Kamu</h4>
+          <div class="q-score-row">
+            <span class="q-star">★</span>
+            <span><span id="q-score" class="q-score">0</span> <span class="dim-text">/ 100</span></span>
+          </div>
+          <p class="q-score-msg" id="q-score-msg"></p>
+          <div class="q-score-btns">
+            <button type="button" id="q-retry" class="q-btn-sec" data-i18n="p4_retry">Ulangi Quiz</button>
+            <button type="button" id="q-finish" class="q-btn-done" disabled data-i18n="p4_finish">Selesai</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <button type="button" class="btn-text" data-goto="3" data-i18n="p4_back">⬅ Kembali ke Spectrum</button>
+      <div class="pagination">
+        <span class="dot active" data-goto="1">1</span><span class="line"></span>
+        <span class="dot active" data-goto="2">2</span><span class="line"></span>
+        <span class="dot active" data-goto="3">3</span><span class="line"></span>
+        <span class="dot active current" data-goto="4">4</span>
+      </div>
+      <button type="button" class="btn-text" data-goto="1" data-i18n="p4_intro">Kembali ke Introduction ➔</button>
+    </div>
+  </div>
+</section>

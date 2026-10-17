@@ -1,0 +1,72 @@
+/* ===== PAGE 2: WAVE LAB ===== */
+.container-p2 { flex-direction: column; gap: 30px; }
+.p2-controls { display: flex; gap: 15px; }
+.btn-outline {
+  background: transparent; border: 2px solid var(--border-light); color: var(--text-main);
+  padding: 10px 24px; border-radius: 8px; font-size: 1.05rem; cursor: pointer;
+  display: flex; align-items: center; gap: 8px; font-weight: 600;
+}
+.btn-outline:hover { background: var(--card-bg-light); }
+
+.p2-body { display: flex; gap: 30px; }
+.p2-main { flex: 2.2; display: flex; flex-direction: column; gap: 30px; }
+.p2-sidebar { flex: 1; display: flex; flex-direction: column; gap: 30px; }
+
+.canvas-card {
+  background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 30px;
+  display: flex; flex-direction: column; gap: 20px; transition: background-color 0.3s;
+}
+.canvas-header { display: flex; justify-content: space-between; align-items: center; font-size: 1.1rem; font-weight: 500; }
+.icon-info {
+  display: inline-flex; width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--text-muted);
+  justify-content: center; align-items: center; font-size: 0.9rem; color: var(--text-muted); cursor: pointer; font-weight: bold;
+}
+.tooltip-container { position: relative; }
+.tooltip {
+  position: absolute; right: 0; top: 35px; width: 250px; background: var(--card-bg-light);
+  border: 1px solid var(--border); padding: 12px; border-radius: 8px; font-size: 0.95rem;
+  opacity: 0; visibility: hidden; transition: 0.2s; z-index: 10; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+.tooltip-container:hover .tooltip { opacity: 1; visibility: visible; }
+
+.canvas-wrapper {
+  position: relative; background: var(--bg-color); height: 350px; border-radius: 12px;
+  border: 1px solid var(--border); display: flex; align-items: center; padding-left: 40px; transition: background-color 0.3s;
+}
+.y-labels { position: absolute; left: 15px; top: 15px; display: flex; flex-direction: column; font-size: 1.1rem; gap: 5px; }
+#wave-canvas-2d { width: 100%; height: 100%; }
+
+.zoom-controls {
+  display: flex; align-items: center; justify-content: space-between; background: var(--bg-color);
+  border: 1px solid var(--border); padding: 10px 15px; border-radius: 12px; transition: background-color 0.3s;
+}
+.zoom-label { font-size: 1rem; color: var(--text-muted); font-weight: 600; margin-right: 15px; }
+.zoom-presets { display: flex; gap: 10px; margin: 0 20px; }
+.zoom-btn {
+  background: transparent; border: 1px solid transparent; color: var(--text-muted); padding: 8px 16px;
+  border-radius: 6px; font-size: 1rem; cursor: pointer; font-weight: 600; transition: 0.2s;
+}
+.zoom-btn.action { border: 1px solid var(--border-light); color: var(--text-main); background: var(--card-bg-light); }
+.zoom-btn:hover { background: var(--card-bg-light); color: var(--text-main); }
+.zoom-btn.active { background: rgba(6, 182, 212, 0.2); border: 1px solid var(--cyan); color: var(--cyan); }
+.zoom-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.zoom-btn:disabled:hover { background: var(--card-bg-light); color: var(--text-main); }
+
+.colored-bg { background: var(--card-bg-light); padding: 25px 30px; border-radius: 16px; border: 1px solid var(--border); transition: background-color 0.3s; }
+.values-card { background: var(--card-bg); padding: 25px; border-radius: 16px; border: 1px solid var(--border); transition: background-color 0.3s; }
+.dynamic-card { border: 2px solid var(--cyan); box-shadow: 0 0 15px rgba(6, 182, 212, 0.1); }
+.value-item { display: flex; flex-direction: column; gap: 4px; margin-bottom: 20px; }
+.value-item:last-child { margin-bottom: 0; }
+.val-label { font-size: 1rem; color: var(--text-muted); }
+.val-number { font-size: 2.2rem; font-weight: 700; }
+.val-unit { font-size: 1.1rem; font-weight: 500; }
+.value-item-inline { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+.val-number-small { font-weight: 600; font-size: 1.1rem; }
+
+.locked-card { background: var(--locked-bg); border: 1px solid var(--locked-border); padding: 25px; border-radius: 16px; }
+.locked-card h4 { color: var(--locked-title); font-size: 1.2rem; }
+
+@media (max-width: 900px) {
+  .p2-body { flex-direction: column; }
+  .zoom-controls { flex-direction: column; gap: 15px; }
+}

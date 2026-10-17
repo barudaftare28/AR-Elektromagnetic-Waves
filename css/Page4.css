@@ -1,0 +1,83 @@
+/* ===== PAGE 4: CHALLENGE (QUIZ) ===== */
+.q-container { max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.q-layout { display: grid; grid-template-columns: 100px 1fr 420px; gap: 24px; align-items: start; }
+.q-card, .q-progress-card { position: relative; background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 24px; transition: background-color 0.3s; }
+.q-card h4 { font-size: 1.05rem; margin-bottom: 14px; }
+.q-center, .q-right { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+
+/* Progres kiri */
+.q-progress-card { padding: 20px 10px; display: flex; flex-direction: column; align-items: center; }
+.q-progress-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 16px; }
+.q-progress { display: flex; flex-direction: column; align-items: center; }
+.q-step {
+  position: relative; width: 46px; height: 46px; border-radius: 50%; border: 2px solid var(--border-light);
+  background: var(--card-bg-light); color: var(--text-muted); font-size: 1.1rem; font-weight: 700;
+  cursor: pointer; margin-bottom: 26px; transition: 0.2s;
+}
+.q-step:last-child { margin-bottom: 0; }
+.q-step:not(:last-child)::after { content: ""; position: absolute; left: 50%; top: 100%; width: 3px; height: 26px; transform: translateX(-50%); background: var(--border-light); }
+.q-step.current { background: var(--orange); border-color: var(--orange); color: #fff; box-shadow: 0 0 12px rgba(245, 158, 11, 0.6); }
+.q-step.correct { background: var(--green); border-color: var(--green); color: #fff; }
+.q-step.wrong { background: #ef4444; border-color: #ef4444; color: #fff; }
+.q-step.current.correct, .q-step.current.wrong { box-shadow: 0 0 0 3px var(--text-main); }
+
+/* Soal */
+.q-num { font-size: 0.95rem; font-weight: 700; letter-spacing: 1px; margin-bottom: 8px; }
+.q-text { font-size: 1.05rem; line-height: 1.6; margin-bottom: 18px; }
+.q-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+.q-opt {
+  display: flex; align-items: center; gap: 12px; text-align: left; background: var(--bg-color); color: var(--text-main);
+  border: 1px solid var(--border-light); border-radius: 10px; padding: 12px 14px; font-size: 0.95rem; line-height: 1.4; cursor: pointer; transition: 0.2s;
+}
+.q-opt:hover:not(:disabled) { border-color: var(--cyan); }
+.q-opt:disabled { cursor: default; }
+.q-letter {
+  flex: 0 0 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  border: 1.5px solid var(--text-muted); color: var(--text-muted); font-weight: 700; font-size: 0.85rem;
+}
+.q-opt.selected { border-color: var(--orange); background: rgba(245, 158, 11, 0.18); }
+.q-opt.selected .q-letter { background: var(--orange); border-color: var(--orange); color: #fff; }
+.q-opt.correct { border-color: var(--green); background: rgba(16, 185, 129, 0.2); }
+.q-opt.correct .q-letter { background: var(--green); border-color: var(--green); color: #fff; }
+.q-opt.wrong { border-color: #ef4444; background: rgba(239, 68, 68, 0.18); }
+.q-opt.wrong .q-letter { background: #ef4444; border-color: #ef4444; color: #fff; }
+.q-result { min-height: 24px; font-weight: 600; margin-bottom: 10px; }
+.q-result.ok { color: var(--green); }
+.q-result.no { color: #ef4444; }
+.q-btn-main { width: 100%; padding: 13px; border: none; border-radius: 10px; cursor: pointer; background: linear-gradient(180deg, #d97706, #b45309); color: #fff; font-weight: 700; font-size: 1rem; }
+.q-btn-main:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Kartu terkunci */
+.lock-overlay {
+  display: none; position: absolute; inset: 0; z-index: 2; border-radius: 16px; align-items: center; justify-content: center;
+  text-align: center; padding: 20px; background: rgba(10, 15, 29, 0.55); backdrop-filter: blur(5px); color: #fff; font-weight: 600;
+}
+body.light-mode .lock-overlay { background: rgba(243, 244, 246, 0.7); color: #111827; }
+.locked .lock-overlay { display: flex; }
+.locked > :not(.lock-overlay) { pointer-events: none; user-select: none; }
+
+/* Penjelasan, visualisasi, skor */
+.q-explain-body { display: flex; gap: 20px; align-items: center; justify-content: space-between; }
+.q-steps { margin-left: 18px; line-height: 1.7; font-size: 0.95rem; color: var(--text-muted); }
+.q-chip { flex: 0 0 auto; padding: 14px 18px; border-radius: 10px; font-weight: 700; text-align: center; color: var(--cyan); background: rgba(6, 182, 212, 0.12); border: 1px solid var(--cyan); }
+#q-canvas { width: 100%; height: 300px; display: block; border-radius: 10px; background: var(--bg-color); border: 1px solid var(--border); }
+.q-score-row { display: flex; align-items: center; gap: 12px; }
+.q-star { color: #fbbf24; font-size: 2rem; }
+.q-score { font-size: 2.2rem; font-weight: 700; color: var(--green); }
+.q-score-msg { text-align: center; margin: 10px 0 16px; color: var(--text-muted); font-size: 0.95rem; }
+.q-score-btns { display: flex; gap: 12px; }
+.q-btn-sec, .q-btn-done { flex: 1; padding: 11px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.95rem; }
+.q-btn-sec { background: transparent; color: var(--text-main); border: 1px solid var(--border-light); }
+.q-btn-sec:hover { background: var(--card-bg-light); }
+.q-btn-done { background: var(--green); color: #fff; border: 1px solid var(--green); }
+.q-btn-done:disabled { opacity: 0.4; cursor: not-allowed; }
+
+@media (max-width: 1100px) {
+  .q-layout { grid-template-columns: 1fr; }
+  .q-progress-card { padding: 14px; }
+  .q-progress { flex-direction: row; }
+  .q-step { margin: 0 26px 0 0; }
+  .q-step:last-child { margin: 0; }
+  .q-step:not(:last-child)::after { left: 100%; top: 50%; width: 26px; height: 3px; transform: translateY(-50%); }
+  .q-explain-body { flex-direction: column; align-items: stretch; }
+}

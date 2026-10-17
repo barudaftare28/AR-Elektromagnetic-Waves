@@ -1,0 +1,94 @@
+<!-- PAGE 2: WAVE LAB (SIMULASI 2D) -->
+<section id="page-2" class="page">
+  <div class="container container-p2">
+    <div class="p2-header">
+      <div class="tag-header no-margin">
+        <span class="tag bg-blue">PAGE 2</span>
+        <div>
+          <h2 class="p2-title">WAVE LAB <span class="dim-text" data-i18n="p2_sim">(SIMULASI)</span></h2>
+          <p class="p2-subtitle" data-i18n="p2_desc">Amati gelombang elektromagnetik dan pahami sifat-sifatnya.</p>
+        </div>
+      </div>
+      <div class="p2-controls">
+        <button id="btn-reset" class="btn-outline">🔄 <span data-i18n="btn_reset">RESET</span></button>
+        <button id="btn-pause" class="btn-outline"><span id="pause-icon">⏸</span> <span id="pause-label" data-i18n="btn_pause">PAUSE</span></button>
+      </div>
+    </div>
+
+    <div class="p2-body">
+      <div class="p2-main">
+        <div class="canvas-card">
+          <div class="canvas-header">
+            <span><span data-i18n="p2_observe">Lihat dan Pahami</span> <span class="dim-text" data-i18n="p2_cant_change">(Tidak Dapat Diubah)</span></span>
+            <div class="tooltip-container">
+              <span class="icon-info">i</span>
+              <div class="tooltip" data-i18n="p2_tt">Gelombang merambat lurus dengan kecepatan konstan di ruang hampa.</div>
+            </div>
+          </div>
+
+          <div class="canvas-wrapper">
+            <div class="y-labels">
+              <span class="cyan-text font-bold">E</span>
+              <span class="purple-text font-bold">B ➔</span>
+            </div>
+            <canvas id="wave-canvas-2d"></canvas>
+          </div>
+
+          <div class="zoom-controls">
+            <span class="zoom-label">ZOOM:</span>
+            <button class="zoom-btn action" id="z-out">🔍 - <span data-i18n="btn_zout">Zoom Out</span></button>
+            <div class="zoom-presets">
+              <button class="zoom-btn" id="z-05">0.5x</button>
+              <button class="zoom-btn active" id="z-1">1x</button>
+              <button class="zoom-btn" id="z-2">2x</button>
+            </div>
+            <button class="zoom-btn action" id="z-in">🔍 + <span data-i18n="btn_zin">Zoom In</span></button>
+          </div>
+        </div>
+
+        <div class="info-card colored-bg">
+          <h4 class="cyan-text mb-2" data-i18n="p2_short">Penjelasan Singkat</h4>
+          <p class="text-lg" data-i18n="p2_short_desc">Gelombang elektromagnetik terdiri dari medan listrik (E) dan medan magnet (B) yang berosilasi secara bersamaan, saling tegak lurus, dan merambat ke depan dengan kecepatan cahaya (c). Kedua medan ini dapat merambat tanpa memerlukan medium, sehingga gelombang elektromagnetik dapat bergerak melalui ruang hampa. Gelombang ini juga membawa energi yang dapat dimanfaatkan dalam berbagai teknologi, seperti komunikasi radio, gelombang mikro, dan cahaya yang kita lihat sehari-hari.</p>
+        </div>
+      </div>
+
+      <div class="p2-sidebar">
+        <div class="values-card dynamic-card">
+          <h4 class="mb-4"><span data-i18n="p2_sensor">Sensor Real-time</span> 📡</h4>
+          <div class="value-item">
+            <span class="val-label" data-i18n="p2_rt_e">Medan Listrik (E) Saat Ini</span>
+            <span class="val-number cyan-text" id="rt-e">0.00 <span class="val-unit">V/m</span></span>
+          </div>
+          <div class="value-item">
+            <span class="val-label" data-i18n="p2_rt_b">Medan Magnet (B) Saat Ini</span>
+            <span class="val-number purple-text" id="rt-b">0.00 <span class="val-unit">T</span></span>
+          </div>
+        </div>
+
+        <div class="values-card">
+          <h4 class="mb-4" data-i18n="p2_const">Nilai Konstan Gelombang</h4>
+          <div class="value-item-inline"><span class="val-label" data-i18n="p2_freq">Frekuensi (f)</span><span class="val-number-small">5.00 Hz</span></div>
+          <div class="value-item-inline"><span class="val-label" data-i18n="p2_lambda">Panjang Gelombang (λ)</span><span class="val-number-small">60.00 m</span></div>
+          <div class="value-item-inline"><span class="val-label" data-i18n="p2_amp">Amplitudo Maks</span><span class="val-number-small">2.00 m</span></div>
+          <div class="value-item-inline"><span class="val-label" data-i18n="p2_speed">Kecepatan (c)</span><span class="val-number-small">3×10⁸ m/s</span></div>
+        </div>
+
+        <div class="locked-card">
+          <h4 class="mb-2" data-i18n="p2_why">Kenapa nilai di atas tidak bisa diubah?</h4>
+          <p class="text-sm" data-i18n="p2_why_desc">Frekuensi dan panjang gelombang adalah identitas asli gelombang tersebut. Yang bergerak naik-turun (berubah) secara real-time hanyalah simpangan medan listrik dan magnetnya.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <button class="btn-text" data-goto="1">⬅ <span data-i18n="btn_back">Kembali ke Intro</span></button>
+      <div class="pagination">
+        <span class="dot active" data-goto="1">1</span><span class="line"></span>
+        <span class="dot active current" data-goto="2">2</span><span class="line dim"></span>
+        <span class="dot dim" data-goto="3">3</span><span class="line dim"></span>
+        <span class="dot dim" data-goto="4">4</span>
+      </div>
+      <button class="btn-text" data-goto="3"><span data-i18n="btn_next">Lanjut ke Spectrum (AR)</span> ➔</button>
+    </div>
+  </div>
+</section>
