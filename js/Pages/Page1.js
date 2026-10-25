@@ -7,8 +7,8 @@ export const i18n = {
     p1_e_title: "Medan Listrik (E)", p1_e_desc: "Bergetar naik turun",
     p1_b_title: "Medan Magnet (B)", p1_b_desc: "Bergetar tegak lurus terhadap E",
     p1_med_title: "Tanpa Medium", p1_med_desc: "Dapat merambat di ruang hampa",
-    p1_fact_title: "Tahukah Kamu?",
-    p1_fact_desc: "Teori elektromagnetik dikembangkan oleh <strong>James Clerk Maxwell (1862 - 1864)</strong> yang menyatakan bahwa perubahan medan listrik dan magnet dapat merambat sebagai gelombang.",
+    p1_fact_title: "Konsep Gelombang Elektromagnetik",
+    p1_fact_desc: "<strong>Gelombang elektromagnetik adalah gelombang yang tidak membutuhkan medium dalam perambatannya.</strong> &nbsp;&nbsp;&nbsp;&nbsp;Energi elektromagnetik merambat dalam gelombang melalui beberapa karakter seperti panjang gelombang, amplitudo, frekuensi, dan kecepatan. <br>&nbsp;&nbsp;&nbsp;&nbsp;Energi elektromagnetik dipancarkan atau dilepaskan pada level yang berbeda. Semakin tinggi level energi dalam suatu sumber energi, maka semakin rendah panjang gelombang dari energi yang dihasilkan akan tetapi semakin tinggi frekuensinya.",
     p1_ref: "Referensi Materi:",
     lbl_e: "Medan Listrik (E)", lbl_b: "Medan Magnet (B)", lbl_dir: "Arah Rambat",
     p1_form_title: "Hubungan Dasar",
@@ -22,7 +22,7 @@ export const i18n = {
     p1_e_title: "Electric Field (E)", p1_e_desc: "Oscillates up and down",
     p1_b_title: "Magnetic Field (B)", p1_b_desc: "Oscillates perpendicular to E",
     p1_med_title: "No Medium Needed", p1_med_desc: "Can travel through a vacuum",
-    p1_fact_title: "Did You Know?",
+    p1_fact_title: "Electromagnetic Waves Concept",
     p1_fact_desc: "The theory of electromagnetism was developed by <strong>James Clerk Maxwell (1862 - 1864)</strong>, showing that changes in electric and magnetic fields propagate as waves.",
     p1_ref: "Reference:",
     lbl_e: "Electric Field (E)", lbl_b: "Magnetic Field (B)", lbl_dir: "Propagation",
@@ -140,3 +140,4 @@ function placeLabel(vec, label, clampRight) {
   label.style.top = `${y}px`;
   label.style.opacity = 1;
 }
+

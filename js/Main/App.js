@@ -73,3 +73,33 @@ navigateToPage(1).catch((err) => {
     `<p style="padding:40px">⚠️ ${err.message}. Jalankan lewat server lokal (mis. Live Server di VS Code), bukan dengan membuka file langsung.</p>`;
   console.error(err);
 });
+
+// 1. Variabel penyimpan rekor halaman
+let maxPageReached = 1;
+
+// 2. Fungsi pengubah warna dan ikon
+function updateNavigation(currentPageNumber) {
+  if (currentPageNumber > maxPageReached) {
+    maxPageReached = currentPageNumber;
+  }
+
+  const navButtons = document.querySelectorAll('.nav-btn');
+  navButtons.forEach((btn) => {
+    let btnPageNum = parseInt(btn.getAttribute('data-goto'));
+    btn.classList.remove('active', 'completed');
+    
+    if (btnPageNum === currentPageNumber) {
+      btn.classList.add('active');
+    } else if (btnPageNum <= maxPageReached) {
+      btn.classList.add('completed');
+    }
+  });
+}
+
+// 3. TRIGGER PENTING: Jalankan fungsi di atas setiap kali tombol navigasi diklik
+document.querySelectorAll('.nav-btn').forEach(button => {
+  button.addEventListener('click', function() {
+    let targetPage = parseInt(this.getAttribute('data-goto'));
+    updateNavigation(targetPage);
+  });
+});

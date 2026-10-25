@@ -7,8 +7,8 @@ export const i18n = {
     p2_observe: "Lihat dan Pahami", p2_cant_change: "(Tidak Dapat Diubah)",
     p2_tt: "Gelombang merambat lurus dengan kecepatan konstan di ruang hampa.",
     btn_zin: "Zoom In", btn_zout: "Zoom Out",
-    p2_short: "Penjelasan Singkat",
-    p2_short_desc: "Gelombang elektromagnetik terdiri dari medan listrik (E) dan medan magnet (B) yang berosilasi secara bersamaan, saling tegak lurus, dan merambat ke depan dengan kecepatan cahaya (c). Kedua medan ini dapat merambat tanpa memerlukan medium, sehingga gelombang elektromagnetik dapat bergerak melalui ruang hampa. Gelombang ini juga membawa energi yang dapat dimanfaatkan dalam berbagai teknologi, seperti komunikasi radio, gelombang mikro, dan cahaya yang kita lihat sehari-hari.",
+    p2_short: "Sifat Gelombang Elektromagnetik",
+    p2_short_desc: "1. Merupakan gelombang transversal.<br>2. Merambat dalam ruang hampa.<br>3. Mengalami pemantulan (refleksi), pembiasan (refraksi), interferensi, difraksi, dan polarisasi.<br>4. Arah perambatannya tidak dibelokkan oleh medan magnet maupun medan listrik.<br>5. Terjadi perubahan medan listrik dan medan magnet yang berlangsung secara terus menerus.",
     p2_sensor: "Sensor Real-time", p2_rt_e: "Medan Listrik (E) Saat Ini", p2_rt_b: "Medan Magnet (B) Saat Ini",
     p2_const: "Nilai Konstan Gelombang",
     p2_freq: "Frekuensi (f)", p2_lambda: "Panjang Gelombang (λ)", p2_amp: "Amplitudo Maks", p2_speed: "Kecepatan (c)",
@@ -106,9 +106,55 @@ export function update(ts, dt) {
 
   ctx.clearRect(0, 0, w, h);
 
-  // Sumbu tengah
+  // Sumbu tengah (Sumbu X)
   ctx.beginPath(); ctx.moveTo(0, midY); ctx.lineTo(w, midY);
   ctx.strokeStyle = axisColor; ctx.lineWidth = 2; ctx.stroke();
+
+  // Atur gaya teks koordinat
+  ctx.fillStyle = isLight() ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.5)";
+  ctx.font = "bold 15px Arial";
+  ctx.textBaseline = "middle";
+
+  // Label sumbu X (nilai 0) ditaruh sedikit di atas garis tengah
+  ctx.fillText("0", 5, midY - 8);
+
+  ctx.strokeStyle = isLight() ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.1)";
+  ctx.lineWidth = 1;
+
+  // Nilai maksimum amplitudo UI adalah 2 * zoom
+  // Kita cari jarak piksel untuk setiap 1 unit angka
+  let pikselPerUnit = amp / (2 * zoom); 
+  let maxNilai = Math.floor(2 * zoom); // Jika zoom 2x, max nilainya 4
+
+  // Lakukan perulangan untuk menggambar grid 1, 2, 3... dst.
+  for (let i = 1; i <= maxNilai; i++) {
+    let jarakPiksel = i * pikselPerUnit;
+
+    // --- Bagian Atas (Nilai Positif) ---
+    let yAtas = midY - jarakPiksel;
+    ctx.beginPath(); 
+    ctx.moveTo(0, yAtas); 
+    ctx.lineTo(w, yAtas);
+    ctx.stroke();
+    
+    // Teks atas (Pastikan tidak keluar bingkai)
+    let labelYAtas = Math.max(8, yAtas);
+    ctx.fillText("+" + i, 5, labelYAtas);
+
+    // --- Bagian Bawah (Nilai Negatif) ---
+    let yBawah = midY + jarakPiksel;
+    ctx.beginPath(); 
+    ctx.moveTo(0, yBawah); 
+    ctx.lineTo(w, yBawah);
+    ctx.stroke();
+    
+    // Teks bawah (Pastikan tidak keluar bingkai)
+    let labelYBawah = Math.min(h - 8, yBawah);
+    ctx.fillText("-" + i, 5, labelYBawah);
+  }
+  
+  // Kembalikan baseline ke pengaturan standar
+  ctx.textBaseline = "alphabetic";
 
   // E (cyan) dan B (ungu, setengah amplitudo & berlawanan arah)
   ctx.lineWidth = 3.5;

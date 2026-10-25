@@ -16,6 +16,12 @@
   display: flex; gap: 20px; align-items: center; background: var(--card-bg); border: 1px solid var(--border);
   border-radius: 16px; padding: 20px; margin-top: 20px; transition: background-color 0.3s;
 }
+
+.maxwell-card p {
+  text-indent: 2em; /* Membuat baris pertama menjorok ke dalam */
+  text-align: justify; /* Opsional: agar teks rata kiri-kanan */
+}
+
 .maxwell-img { width: 90px; height: auto; border-radius: 10px; filter: grayscale(100%); opacity: 0.8; }
 .info-header { font-weight: 600; color: var(--primary); margin-bottom: 8px; font-size: 1.1rem; }
 .maxwell-card p { font-size: 1rem; color: var(--text-muted); line-height: 1.6; }

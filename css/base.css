@@ -150,3 +150,27 @@ body {
   .container { flex-direction: column; }
   .top-header { flex-wrap: wrap; gap: 20px; }
 }
+
+/* Status halaman yang sedang dibuka */
+.nav-btn.active .badge {
+  background-color: #3b82f6; 
+  color: white;
+}
+
+/* Status halaman yang sudah dilewati */
+.nav-btn.completed .badge {
+  background-color: #10b981; 
+  color: transparent;
+  position: relative;
+}
+
+/* Mengubah angka menjadi ikon centang untuk yang sudah selesai */
+.nav-btn.completed .badge::after {
+  content: "✔";
+  color: white;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+}
