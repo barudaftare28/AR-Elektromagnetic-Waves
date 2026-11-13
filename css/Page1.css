@@ -1,25 +1,31 @@
-/* --- TATA LETAK & TEMA PAGE 1 --- */
 .page1-container {
-    padding: 20px;
-    font-family: 'Arial', sans-serif;
-    color: var(--text-color);
-    width: 100%; /* Memaksa kontainer memenuhi lebar layar */
-    box-sizing: border-box; /* Mencegah padding merusak ukuran lebar */
-    margin: 0 auto; /* Otomatis ke tengah */
+    max-width: 1400px; /* Dikunci agar lebarnya sama persis dengan halaman lain */
+    margin: 0 auto;
+    padding: 40px; /* Samakan padding dengan halaman utama lainnya */
+    box-sizing: border-box;
+    width: 100%;
+    color: var(--text-main);
 }
 
 .top-section {
     display: flex;
-    gap: 20px;
+    gap: 30px; /* Jarak antar kolom kiri dan kanan */
     margin-bottom: 20px;
+    width: 100%;
 }
 
 .left-card {
     flex: 1;
+    width: 50%; /* Membagi rata lebar kolom kiri */
+    min-width: 0; /* Mencegah elemen flex melar keluar */
+    display: flex;
+    flex-direction: column;
 }
 
 .right-column {
     flex: 1;
+    width: 50%; /* Membagi rata lebar kolom kanan */
+    min-width: 0;
     display: flex;
     flex-direction: column;
     gap: 20px;
