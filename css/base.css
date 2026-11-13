@@ -171,14 +171,14 @@ body {
 }
 
 /* Status halaman yang sudah dilewati */
-.nav-btn.completed .badge {
+/* .nav-btn.completed .badge {
   background-color: #10b981; 
   color: transparent;
   position: relative;
-}
+} */
 
 /*Mengubah angka menjadi ikon centang untuk yang sudah selesai*/
-.nav-btn.completed .badge::after {
+/* .nav-btn.completed .badge::after {
   content: "✔";
   color: white;
   position: absolute;
@@ -186,4 +186,4 @@ body {
   top: 50%;
   transform: translate(-50%, -50%);
   font-size: 12px;
-}
+} */
