@@ -177,7 +177,7 @@ body {
   position: relative;
 }
 
-/* Mengubah angka menjadi ikon centang untuk yang sudah selesai
+/*Mengubah angka menjadi ikon centang untuk yang sudah selesai*/
 .nav-btn.completed .badge::after {
   content: "✔";
   color: white;
@@ -186,4 +186,4 @@ body {
   top: 50%;
   transform: translate(-50%, -50%);
   font-size: 12px;
-} */
+}
