@@ -33,111 +33,163 @@ export const i18n = {
   },
 };
 
-const N = 150; // jumlah titik gelombang
-let container, scene, camera, renderer, axisMat;
-let geoE, geoB, linesE, linesB;
-let time = 0;
-const el = {};
+(function initWaveSimulation() {
+    const canvas = document.getElementById('waveCanvas');
+    const sliderF = document.getElementById('slider-f');
+    const displayF = document.getElementById('display-f');
+    const displayLambda = document.getElementById('display-lambda');
 
-function makeLine(geo, color) {
-  return new THREE.Line(geo, new THREE.LineBasicMaterial({ color }));
-}
-function makeSticks(color) {
-  const s = new THREE.LineSegments(
-    new THREE.BufferGeometry(),
-    new THREE.LineBasicMaterial({ color, opacity: 0.4, transparent: true })
-  );
-  s.geometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(N * 6), 3));
-  return s;
-}
-function makePoints() {
-  const g = new THREE.BufferGeometry();
-  g.setAttribute("position", new THREE.BufferAttribute(new Float32Array(N * 3), 3));
-  return g;
-}
+    // JIKA elemen canvas belum ada (misal karena halaman di-load dinamis), tunggu 100ms dan cek lagi
+    if (!canvas || !sliderF) {
+        setTimeout(initWaveSimulation, 100);
+        return;
+    }
 
-export function init() {
-  container = document.getElementById("wave-container-1");
-  if (!container) return;
-  el.e = document.getElementById("label-e");
-  el.b = document.getElementById("label-b");
-  el.dir = document.getElementById("label-dir");
+    const ctx = canvas.getContext('2d');
+    const C = 300000000; // Kecepatan cahaya konstan m/s
+    let currentFreq = parseFloat(sliderF.value);
+    let timeOffset = 0;
+    
+    // Variabel untuk Swipe/Drag
+    let isDragging = false;
+    let lastMouseX = 0;
 
-  scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 100);
-  camera.position.set(6, 3, 7);
-  camera.lookAt(0, 0, 0);
+    function updateValues() {
+        let freqHz = currentFreq * 1000; 
+        let lambda = C / freqHz;
+        displayF.innerHTML = currentFreq.toFixed(2) + " kHz";
+        displayLambda.innerHTML = lambda.toFixed(2) + " m";
+    }
 
-  renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-  renderer.setSize(container.clientWidth, container.clientHeight);
-  container.appendChild(renderer.domElement);
+    sliderF.addEventListener('input', function() {
+        currentFreq = parseFloat(this.value);
+        updateValues();
+    });
 
-  axisMat = new THREE.LineBasicMaterial({ color: 0xffffff, opacity: 0.5, transparent: true });
-  scene.add(new THREE.Line(
-    new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-6, 0, 0), new THREE.Vector3(6, 0, 0)]),
-    axisMat
-  ));
+    canvas.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        lastMouseX = e.clientX;
+    });
 
-  geoE = makePoints();
-  geoB = makePoints();
-  linesE = makeSticks(0x06b6d4);
-  linesB = makeSticks(0x8b5cf6);
-  scene.add(makeLine(geoE, 0x06b6d4), makeLine(geoB, 0x8b5cf6), linesE, linesB);
+    window.addEventListener('mouseup', () => {
+        isDragging = false;
+    });
 
-  window.addEventListener("themeChanged", applyTheme);
-  window.addEventListener("resize", onResize);
-  applyTheme();
-}
+    window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        let deltaX = e.clientX - lastMouseX;
+        lastMouseX = e.clientX;
+        currentFreq += deltaX * 2; 
 
-function applyTheme() {
-  const light = document.body.classList.contains("light-mode");
-  axisMat.color.setHex(light ? 0x000000 : 0xffffff);
-  axisMat.opacity = light ? 0.3 : 0.5;
-}
+        if(currentFreq < parseInt(sliderF.min)) currentFreq = parseInt(sliderF.min);
+        if(currentFreq > parseInt(sliderF.max)) currentFreq = parseInt(sliderF.max);
 
-function onResize() {
-  if (!renderer || container.clientWidth === 0) return;
-  camera.aspect = container.clientWidth / container.clientHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(container.clientWidth, container.clientHeight);
-}
+        sliderF.value = currentFreq;
+        updateValues();
+    });
 
-export function update(ts, dt) {
-  if (!renderer || container.offsetParent === null) return;
-  time += dt * 2.4; // kecepatan sama dengan versi lama (0.04/frame @60fps), tapi tidak tergantung FPS
+    // Mencegah penumpukan frame jika script terpanggil lebih dari sekali
+    if (window.waveAnimFrame) cancelAnimationFrame(window.waveAnimFrame);
 
-  const pE = geoE.attributes.position.array, pB = geoB.attributes.position.array;
-  const sE = linesE.geometry.attributes.position.array, sB = linesB.geometry.attributes.position.array;
-  const peakE = new THREE.Vector3(), peakB = new THREE.Vector3();
+ 
+function drawSimulation() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // 1. CEK LIGHT MODE (Berdasarkan CSS yang kamu pakai)
+    // Jika body memiliki class 'light-mode', berarti sedang mode terang.
+    let isLight = document.body.classList.contains('light-mode') || 
+                  document.documentElement.classList.contains('light-mode');
+                  
+    // Karena default CSS-mu adalah dark mode, maka isDark kebalikan dari isLight
+    let isDark = !isLight;
 
-  for (let i = 0; i < N; i++) {
-    const x = (i / N) * 11 - 5.5;
-    const v = Math.sin(x * 1.5 - time) * 1.5;
+    // 2. SET WARNA (Light mode = teks hitam, Dark mode = teks putih)
+    let textColor = isDark ? "#ffffff" : "#000000"; 
+    
+    // Warna untuk Garis Sumbu (Tengah)
+    let axisColor = isDark ? "rgba(255, 255, 255, 0.4)" : "rgba(0, 0, 0, 0.4)";
+    
+    // Warna untuk Grid Kotak-Kotak (Gunakan opacity rendah agar tidak menutupi gelombang)
+    let gridColor = isDark ? "rgba(255, 255, 255, 0.15)" : "rgba(0, 0, 0, 0.15)";
 
-    pE.set([x, v, 0], i * 3);           // E bergetar pada sumbu Y
-    pB.set([x, 0, v], i * 3);           // B bergetar pada sumbu Z (tegak lurus E)
-    sE.set([x, 0, 0, x, v, 0], i * 6);
-    sB.set([x, 0, 0, x, 0, v], i * 6);
+    const midY = canvas.height / 2;
+    const midX = canvas.width / 2;
+        
+        // 1. BESARKAN GELOMBANG (Amplitudo dinaikkan ke 135)
+        let amplitude = 135; 
 
-    if (i === 70) peakE.set(x, v + 0.8, 0);
-    if (i === 35) peakB.set(x, 0, v + 0.8);
-  }
-  [geoE, geoB, linesE.geometry, linesB.geometry].forEach((g) => (g.attributes.position.needsUpdate = true));
-  renderer.render(scene, camera);
+        // 2. GAMBAR GRID
+        ctx.beginPath();
+        ctx.globalAlpha = 1.0;
+        ctx.strokeStyle = gridColor; 
+        ctx.lineWidth = 1;
+        for(let i=0; i<canvas.width; i+=40) { ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); }
+        for(let i=0; i<canvas.height; i+=40) { ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); }
+        ctx.stroke();
 
-  placeLabel(peakE, el.e);
-  placeLabel(peakB, el.b);
-  placeLabel(new THREE.Vector3(4, 2, 0), el.dir, true);
-}
+        // 3. GAMBAR GELOMBANG MERAH
+        ctx.beginPath();
+        ctx.strokeStyle = "#ff4757"; 
+        ctx.lineWidth = 4;
+        let visualFreq = (Math.PI * 2 * currentFreq) / 100000; 
+        for(let x = 0; x <= canvas.width; x++) {
+            let y = midY - amplitude * Math.sin((x - midX) * visualFreq - timeOffset);
+            if(x === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
 
-function placeLabel(vec, label, clampRight) {
-  const w = container.clientWidth, h = container.clientHeight;
-  vec.project(camera);
-  let x = (vec.x * 0.5 + 0.5) * w;
-  const y = (vec.y * -0.5 + 0.5) * h;
-  if (clampRight && x > w - 140) x = w - 140; // cegah label terpotong di tepi kanan
-  label.style.left = `${x}px`;
-  label.style.top = `${y}px`;
-  label.style.opacity = 1;
-}
+        // 4. GARIS SUMBU UTAMA
+        ctx.beginPath();
+        ctx.strokeStyle = axisColor; 
+        ctx.lineWidth = 1.5;
+        
+        ctx.moveTo(0, midY); ctx.lineTo(canvas.width, midY); 
+        ctx.moveTo(midX, 0); ctx.lineTo(midX, canvas.height); 
 
+        ctx.moveTo(midX - 5, midY - amplitude); ctx.lineTo(midX + 5, midY - amplitude);
+        ctx.moveTo(midX - 5, midY + amplitude); ctx.lineTo(midX + 5, midY + amplitude);
+
+        let stepX = 100;
+        let meterPerStep = 300;
+        
+        for(let x = midX + stepX; x < canvas.width; x += stepX) {
+            ctx.moveTo(x, midY - 5); ctx.lineTo(x, midY + 5);
+        }
+        for(let x = midX - stepX; x > 0; x -= stepX) {
+            ctx.moveTo(x, midY - 5); ctx.lineTo(x, midY + 5);
+        }
+        ctx.stroke();
+
+        // 5. TEKS KOORDINAT (Warna dipaksa Solid Putih)
+        ctx.globalAlpha = 1.0; // Pastikan teks tidak ikut transparan
+        ctx.fillStyle = textColor; 
+        ctx.font = "bold 13px Arial"; 
+        
+        ctx.textAlign = "right";
+        ctx.textBaseline = "middle";
+        ctx.fillText("1", midX - 10, midY - amplitude);
+        ctx.fillText("-1", midX - 10, midY + amplitude);
+        
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        ctx.fillText("0 m", midX + 15, midY + 10); 
+
+        let distance = meterPerStep;
+        for(let x = midX + stepX; x < canvas.width; x += stepX) {
+            ctx.fillText(distance + " m", x, midY + 10); 
+            distance += meterPerStep;
+        }
+        
+        distance = -meterPerStep;
+        for(let x = midX - stepX; x > 0; x -= stepX) {
+            ctx.fillText(distance + " m", x, midY + 10); 
+            distance -= meterPerStep;
+        }
+
+        timeOffset += 0.05;
+        window.waveAnimFrame = requestAnimationFrame(drawSimulation);
+    }
+    updateValues();
+    drawSimulation();
+})();

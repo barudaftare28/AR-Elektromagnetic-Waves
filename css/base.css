@@ -95,10 +95,23 @@ body {
 }
 .nav-btn.active { background: var(--primary); color: white; }
 .badge {
-  background: var(--card-bg); color: var(--text-muted); border-radius: 50%; width: 24px; height: 24px;
-  display: inline-flex; justify-content: center; align-items: center; font-size: 0.85rem;
+  background: var(--card-bg); 
+  /* Paksa warna teks menggunakan --text-main agar selalu kontras dengan card-bg */
+  color: var(--text-main) !important; 
+  border-radius: 50%; width: 24px; height: 24px;
+  display: inline-flex; justify-content: center; align-items: center; 
+  font-size: 0.85rem;
+  /* Tambahkan sedikit border agar batas lingkaran tegas di light mode */
+  border: 1px solid var(--border); 
 }
-.nav-btn.active .badge { background: white; color: var(--primary); font-weight: bold; }
+
+/* Saat menu aktif (biru), teks badge kembali disesuaikan */
+.nav-btn.active .badge { 
+  background: white !important; 
+  color: var(--primary) !important; 
+  font-weight: bold; 
+  border: none; /* Hilangkan border saat aktif */
+}
 .top-actions { display: flex; gap: 15px; }
 .action-btn {
   background: transparent; border: 1px solid var(--border); color: var(--text-main);
@@ -164,7 +177,7 @@ body {
   position: relative;
 }
 
-/* Mengubah angka menjadi ikon centang untuk yang sudah selesai */
+/*Mengubah angka menjadi ikon centang untuk yang sudah selesai*/
 .nav-btn.completed .badge::after {
   content: "✔";
   color: white;
