@@ -1,85 +1,300 @@
-<!-- PAGE 2: WAVE LAB (SIMULASI 2D) -->
+<!-- PAGE 2: MEDAN LISTRIK, MEDAN MAGNET, DAN GELOMBANG ELEKTROMAGNETIK -->
+<!-- TAHAP 1: hanya Box 1 (Medan Listrik). Box 2 dan Box 3 ditambahkan di tahap berikutnya. -->
 <section id="page-2" class="page">
   <div class="container container-p2">
+
+    <!-- HEADER -->
     <div class="p2-header">
       <div class="tag-header no-margin">
         <span class="tag bg-blue">PAGE 2</span>
         <div>
           <h2 class="p2-title">WAVE LAB <span class="dim-text" data-i18n="p2_sim">(SIMULASI)</span></h2>
-          <p class="p2-subtitle" data-i18n="p2_desc">Amati gelombang elektromagnetik dan pahami sifat-sifatnya.</p>
+          <p class="p2-subtitle" data-i18n="p2_desc">Pelajari medan listrik dan medan magnet, lalu lihat bagaimana keduanya membentuk gelombang elektromagnetik.</p>
         </div>
-      </div>
-      <div class="p2-controls">
-        <button id="btn-reset" class="btn-outline">🔄 <span data-i18n="btn_reset">RESET</span></button>
-        <button id="btn-pause" class="btn-outline"><span id="pause-icon">⏸</span> <span id="pause-label" data-i18n="btn_pause">PAUSE</span></button>
       </div>
     </div>
 
-    <div class="p2-body">
-      <div class="p2-main">
-        <div class="canvas-card">
-          <div class="canvas-header">
-            <span><span data-i18n="p2_observe">Lihat dan Pahami</span> <span class="dim-text" data-i18n="p2_cant_change">(Tidak Dapat Diubah)</span></span>
-            <div class="tooltip-container">
-              <span class="icon-info">i</span>
-              <div class="tooltip" data-i18n="p2_tt">Gelombang merambat lurus dengan kecepatan konstan di ruang hampa.</div>
+    <!-- BOX 1 DAN BOX 2 (BERSEBELAHAN) -->
+    <div class="p2-fields">
+
+      <!-- BOX 1: MEDAN LISTRIK -->
+      <article class="p2-box" id="box-e">
+        <h3 class="p2-box-title cyan-text" data-i18n="p2_e_title">Medan Listrik (E)</h3>
+        <p class="text-lg" data-i18n="p2_e_intro">Medan listrik adalah daerah di sekitar muatan listrik tempat muatan lain merasakan gaya. Muatan positif menghasilkan medan yang arahnya menjauhi muatan, sedangkan muatan negatif menghasilkan medan yang arahnya menuju muatan.</p>
+
+        <!-- Kartu rumus + keterangan -->
+        <div class="sub-card">
+          <h4 data-i18n="p2_formula">Rumus</h4>
+
+          <div class="formula-pair">
+            <div class="formula-eq">E = F / q</div>
+            <div class="formula-eq">E = k · Q / r²</div>
+          </div>
+
+          <ul class="legend">
+            <li>
+              <span class="leg-sym">E</span>
+              <span class="leg-name" data-i18n="p2_e_leg_E">Kuat Medan Listrik</span>
+              <span class="leg-unit">N/C</span>
+            </li>
+            <li>
+              <span class="leg-sym">F</span>
+              <span class="leg-name" data-i18n="p2_e_leg_F">Gaya Listrik Pada Muatan Uji</span>
+              <span class="leg-unit">N</span>
+            </li>
+            <li>
+              <span class="leg-sym">q</span>
+              <span class="leg-name" data-i18n="p2_e_leg_qt">Muatan Uji</span>
+              <span class="leg-unit">C</span>
+            </li>
+            <li>
+              <span class="leg-sym">k</span>
+              <span class="leg-name" data-i18n="p2_e_leg_k">Konstanta Coulomb</span>
+              <span class="leg-unit">9 × 10⁹ N·m²/C²</span>
+            </li>
+            <li>
+              <span class="leg-sym">Q</span>
+              <span class="leg-name" data-i18n="p2_e_leg_qs">Muatan Sumber</span>
+              <span class="leg-unit">C</span>
+            </li>
+            <li>
+              <span class="leg-sym">r</span>
+              <span class="leg-name" data-i18n="p2_e_leg_r">Jarak Dari Muatan Sumber</span>
+              <span class="leg-unit">m</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Kartu simulasi interaktif -->
+        <div class="sub-card">
+          <h4 data-i18n="p2_sim_title">Simulasi</h4>
+
+          <div class="sim-stage">
+            <canvas id="e-canvas" class="sim-canvas" aria-hidden="true"></canvas>
+
+            <!-- 1. kotak muatan: anak langsung .sim-stage -->
+            <div class="sim-charge" role="group">
+              <span class="sim-charge-label" data-i18n="p2_e_q">Muatan</span>
+              <div class="charge-toggle">
+                <button type="button" class="charge-btn pos active" data-sign="1" aria-pressed="true">+</button>
+                <button type="button" class="charge-btn neg" data-sign="-1" aria-pressed="false">−</button>
+              </div>
+            </div>
+
+            <!-- 2. kolom kanan: juga anak langsung .sim-stage -->
+            <div class="sim-overlay">
+              <div class="sim-result res-cyan">
+                <span data-i18n="p2_e_out">Kuat medan E</span>
+                <strong id="e-out" aria-live="polite">--</strong>
+              </div>
+
+              <div class="sim-control stack">
+                <label for="e-r" data-i18n="p2_e_r">Jarak (r)</label>
+                <input type="range" id="e-r" class="p2-slider accent-cyan" min="0.1" max="5" step="0.1" value="1" />
+                <output id="e-r-val" for="e-r">1.0 m</output>
+              </div>
             </div>
           </div>
 
+          <p class="text-sm">
+            <span data-i18n="p2_e_qlabel">Muatan sumber</span> Q = <strong id="e-q-val">1 µC</strong>
+            <span data-i18n="p2_e_note">(besarnya tetap). Tombol + dan − mengganti jenis muatan, tanda − pada nilai E berarti arah medan menuju muatan sedangkan + (tidak ada tanda) pada nilai E berarti arah medan menjauhi muatan . Panjang panah bersifat skematis, sedangkan angka hasil dihitung dengan rumus.</span>
+          </p>
+        </div>
+
+        <!-- Kartu materi -->
+                <!-- Kartu materi -->
+        <div class="sub-card mat-card">
+          <h4 data-i18n="p2_mat_title">Memahami rumus</h4>
+          <p class="text-lg" data-i18n="p2_e_mat_1">E = F/q berarti kuat medan adalah gaya yang dialami setiap satu satuan muatan uji.</p>
+          <p class="text-lg" data-i18n="p2_e_mat_2">Pada E = k·Q/r², jarak dua kali lebih jauh membuat E menjadi seperempatnya, sehingga medan melemah dengan cepat saat menjauh.</p>
+          <p class="text-lg" data-i18n="p2_e_mat_3">Medan listrik yang berubah terhadap waktu menimbulkan medan magnet. Inilah salah satu dasar terbentuknya gelombang elektromagnetik.</p>
+        </div>
+      </article>
+
+      <!-- TAHAP 2: BOX 2 (MEDAN MAGNET) DITAMBAHKAN DI SINI -->
+             <!-- BOX 2: MEDAN MAGNET -->
+      <article class="p2-box" id="box-b">
+        <h3 class="p2-box-title purple-text" data-i18n="p2_b_title">Medan Magnet (B)</h3>
+        <p class="text-lg" data-i18n="p2_b_intro">Medan magnet adalah daerah di sekitar magnet atau arus listrik tempat muncul gaya magnetik. Di sekitar kawat lurus berarus, garis medan magnet berbentuk lingkaran yang mengelilingi kawat.</p>
+
+        <div class="sub-card">
+          <h4 data-i18n="p2_formula">Rumus</h4>
+
+          <div class="formula-pair single">
+            <div class="formula-eq">B = μ<sub>0</sub> · I / (2π · r)</div>
+          </div>
+
+          <ul class="legend">
+            <li>
+              <span class="leg-sym">B</span>
+              <span class="leg-name" data-i18n="p2_b_leg_B">Kuat Medan Magnet</span>
+              <span class="leg-unit">T</span>
+            </li>
+            <li>
+              <span class="leg-sym">I</span>
+              <span class="leg-name" data-i18n="p2_b_leg_I">Kuat Arus Listrik</span>
+              <span class="leg-unit">A</span>
+            </li>
+            <li>
+              <span class="leg-sym">r</span>
+              <span class="leg-name" data-i18n="p2_b_leg_r">Jarak dari Kawat</span>
+              <span class="leg-unit">m</span>
+            </li>
+            <li>
+              <span class="leg-sym">μ<sub>0</sub></span>
+              <span class="leg-name" data-i18n="p2_b_leg_mu">Permeabilitas Ruang Hampa</span>
+              <span class="leg-unit">4π × 10⁻⁷ T·m/A</span>
+            </li>
+          </ul>
+        </div>
+
+                <div class="sub-card">
+          <h4 data-i18n="p2_sim_title">Simulasi</h4>
+
+          <div class="sim-stage">
+            <canvas id="b-canvas" class="sim-canvas" aria-hidden="true"></canvas>
+
+             <!-- Pengatur arah arus -->
+            <div class="sim-charge" id="b-dir-box" role="group">
+              <span class="sim-charge-label" data-i18n="p2_b_dir">Arah arus</span>
+              <div class="charge-toggle">
+                <button type="button" class="dir-btn active" data-dir="1" aria-pressed="true" aria-label="Keluar layar">⊙</button>
+                <button type="button" class="dir-btn" data-dir="-1" aria-pressed="false" aria-label="Masuk layar">⊗</button>
+              </div>
+              <span class="dir-cap" id="b-dir-cap" data-i18n="p2_b_dir_out">Keluar layar</span>
+            </div>
+
+            <!-- kolom kanan atas: kuat medan B, arus, jarak (anak langsung .sim-stage) -->
+            <div class="sim-overlay overlay-b" id="b-overlay">
+              <div class="sim-result res-purple">
+                <span data-i18n="p2_b_out">Kuat medan B</span>
+                <strong id="b-out" aria-live="polite">--</strong>
+              </div>
+
+              <div class="sim-control stack">
+                <label for="b-i" data-i18n="p2_b_i">Arus (I)</label>
+                <input type="range" id="b-i" class="p2-slider accent-purple" min="0" max="20" step="0.5" value="5" />
+                <output id="b-i-val" for="b-i">5.0 A</output>
+              </div>
+
+              <div class="sim-control stack">
+                <label for="b-r" data-i18n="p2_b_r">Jarak (r)</label>
+                <input type="range" id="b-r" class="p2-slider accent-purple" min="0.01" max="1" step="0.01" value="0.1" />
+                <output id="b-r-val" for="b-r">0.10 m</output>
+              </div>
+            </div>
+          </div>
+          
+          <p class="text-sm" id="b-note" data-i18n="p2_b_note">Arus mengalir keluar dari layar, sehingga garis medan berputar berlawanan arah jarum jam (kaidah tangan kanan). Tanda panah yang bergerak hanya ilustrasi arah medan, dan makin cepat saat arus makin besar atau titik makin dekat kawat. Panjang panah bersifat skematis.</p>
+        </div>
+
+        <div class="sub-card mat-card">
+          <h4 data-i18n="p2_mat_title">Memahami rumus</h4>
+          <p class="text-lg" data-i18n="p2_b_mat_1">Arus yang lebih besar menghasilkan medan yang lebih kuat: I dua kali lipat membuat B dua kali lipat.</p>
+          <p class="text-lg" data-i18n="p2_b_mat_2">Semakin jauh dari kawat, medan semakin lemah: jarak dua kali lebih jauh membuat B menjadi setengahnya.</p>
+          <p class="text-lg" data-i18n="p2_b_mat_3">Sebaliknya, medan magnet yang berubah terhadap waktu menimbulkan medan listrik (induksi Faraday). Keduanya saling melengkapi.</p>
+          <p class="text-lg" data-i18n="p2_b_mat_4"></p>
+        </div>
+      </article>
+    </div>
+
+        <!-- BOX 3: GELOMBANG ELEKTROMAGNETIK -->
+    <article class="p2-box" id="box-wave">
+                  <div class="canvas-header">
+        <h3 class="p2-box-title" data-i18n="p2_w_title">Gelombang Elektromagnetik</h3>
+        <div class="tooltip-container">
+          <span class="icon-info" tabindex="0">i</span>
+          <div class="tooltip" data-i18n="p2_tt">Gelombang merambat lurus dengan kecepatan konstan di ruang hampa.</div>
+        </div>
+      </div>
+
+      <!-- Satu baris: tiga tombol tampilan gelombang, garis pemisah, lalu Reset dan Pause -->
+      <div class="wave-toolbar">
+        <div class="wave-tabs" role="group" aria-label="Tampilan gelombang">
+          <button type="button" class="wave-tab" data-mode="e" aria-pressed="false" data-i18n="p2_tab_e">Medan Listrik</button>
+          <button type="button" class="wave-tab" data-mode="b" aria-pressed="false" data-i18n="p2_tab_b">Medan Magnet</button>
+          <button type="button" class="wave-tab active" data-mode="eb" aria-pressed="true" data-i18n="p2_tab_eb">Gelombang Elektromagnetik</button>
+        </div>
+        <span class="toolbar-sep" aria-hidden="true"></span>
+        <div class="toolbar-actions">
+          <button id="btn-reset" class="btn-outline btn-sm">🔄 <span data-i18n="btn_reset">RESET</span></button>
+          <button id="btn-pause" class="btn-outline btn-sm"><span id="pause-icon">⏸</span> <span id="pause-label" data-i18n="btn_pause">PAUSE</span></button>
+        </div>
+      </div>
+
+      <div class="wave-grid">
+        <!-- Kiri: grafik, box kontrol, catatan -->
+        <div class="wave-main">
           <div class="canvas-wrapper">
             <div class="y-labels">
-              <span class="cyan-text font-bold">E</span>
-              <span class="purple-text font-bold">B</span>
+              <span class="cyan-text font-bold" data-i18n="p2_leg_e">E (vertikal, V/m)</span>
+              <span class="purple-text font-bold" data-i18n="p2_leg_b">B (masuk-keluar layar)</span>
             </div>
-            <canvas id="wave-canvas-2d"></canvas>
+            <canvas id="wave-canvas-2d" aria-hidden="true"></canvas>
           </div>
 
-          <div class="zoom-controls">
-            <span class="zoom-label">ZOOM:</span>
-            <button class="zoom-btn action" id="z-out">🔍 - <span data-i18n="btn_zout">Zoom Out</span></button>
-            <div class="zoom-presets">
-              <button class="zoom-btn" id="z-05">0.5x</button>
-              <button class="zoom-btn active" id="z-1">1x</button>
-              <button class="zoom-btn" id="z-2">2x</button>
+          <!-- BOX GABUNGAN: zoom + slider (garis hijau) -->
+          <div class="wave-controls">
+            <div class="zoom-controls">
+              <span class="zoom-label">ZOOM</span>
+              <button class="zoom-btn action" id="z-out">🔍 - <span data-i18n="btn_zout">Zoom Out</span></button>
+              <div class="zoom-presets">
+                <button class="zoom-btn" id="z-05">0.5x</button>
+                <button class="zoom-btn active" id="z-1">1x</button>
+                <button class="zoom-btn" id="z-2">2x</button>
+              </div>
+              <button class="zoom-btn action" id="z-in">🔍 + <span data-i18n="btn_zin">Zoom In</span></button>
             </div>
-            <button class="zoom-btn action" id="z-in">🔍 + <span data-i18n="btn_zin">Zoom In</span></button>
+
+            <div class="wave-sliders">
+              <div class="sim-control stack">
+                <label for="sl-wave-f" data-i18n="p2_wave_f">Frekuensi f</label>
+                <input type="range" id="sl-wave-f" class="p2-slider accent-cyan" min="0.5" max="3" step="0.1" value="1" />
+                <output id="sl-wave-f-val" for="sl-wave-f">1.0×</output>
+              </div>
+              <div class="sim-control stack">
+                <label for="sl-wave-speed" data-i18n="p2_wave_speed">Kecepatan animasi</label>
+                <input type="range" id="sl-wave-speed" class="p2-slider accent-orange" min="0.25" max="3" step="0.25" value="1" />
+                <output id="sl-wave-speed-val" for="sl-wave-speed">1×</output>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="info-card colored-bg">
-          <h4 class="cyan-text mb-2" data-i18n="p2_short">Penjelasan Singkat</h4>
-          <p class="text-lg" data-i18n="p2_short_desc">Gelombang elektromagnetik terdiri dari medan listrik (E) dan medan magnet (B) yang berosilasi secara bersamaan, saling tegak lurus, dan merambat ke depan dengan kecepatan cahaya (c). Kedua medan ini dapat merambat tanpa memerlukan medium, sehingga gelombang elektromagnetik dapat bergerak melalui ruang hampa. Gelombang ini juga membawa energi yang dapat dimanfaatkan dalam berbagai teknologi, seperti komunikasi radio, gelombang mikro, dan cahaya yang kita lihat sehari-hari.</p>
+        <!-- Kanan: sensor saja -->
+        <div class="wave-side">
+          <div class="values-card dynamic-card">
+            <h4 class="mb-4"><span data-i18n="p2_sensor">Sensor Real-time</span> 📡</h4>
+            <div class="value-item">
+              <span class="val-label" data-i18n="p2_rt_e">Medan Listrik (E) Saat Ini</span>
+              <span class="val-number cyan-text" id="rt-e">0.00 <span class="val-unit">V/m</span></span>
+            </div>
+            <div class="value-item">
+              <span class="val-label" data-i18n="p2_rt_b">Medan Magnet (B) Saat Ini</span>
+              <span class="val-number purple-text" id="rt-b">0.00 <span class="val-unit">nT</span></span>
+            </div>
+            <p class="text-sm" data-i18n="p2_sensor_note">Nilai dibaca pada garis putus-putus di grafik. Di ruang hampa B = E/c, sehingga B bernilai sangat kecil (dalam nT).</p>
+          </div>
+
+            <div class="note-card">
+              <p class="text-sm" data-i18n="p2_note_zoom"></p>
+              <p class="text-sm" data-i18n="p2_note"></p>
+            </div>
+
         </div>
       </div>
 
-      <div class="p2-sidebar">
-        <div class="values-card dynamic-card">
-          <h4 class="mb-4"><span data-i18n="p2_sensor">Sensor Real-time</span> 📡</h4>
-          <div class="value-item">
-            <span class="val-label" data-i18n="p2_rt_e">Medan Listrik (E) Saat Ini</span>
-            <span class="val-number cyan-text" id="rt-e">0.00 <span class="val-unit">V/m</span></span>
-          </div>
-          <div class="value-item">
-            <span class="val-label" data-i18n="p2_rt_b">Medan Magnet (B) Saat Ini</span>
-            <span class="val-number purple-text" id="rt-b">0.00 <span class="val-unit">T</span></span>
-          </div>
-        </div>
-
-        <div class="values-card">
-          <h4 class="mb-4" data-i18n="p2_const">Nilai Konstan Gelombang</h4>
-          <div class="value-item-inline"><span class="val-label" data-i18n="p2_freq">Frekuensi (f)</span><span class="val-number-small">5.00 Hz</span></div>
-          <div class="value-item-inline"><span class="val-label" data-i18n="p2_lambda">Panjang Gelombang (λ)</span><span class="val-number-small">60.00 m</span></div>
-          <div class="value-item-inline"><span class="val-label" data-i18n="p2_amp">Amplitudo Maks</span><span class="val-number-small">2.00 m</span></div>
-          <div class="value-item-inline"><span class="val-label" data-i18n="p2_speed">Kecepatan (c)</span><span class="val-number-small">3×10⁸ m/s</span></div>
-        </div>
-
-        <div class="locked-card">
-          <h4 class="mb-2" data-i18n="p2_why">Kenapa nilai di atas tidak bisa diubah?</h4>
-          <p class="text-sm" data-i18n="p2_why_desc">Frekuensi dan panjang gelombang adalah identitas asli gelombang tersebut. Yang bergerak naik-turun (berubah) secara real-time hanyalah simpangan medan listrik dan magnetnya.</p>
-        </div>
+      <!-- Penjelasan pembentukan gelombang elektromagnetik -->
+      <div class="sub-card">
+        <h4 data-i18n="p2_how_title">Bagaimana gelombang elektromagnetik terbentuk?</h4>
+        <p class="text-lg" data-i18n="p2_how_1">Perubahan medan listrik menghasilkan medan magnet. Ketika medan listrik berubah terhadap waktu, perubahan tersebut menghasilkan medan magnet yang juga berubah.</p>
+        <p class="text-lg" data-i18n="p2_how_2">Perubahan medan magnet menghasilkan medan listrik. Medan magnet yang berubah terhadap waktu dapat menghasilkan medan listrik melalui proses induksi elektromagnetik.</p>
+        <p class="text-lg" data-i18n="p2_how_3">Kedua medan saling berkaitan. Medan listrik dan medan magnet yang berubah secara terus-menerus saling mendukung dalam pembentukan dan perambatan gelombang elektromagnetik.</p>
       </div>
-    </div>
+    </article>
 
+    <!-- NAVIGASI BAWAH -->
     <div class="bottom-nav">
       <button class="btn-text" data-goto="1">⬅ <span data-i18n="btn_back">Kembali ke Intro</span></button>
       <div class="pagination">

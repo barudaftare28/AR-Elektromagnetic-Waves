@@ -2,6 +2,12 @@ import { getLang, t } from "../Main/Bahasa.js";
 
 export const i18n = {
   id: {
+    p4_start_title: "Isi datamu dulu", p4_name: "Nama", p4_class: "Kelas", p4_start: "Mulai Quiz",
+    p4_ph_name: "Nama lengkap", p4_ph_class: "contoh: XI IPA 2",
+    p4_need: "Isi nama (minimal 2 huruf) dan kelas dulu ya.",
+    p4_saving: "Menyimpan hasil…", p4_saved: "✔ Hasil tersimpan", p4_time: "Waktu:",
+    p4_save_fail: "⚠ Hasil belum tersimpan.", p4_save_retry: "Coba lagi",
+    p4_loading: "Memuat soal…",          
     p4_sub: "Uji pemahamanmu tentang gelombang elektromagnetik!", p4_progress: "PROGRESS",
     p4_check: "Cek Jawaban", p4_nextq: "Soal Berikutnya →",
     p4_lock_exp: "🔒 Jawab soal ini untuk membuka penjelasan", p4_lock_viz: "🔒 Jawab soal ini untuk membuka visualisasi",
@@ -13,6 +19,12 @@ export const i18n = {
     p4_msg_mid: "Lumayan! Coba lagi untuk skor lebih tinggi.", p4_msg_low: "Jangan menyerah, pelajari lagi lalu ulangi!",
   },
   en: {
+    p4_start_title: "Enter your details", p4_name: "Name", p4_class: "Class", p4_start: "Start Quiz",
+    p4_ph_name: "Full name", p4_ph_class: "e.g. XI IPA 2",
+    p4_need: "Please enter your name (min. 2 letters) and class.",
+    p4_saving: "Saving result…", p4_saved: "✔ Result saved", p4_time: "Time:",
+    p4_save_fail: "⚠ Result not saved.", p4_save_retry: "Try again",
+    p4_loading: "Loading questions…",
     p4_sub: "Test your understanding of electromagnetic waves!", p4_progress: "PROGRESS",
     p4_check: "Check Answer", p4_nextq: "Next Question →",
     p4_lock_exp: "🔒 Answer this question to unlock the explanation", p4_lock_viz: "🔒 Answer this question to unlock the visualization",
@@ -26,7 +38,7 @@ export const i18n = {
 };
 
 // ---------- DATA SOAL ----------
-const QUESTIONS = [
+const FALLBACK = [
   {
     viz: "amp",
     q: {
@@ -158,12 +170,34 @@ const QUESTIONS = [
   },
 ];
 
-const TOTAL = QUESTIONS.length;
-const POINT = 100 / TOTAL;
+const SUPABASE_URL = "https://zhhibutkjisgtoqkiuoc.supabase.co";
+const SUPABASE_KEY = "sb_publishable__hC16Dkxl6OqMXD6d3DgEQ_4ppOFbEn";
+const QUIZ_SIZE = 5; 
+const VIZ_OK = ["amp", "freq", "pp", "speed", "one", "em", "spectrum", "fieldE", "fieldB", "medium"];
+
+let pool = FALLBACK, set = [], TOTAL = 0, POINT = 0;
 const $ = (id) => document.getElementById(id);
 
-let order, sel, checked, cur;
+let sel, checked, cur;
 let canvas, ctx, C;
+let t0 = 0, attempt = 0, durasi = 0, saved = false, player = null;
+const fmtTime = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
+
+let stage = 2, stageAt = 0, stageCur = -1, stageTimer = null, nowMs = 0;
+
+function setStage(n) {
+  stage = n; stageAt = performance.now();
+  document.querySelectorAll("#q-explain li").forEach((li, i) => li.classList.toggle("on", i === n));
+}
+function startStages() {
+  clearTimeout(stageTimer);
+  stageCur = cur;
+  setStage(0);
+  stageTimer = setTimeout(() => {
+    setStage(1);
+    stageTimer = setTimeout(() => setStage(2), 1800);
+  }, 1800);
+}
 
 function shuffle(a) {
   for (let i = a.length - 1; i > 0; i--) {
@@ -172,18 +206,87 @@ function shuffle(a) {
   }
   return a;
 }
-const curQ = () => QUESTIONS[order[cur]];
-const isCorrect = (i) => checked[i] && sel[i] === QUESTIONS[order[i]].ans;
+const curQ = () => set[cur];
+const isCorrect = (i) => checked[i] && sel[i] === set[i].ans;
 const score = () => checked.reduce((s, _, i) => s + (isCorrect(i) ? POINT : 0), 0);
 
-function resetQuiz(doShuffle) {
-  order = QUESTIONS.map((_, i) => i);
-  if (doShuffle) shuffle(order);
+function resetQuiz() {
+  set = pickSet(pool).map(shuffleOptions); 
+  TOTAL = set.length;
+  POINT = 100 / TOTAL;
   sel = Array(TOTAL).fill(null);
   checked = Array(TOTAL).fill(false);
   cur = 0;
+  t0 = Date.now();
+  saved = false;
+  attempt++;
+  $("q-save").textContent = "";
+  clearTimeout(stageTimer);
+  stageCur = -1;
   render();
 }
+
+async function loadQuestions() {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/questions?select=*&aktif=eq.true`, {
+    headers: { apikey: SUPABASE_KEY },
+  });
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  const rows = await res.json();
+  return rows
+    .filter((r) => VIZ_OK.includes(r.viz) && r.opts_id?.length === 4 && r.opts_en?.length === 4)
+    .map((r) => ({
+      viz: r.viz,
+      q: { id: r.q_id, en: r.q_en },
+      opts: { id: r.opts_id, en: r.opts_en },
+      ans: r.ans,
+      steps: { id: r.steps_id, en: r.steps_en },
+      chip: { id: r.chip_id, en: r.chip_en },
+      params: r.params || {},
+    }));
+}
+
+async function saveResult() {
+  if (saved || !player) return;
+  const box = $("q-save");
+  box.className = "q-save";
+  box.textContent = t("p4_saving");
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/results`, {
+      method: "POST",
+      headers: { apikey: SUPABASE_KEY, "Content-Type": "application/json", Prefer: "return=minimal" },
+      body: JSON.stringify({
+        nama: player.nama, kelas: player.kelas,
+        skor: Math.round(score()),
+        benar: checked.filter((_, i) => isCorrect(i)).length,
+        total_soal: TOTAL, durasi_detik: durasi, percobaan: attempt,
+      }),
+    });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    saved = true;
+    box.className = "q-save ok";
+    box.textContent = `${t("p4_saved")} · ${t("p4_time")} ${fmtTime(durasi)}`;
+  } catch (e) {
+    console.warn("Gagal menyimpan hasil:", e);
+    box.className = "q-save no";
+    box.textContent = t("p4_save_fail");
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "q-btn-sec"; b.textContent = t("p4_save_retry");
+    b.onclick = saveResult;
+    box.appendChild(b);
+  }
+}
+
+function showStart() {
+  player = null; attempt = 1;
+  $("q-name").value = ""; $("q-class").value = "";
+  $("q-start").hidden = false; $("q-layout").hidden = true;
+}
+
+function applyStartText() {
+  $("q-name").placeholder = t("p4_ph_name");
+  $("q-class").placeholder = t("p4_ph_class");
+}
+
 
 // ---------- RENDER ----------
 function renderProgress() {
@@ -249,7 +352,13 @@ function renderLocked() {
   $("q-explain-card").classList.toggle("locked", !open);
   $("q-viz-card").classList.toggle("locked", !open);
   if (open) {
-    $("q-explain").innerHTML = curQ().steps[getLang()].map((s) => `<li>${s}</li>`).join("");
+    if (stageCur !== cur) { clearTimeout(stageTimer); stageCur = cur; stage = 2; }
+    const ol = $("q-explain");
+    ol.innerHTML = curQ().steps[getLang()].map((s) => `<li>${s}</li>`).join("");
+    ol.querySelectorAll("li").forEach((li, i) => {
+      li.classList.toggle("on", i === stage);
+      li.onclick = () => { clearTimeout(stageTimer); setStage(i); };
+    });
     $("q-chip").textContent = curQ().chip[getLang()];
   } else {
     $("q-explain").innerHTML = "<li>••••••••••••••••</li><li>••••••••••••</li><li>••••••••••••••••••</li>";
@@ -318,127 +427,365 @@ function dot(x, y, color, letter) {
 const firstCrest = (x0, lam, ph) => x0 + (((ph % lam) + lam) % lam);
 
 const VT = {
-  id: { before: "Sebelum (A kecil)", after: "Sesudah (A besar)", f1: "Frekuensi f", f2: "Frekuensi f × 2",
-        pp: "Jarak puncak ke puncak = 1 λ", f3: "f = 3 Hz (3 gelombang tiap detik)", crest: "bukit", trough: "lembah" },
-  en: { before: "Before (small A)", after: "After (large A)", f1: "Frequency f", f2: "Frequency f × 2",
-        pp: "Crest to crest distance = 1 λ", f3: "f = 3 Hz (3 waves per second)", crest: "crest", trough: "trough" },
+  id: { before: "Sebelum (A kecil)", after: "Sesudah (A besar)", fq: "Frekuensi f", crest: "bukit", trough: "lembah",
+        ampNote: "Amplitudo ↑ → energi ↑ (λ dan f tetap)", inv: "Frekuensi ↑ → panjang gelombang ↓ (v tetap)",
+        pp: "Jarak puncak ke puncak = 1 λ", f3: (f) => `f = ${f} Hz (${f} gelombang tiap detik)` },
+  en: { before: "Before (small A)", after: "After (large A)", fq: "Frequency f", crest: "crest", trough: "trough",
+        ampNote: "Amplitude ↑ → energy ↑ (λ and f unchanged)", inv: "Frequency ↑ → wavelength ↓ (v constant)",
+        pp: "Crest to crest distance = 1 λ", f3: (f) => `f = ${f} Hz (${f} waves per second)` },
 };
 
+// Angka bawaan bila kolom params di database kosong
+const DEF = { amp: { a1: 1, a2: 3 }, freq: { k: 2 }, pp: { lam: 4 }, speed: { lam: 2, f: 3 }, one: { lam: 2 } };
+const num = (n) => String(+(+n).toFixed(2)).replace(".", getLang() === "id" ? "," : ".");
+const fade = (s) => (stage > s ? 1 : stage === s ? Math.min(1, (nowMs - stageAt) / 400) : 0);
+function at(s, fn) { const a = fade(s); if (a <= 0) return; ctx.globalAlpha = a; fn(); ctx.globalAlpha = 1; }
+
+function ruler(x, y, pxm, maxM) {
+  const step = maxM > 14 ? 2 : 1, every = maxM > 8 ? 2 : 1;
+  ctx.strokeStyle = C.dim; ctx.lineWidth = 1; ctx.beginPath();
+  ctx.moveTo(x, y); ctx.lineTo(x + maxM * pxm, y);
+  for (let m = 0; m <= maxM + 1e-9; m += step) { ctx.moveTo(x + m * pxm, y - 4); ctx.lineTo(x + m * pxm, y + 4); }
+  ctx.stroke();
+  for (let m = 0; m <= maxM + 1e-9; m += step * every) label(String(m), x + m * pxm, y + 14, C.dim, 10);
+  label("m", x + maxM * pxm + 10, y, C.dim, 10);
+}
+
+
+
+const EM_VIZ = ["em", "medium", "spectrum", "fieldE", "fieldB"];
+const NEWVIZ = EM_VIZ;
+const B_COL = "#EC4899";
+Object.assign(DEF, { em: {}, spectrum: { a: 0, b: 6 }, fieldE: { r1: 1, r2: 2, s: 1 }, fieldB: { r1: 1, r2: 2 }, medium: {} });
+
+// ---- Pengacakan pilihan jawaban (bahasa ID dan EN diacak dengan urutan yang sama) ----
+function shuffleOptions(q) {
+  const idx = shuffle([0, 1, 2, 3]);
+  return { ...q, opts: { id: idx.map((i) => q.opts.id[i]), en: idx.map((i) => q.opts.en[i]) }, ans: idx.indexOf(q.ans) };
+}
+
+// ---- Pemilihan 5 soal seimbang: maks 2 per jenis gambar, minimal 2 soal bertema EM ----
+function pickSet(list) {
+  for (let n = 0; n < 300; n++) {
+    const s = shuffle([...list]).slice(0, QUIZ_SIZE), cnt = {};
+    s.forEach((q) => (cnt[q.viz] = (cnt[q.viz] || 0) + 1));
+    if (Object.values(cnt).every((c) => c <= 2) && s.filter((q) => EM_VIZ.includes(q.viz)).length >= 2) return s;
+  }
+  return shuffle([...list]).slice(0, QUIZ_SIZE); // cadangan (mis. soal cadangan lokal)
+}
+
+// ---- Visualisasi baru ----
+function arrow(xa, ya, xb, yb, col, wd) {
+  const a = Math.atan2(yb - ya, xb - xa);
+  ctx.strokeStyle = ctx.fillStyle = col; ctx.lineWidth = wd || 2;
+  ctx.beginPath(); ctx.moveTo(xa, ya); ctx.lineTo(xb, yb); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(xb, yb);
+  ctx.lineTo(xb - 8 * Math.cos(a - 0.4), yb - 8 * Math.sin(a - 0.4));
+  ctx.lineTo(xb - 8 * Math.cos(a + 0.4), yb - 8 * Math.sin(a + 0.4)); ctx.fill();
+}
+
+const SPEC = {
+  col: ["#FF4D5E", "#FF8A00", "#F5D000", "#2ECC71", "#3B82F6", "#A855F7", "#EC4899"],
+  id: ["Radio", "Mikro", "IR", "Tampak", "UV", "Sinar-X", "Gamma"],
+  en: ["Radio", "Micro", "IR", "Visible", "UV", "X-ray", "Gamma"],
+};
+const VT2 = {
+  id: { E: "E (vertikal)", B: "B (masuk–keluar layar)", prop: "arah rambat", perp: "E ⟂ B ⟂ arah rambat", inphase: "puncak E dan B sefase",
+        up: ["frekuensi (f) ↑", "energi foton ↑", "panjang gelombang (λ) ↓"], nonion: "non-pengion", ion: "pengion",
+        wire: "kawat berarus (arus keluar layar)", rhr: "kaidah tangan kanan: B berlawanan arah jarum jam",
+        air: "Bunyi: butuh medium (partikel udara)", vac: "Ruang hampa: tidak ada partikel", emv: "Gelombang EM: tanpa medium",
+        sum: "Bunyi butuh medium, gelombang EM tidak" },
+  en: { E: "E (vertical)", B: "B (into/out of screen)", prop: "direction of travel", perp: "E ⟂ B ⟂ direction of travel", inphase: "E and B crests line up (in phase)",
+        up: ["frequency (f) ↑", "photon energy ↑", "wavelength (λ) ↓"], nonion: "non-ionizing", ion: "ionizing",
+        wire: "current-carrying wire (current out of screen)", rhr: "right-hand rule: B runs counter-clockwise",
+        air: "Sound: needs a medium (air particles)", vac: "Vacuum: no particles", emv: "EM wave: no medium needed",
+        sum: "Sound needs a medium, EM waves do not" },
+};
+const ratioTxt = (L, k) => `r × ${num(k)} → ${L} ÷ ${num(L === "E" ? k * k : k)}`;
+
+function drawNew(type, P, time, w, h, x0, x1, span) {
+  const T2 = VT2[getLang()], ph = 60 * time;
+
+  if (type === "em") {
+    const lam = span / 2, A = h * 0.24, mid = h * 0.5;
+    const val = (x) => Math.sin((2 * Math.PI * (x - x0 - ph)) / lam);
+    const pt = (k, x) => (k === "E" ? [x, mid - A * val(x)] : [x - 0.5 * A * val(x), mid + 0.4 * A * val(x)]);
+    const field = (k, col) => {
+      ctx.strokeStyle = col; ctx.lineWidth = 2.5; ctx.beginPath();
+      for (let x = x0; x <= x1; x += 3) { const [px, py] = pt(k, x); x === x0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py); }
+      ctx.stroke();
+      for (let x = x0 + 12; x <= x1; x += 24) if (Math.abs(val(x)) > 0.1) { const [px, py] = pt(k, x); arrow(x, mid, px, py, col, 1.2); }
+    };
+    axisLine(x0, x1, mid);
+    at(0, () => { field("E", C.blue); label(T2.E, x0 + 4, 16, C.blue, 12, "left"); });
+    at(1, () => { field("B", B_COL); label(T2.B, x0 + 4, 34, B_COL, 12, "left"); });
+    at(2, () => {
+      const xc = firstCrest(x0, lam, ph + lam / 4), [ex, ey] = pt("E", xc), [bx, by] = pt("B", xc);
+      ctx.setLineDash([4, 4]); ctx.strokeStyle = C.dim; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(ex, ey); ctx.lineTo(bx, by); ctx.stroke(); ctx.setLineDash([]);
+      dot(ex, ey, C.blue, "E"); dot(bx, by, B_COL, "B");
+      arrow(x0 + 8, h * 0.8, x0 + 64, h * 0.8, C.text, 2); label(T2.prop, x0 + 72, h * 0.8, C.text, 12, "left");
+      label(T2.perp, w / 2, h - 34, C.text, 13); label(T2.inphase, w / 2, h - 14, C.dim, 12);
+    });
+  }
+
+  if (type === "spectrum") {
+    const bw = span / 7, by = h * 0.12, bh = 44, names = SPEC[getLang()];
+    SPEC.col.forEach((c, i) => {
+      const hi = i === P.a || i === P.b;
+      ctx.globalAlpha = hi ? 1 : 0.35; ctx.fillStyle = c; ctx.fillRect(x0 + i * bw + 1, by, bw - 2, bh); ctx.globalAlpha = 1;
+      label(names[i], x0 + i * bw + bw / 2, by + bh + 12, hi ? C.text : C.dim, 10);
+    });
+    at(1, () => [[T2.up[0], C.orange, h * 0.5], [T2.up[1], C.purple, h * 0.62], [T2.up[2], C.blue, h * 0.74]].forEach(([tx, col, y]) => {
+      arrow(x0, y, x1, y, col, 2.5); label(tx, x0 + 4, y - 11, col, 11, "left");
+    }));
+    at(2, () => {
+      const xb = x0 + span * (4.3 / 7), y = h * 0.88;
+      ctx.lineWidth = 5; ctx.strokeStyle = C.green; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(xb, y); ctx.stroke();
+      ctx.strokeStyle = C.red; ctx.beginPath(); ctx.moveTo(xb, y); ctx.lineTo(x1, y); ctx.stroke();
+      label(T2.nonion, (x0 + xb) / 2, y + 16, C.green, 12); label(T2.ion, (xb + x1) / 2, y + 16, C.red, 12);
+    });
+  }
+
+  if (type === "fieldE") {
+    const cx = x0 + 34, cy = h * 0.4, s = P.s >= 0 ? 1 : -1, rm = Math.max(P.r1, P.r2), pxm = (x1 - cx - 30) / (rm * 1.05);
+    at(0, () => {
+      for (let i = 0; i < 8; i++) {
+        const a = (i * Math.PI) / 4, c = Math.cos(a), n = Math.sin(a), [p, q] = s > 0 ? [20, 54] : [54, 20];
+        arrow(cx + p * c, cy + p * n, cx + q * c, cy + q * n, C.blue, 1.6);
+      }
+      dot(cx, cy, s > 0 ? C.red : C.blue, s > 0 ? "+" : "−");
+    });
+    const test = (r, col, tag) => {
+      const px = cx + r * pxm, L = 64 * (P.r1 / r) ** 2;
+      ctx.setLineDash([4, 4]); ctx.strokeStyle = C.dim; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(cx + 14, cy); ctx.lineTo(px, cy); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = col; ctx.beginPath(); ctx.arc(px, cy, 5, 0, 7); ctx.fill();
+      label(`r = ${num(r)} m`, px, cy - 14, C.dim, 11);
+      arrow(px, cy + 28, px + s * L, cy + 28, col, 3); label(tag, px, cy + 46, col, 12);
+    };
+    at(1, () => test(P.r1, C.orange, "E₁"));
+    at(2, () => { test(P.r2, C.green, "E₂"); label(ratioTxt("E", P.r2 / P.r1), w / 2, h - 18, C.text, 14); });
+  }
+
+  if (type === "fieldB") {
+    const cx = x0 + 84, cy = h * 0.5, R = 38;
+    at(0, () => {
+      [1, 2, 3].forEach((k) => { ctx.strokeStyle = B_COL; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(cx, cy, R * k, 0, 7); ctx.stroke(); });
+      ctx.strokeStyle = C.text; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, 11, 0, 7); ctx.stroke();
+      ctx.fillStyle = C.text; ctx.beginPath(); ctx.arc(cx, cy, 3.5, 0, 7); ctx.fill();
+      label(T2.wire, x1, 18, C.dim, 11, "right");
+    });
+    at(1, () => {
+      [1, 2, 3].forEach((k) => {
+        arrow(cx + 12, cy - R * k, cx - 12, cy - R * k, B_COL, 2);
+        arrow(cx - 12, cy + R * k, cx + 12, cy + R * k, B_COL, 2);
+      });
+      label(T2.rhr, w / 2, h - 14, C.dim, 11);
+    });
+    at(2, () => {
+      [[P.r1, C.orange, "B₁"], [P.r2, C.green, "B₂"]].forEach(([r, col, tag]) => {
+        const px = cx + r * R, L = 64 * (P.r1 / r);
+        ctx.fillStyle = col; ctx.beginPath(); ctx.arc(px, cy, 5, 0, 7); ctx.fill();
+        arrow(px, cy, px, cy - L, col, 3); label(tag, px + 14, cy - L / 2, col, 12);
+        label(`r = ${num(r)} m`, px, cy + 18, col, 11);
+      });
+      label(ratioTxt("B", P.r2 / P.r1), x1, h * 0.3, C.text, 14, "right");
+    });
+  }
+
+  if (type === "medium") {
+    const lam = span / 3, y1 = h * 0.27, y2 = h * 0.72;
+    at(0, () => {
+      ctx.setLineDash([4, 4]); ctx.strokeStyle = C.dim; ctx.lineWidth = 1; ctx.strokeRect(x0, y1 - 40, span, 80); ctx.setLineDash([]);
+      ctx.fillStyle = C.orange;
+      for (let row = -1; row <= 1; row++) for (let x = x0 + 6; x <= x1 - 6; x += 9) {
+        const dx = 6 * Math.sin((2 * Math.PI * (x - x0 - ph)) / lam);
+        ctx.beginPath(); ctx.arc(x + dx, y1 + row * 22, 2.6, 0, 7); ctx.fill();
+      }
+      label(T2.air, x0 + 4, y1 - 52, C.orange, 12, "left");
+    });
+    at(1, () => {
+      ctx.setLineDash([4, 4]); ctx.strokeStyle = C.dim; ctx.lineWidth = 1; ctx.strokeRect(x0, y2 - 40, span, 80); ctx.setLineDash([]);
+      wave(x0, x1, y2, 26, lam, ph, C.blue);
+      label(T2.vac, x0 + 4, y2 - 52, C.dim, 12, "left"); label(T2.emv, x0 + 4, y2 + 54, C.blue, 12, "left");
+    });
+    at(2, () => label(T2.sum, w / 2, h - 12, C.text, 12));
+  }
+}
+
 function drawViz(time) {
-  const w = canvas.width, h = canvas.height, pad = 24;
-  const x0 = pad, x1 = w - pad, speed = 60; // px/detik
-  const type = curQ().viz, T = VT[getLang()];
+  const w = canvas.width, h = canvas.height, pad = 24, x0 = pad, x1 = w - pad, span = x1 - x0;
+  const q = curQ(), type = q.viz, T = VT[getLang()], P = { ...DEF[type], ...(q.params || {}) };
 
   ctx.strokeStyle = C.grid; ctx.lineWidth = 1; ctx.beginPath();
   for (let x = 0; x <= w; x += 30) { ctx.moveTo(x + 0.5, 0); ctx.lineTo(x + 0.5, h); }
   for (let y = 0; y <= h; y += 30) { ctx.moveTo(0, y + 0.5); ctx.lineTo(w, y + 0.5); }
   ctx.stroke();
 
+  if (NEWVIZ.includes(type)) { drawNew(type, P, time, w, h, x0, x1, span); return; }
   if (type === "amp") {
-    const lam = (x1 - x0) / 3, ph = speed * time;
-    [
-      { mid: h * 0.27, amp: h * 0.07, text: T.before, col: C.blue },
-      { mid: h * 0.74, amp: h * 0.19, text: T.after, col: C.orange },
-    ].forEach((r) => {
+    const lam = span / 3, ph = 60 * time, m = Math.max(P.a1, P.a2), maxPx = h * 0.15;
+    const rows = [
+      { mid: h * 0.25, a: P.a1, text: T.before, col: C.blue, s: 0 },
+      { mid: h * 0.66, a: P.a2, text: T.after, col: C.orange, s: 1 },
+    ];
+    rows.forEach((r) => at(r.s, () => {
+      const amp = (maxPx * r.a) / m;
       axisLine(x0, x1, r.mid);
       ctx.setLineDash([4, 4]); ctx.strokeStyle = C.dim; ctx.lineWidth = 1;
-      [-1, 1].forEach((s) => { ctx.beginPath(); ctx.moveTo(x0, r.mid + s * r.amp); ctx.lineTo(x1, r.mid + s * r.amp); ctx.stroke(); });
+      [-1, 1].forEach((s) => { ctx.beginPath(); ctx.moveTo(x0, r.mid + s * amp); ctx.lineTo(x1, r.mid + s * amp); ctx.stroke(); });
       ctx.setLineDash([]);
-      wave(x0, x1, r.mid, r.amp, lam, ph, r.col);
+      wave(x0, x1, r.mid, amp, lam, ph, r.col);
       ctx.strokeStyle = C.red; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.moveTo(x1 - 14, r.mid); ctx.lineTo(x1 - 14, r.mid - r.amp); ctx.stroke();
-      label("A", x1 - 28, r.mid - r.amp / 2, C.red, 13);
-      label(r.text, x0 + 4, r.mid - r.amp - 16, C.dim, 12, "left");
+      ctx.beginPath(); ctx.moveTo(x1 - 14, r.mid); ctx.lineTo(x1 - 14, r.mid - amp); ctx.stroke();
+      label(`A = ${num(r.a)}`, x1 - 40, r.mid - amp / 2, C.red, 13);
+      label(r.text, x0 + 4, r.mid - maxPx - 12, C.dim, 12, "left");
+    }));
+    at(2, () => {
+      rows.forEach((r) => {
+        const amp = (maxPx * r.a) / m, c = firstCrest(x0, lam, ph);
+        if (c + lam <= x1) hBracket(c, c + lam, r.mid + amp + 26, "λ", C.text);
+      });
+      label(T.ampNote, w / 2, h - 14, C.text, 13);
     });
   }
 
   if (type === "freq") {
-    const ph = speed * time;
-    [
-      { mid: h * 0.3, lam: (x1 - x0) / 2, text: T.f1, lt: "λ", col: C.blue },
-      { mid: h * 0.74, lam: (x1 - x0) / 4, text: T.f2, lt: "λ/2", col: C.purple },
-    ].forEach((r) => {
+    const ph = 60 * time, k = P.k, f = P.f, v = P.v, amp = h * 0.1, real = f && v;
+    const rows = [
+      { mid: h * 0.25, lam: span / 2, s: 0, col: C.blue,
+        text: f ? `f = ${num(f)} Hz` : T.fq, lt: real ? `λ = ${num(v / f)} m` : "λ" },
+      { mid: h * 0.66, lam: span / 2 / k, s: 1, col: C.purple,
+        text: f ? `f = ${num(f * k)} Hz` : `${T.fq} × ${num(k)}`, lt: real ? `λ = ${num(v / (f * k))} m` : `λ/${num(k)}` },
+    ];
+    rows.forEach((r) => at(r.s, () => {
       axisLine(x0, x1, r.mid);
-      wave(x0, x1, r.mid, h * 0.1, r.lam, ph, r.col);
+      wave(x0, x1, r.mid, amp, r.lam, ph, r.col);
       const c = firstCrest(x0, r.lam, ph);
-      if (c + r.lam <= x1) hBracket(c, c + r.lam, r.mid - h * 0.1 - 14, r.lt, C.text);
-      label(r.text, x0 + 4, r.mid + h * 0.1 + 18, C.dim, 12, "left");
-    });
+      if (c + r.lam <= x1) hBracket(c, c + r.lam, r.mid - amp - 14, r.lt, C.text);
+      label(r.text, x0 + 4, r.mid + amp + 18, C.dim, 12, "left");
+    }));
+    at(2, () => label(real ? `λ = v / f  (v = ${num(v)} m/s)` : T.inv, w / 2, h - 16, C.text, 13));
   }
 
   if (type === "pp") {
-    const mid = h * 0.52, amp = h * 0.2, lam = (x1 - x0) / 2.6, ph = lam * 0.6;
+    const lamM = P.lam, win = Math.max(12, lamM * 2.4), pxm = span / win, lam = lamM * pxm, ph = lam * 0.6;
+    const mid = h * 0.45, amp = h * 0.2, ax = x0 + ph, bx = ax + lam;
     axisLine(x0, x1, mid);
     wave(x0, x1, mid, amp, lam, ph, C.blue);
-    const ax = x0 + ph, bx = ax + lam;
-    dot(ax, mid - amp, C.green, "A");
-    dot(bx, mid - amp, C.green, "B");
-    hBracket(ax, bx, mid - amp - 32, "λ = 4 m", C.orange);
-    label(T.pp, w / 2, h - 20, C.dim, 12);
+    ruler(x0, h * 0.8, pxm, win);
+    at(1, () => { dot(ax, mid - amp, C.green, "A"); dot(bx, mid - amp, C.green, "B"); });
+    at(2, () => {
+      hBracket(ax, bx, mid - amp - 32, `λ = ${num(lamM)} m`, C.orange);
+      label(P.f ? `v = λ × f = ${num(lamM)} × ${num(P.f)} = ${num(lamM * P.f)} m/s` : T.pp, w / 2, h - 18, C.text, 13);
+    });
   }
 
   if (type === "speed") {
-    const lam = (x1 - x0) / 3, ph = speed * 1.5 * time, amp = h * 0.13, mid = h * 0.28;
+    const lamM = P.lam, f = P.f, v = lamM * f, win = Math.max(12, lamM * 2.4), pxm = span / win, lam = lamM * pxm;
+    const ph = v * pxm * 0.4 * time, amp = h * 0.1, mid = h * 0.33;
     axisLine(x0, x1, mid);
     wave(x0, x1, mid, amp, lam, ph, C.blue);
+    ruler(x0, h * 0.6, pxm, win);
     const c = firstCrest(x0, lam, ph);
-    if (c + lam <= x1) hBracket(c, c + lam, mid - amp - 14, "λ = 2 m", C.orange);
-    label(T.f3, x0 + 4, mid + amp + 18, C.dim, 12, "left");
-
-    const y2 = h * 0.7;
-    ctx.strokeStyle = C.green; ctx.lineWidth = 4;
-    ctx.beginPath(); ctx.moveTo(x0 + 10, y2); ctx.lineTo(x1 - 14, y2); ctx.stroke();
-    ctx.fillStyle = C.green;
-    ctx.beginPath(); ctx.moveTo(x1 - 4, y2); ctx.lineTo(x1 - 18, y2 - 9); ctx.lineTo(x1 - 18, y2 + 9); ctx.fill();
-    dot(x0 + 10 + ((time * 0.6) % 1) * (x1 - x0 - 40), y2, C.green, "v");
-    label("v = λ × f = 2 × 3 = 6 m/s", w / 2, y2 + 34, C.text, 14);
+    if (c + lam <= x1) hBracket(c, c + lam, mid - amp - 14, `λ = ${num(lamM)} m`, C.orange);
+    at(1, () => label(T.f3(num(f)), x0 + 4, mid + amp + 18, C.dim, 12, "left"));
+    at(2, () => {
+      const y2 = h * 0.78;
+      ctx.strokeStyle = C.green; ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.moveTo(x0 + 10, y2); ctx.lineTo(x1 - 14, y2); ctx.stroke();
+      ctx.fillStyle = C.green;
+      ctx.beginPath(); ctx.moveTo(x1 - 4, y2); ctx.lineTo(x1 - 18, y2 - 9); ctx.lineTo(x1 - 18, y2 + 9); ctx.fill();
+      dot(x0 + 10 + ((time * 0.6) % 1) * (span - 40), y2, C.green, "v");
+      label(`v = λ × f = ${num(lamM)} × ${num(f)} = ${num(v)} m/s`, w / 2, y2 + 30, C.text, 14);
+    });
   }
 
   if (type === "one") {
-    const lam = (x1 - x0) * 0.62, xs = (w - lam) / 2, mid = h * 0.5, amp = h * 0.2;
+    const lamM = P.lam, lam = span * 0.62, xs = x0 + (span - lam) / 2, pxm = lam / lamM;
+    const mid = h * 0.36, amp = h * 0.17;
     axisLine(x0, x1, mid);
-    ctx.beginPath(); // 1 gelombang penuh: bukit dulu, lalu lembah
+    ctx.beginPath();
     for (let x = xs; x <= xs + lam; x += 2) {
       const y = mid - amp * Math.sin((2 * Math.PI * (x - xs)) / lam);
       x === xs ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
     }
     ctx.strokeStyle = C.blue; ctx.lineWidth = 3.5; ctx.stroke();
-    label(T.crest, xs + lam * 0.25, mid - amp - 14, C.green, 13);
-    label(T.trough, xs + lam * 0.75, mid + amp + 16, C.red, 13);
-    hBracket(xs, xs + lam, mid + amp + 52, "2 m = 1 λ", C.orange);
+    ruler(xs, h * 0.77, pxm, lamM);
+    at(1, () => {
+      label(T.crest, xs + lam * 0.25, mid - amp - 14, C.green, 13);
+      label(T.trough, xs + lam * 0.75, mid + amp + 16, C.red, 13);
+    });
+    at(2, () => {
+      hBracket(xs, xs + lam, mid + amp + 44, `${num(lamM)} m = 1 λ`, C.orange);
+      if (P.f) label(`v = λ × f = ${num(lamM)} × ${num(P.f)} = ${num(lamM * P.f)} m/s`, w / 2, h - 18, C.text, 13);
+    });
   }
 }
 
 export function update(ts) {
+  if (!checked || !checked[cur]) return;
   if (!canvas || canvas.offsetParent === null) return;
   const cw = canvas.clientWidth, ch = canvas.clientHeight;
   if (canvas.width !== cw || canvas.height !== ch) { canvas.width = cw; canvas.height = ch; }
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  if (!checked[cur]) return; // masih terkunci: tidak digambar
   C = palette();
+  nowMs = performance.now();
   drawViz(ts / 1000);
 }
 
 // ---------- INIT ----------
-export function init() {
+export async function init() {
   canvas = $("q-canvas");
   ctx = canvas.getContext("2d");
   C = palette();
+  $("q-start-error").textContent = t("p4_loading");
+
+  try {
+    const rows = await loadQuestions();
+    if (rows.length >= 1) pool = rows;
+  } catch (e) {
+    console.warn("Database tidak terjangkau, memakai soal cadangan:", e);
+  }
+
+  $("q-start-btn").onclick = () => {
+    const nama = $("q-name").value.trim(), kelas = $("q-class").value.trim();
+    if (nama.length < 2 || !kelas) { $("q-start-error").textContent = t("p4_need"); return; }
+    player = { nama, kelas };
+    $("q-start-error").textContent = "";
+    $("q-start").hidden = true;
+    $("q-layout").hidden = false;
+    t0 = Date.now();                      // timer mulai dari sini
+  };
+  [$("q-name"), $("q-class")].forEach((el) =>
+    el.addEventListener("keydown", (e) => { if (e.key === "Enter") $("q-start-btn").click(); })
+  );
 
   $("q-action").onclick = () => {
     if (!checked[cur]) {
       if (sel[cur] === null) return;
       checked[cur] = true;
+      if (checked.every(Boolean)) {
+        durasi = Math.max(1, Math.round((Date.now() - t0) / 1000));
+        render(); startStages(); saveResult();
+        return;
+      }
+      render(); startStages();
+      return;
     } else if (cur < TOTAL - 1) {
       cur++;
     }
     render();
   };
-  $("q-retry").onclick = () => resetQuiz(true);
-  $("q-finish").onclick = () => {
-    resetQuiz(false);
-    window.navigateToPage(1);
-  };
-  window.addEventListener("langChanged", render);
-  resetQuiz(false);
+
+  $("q-retry").onclick = () => resetQuiz();
+  $("q-finish").onclick = () => { resetQuiz(); showStart(); window.navigateToPage(1); };
+  window.addEventListener("langChanged", () => { render(); applyStartText(); });
+
+  resetQuiz();
+  showStart();
+  applyStartText();
+  $("q-start-error").textContent = "";
+  $("q-start-btn").disabled = false;
 }

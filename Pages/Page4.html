@@ -10,8 +10,19 @@
         </div>
       </div>
     </div>
+    
 
-    <div class="q-layout">
+    <div class="q-card q-start" id="q-start">
+      <h4 data-i18n="p4_start_title">Isi datamu dulu</h4>
+      <label class="q-field"><span data-i18n="p4_name">Nama</span>
+        <input id="q-name" type="text" maxlength="60" autocomplete="off"></label>
+      <label class="q-field"><span data-i18n="p4_class">Kelas</span>
+        <input id="q-class" type="text" maxlength="20" autocomplete="off"></label>
+      <p class="q-error" id="q-start-error"></p>
+      <button type="button" id="q-start-btn" class="q-btn-main" disabled data-i18n="p4_start">Mulai Quiz</button>
+    </div>
+
+    <div class="q-layout" id="q-layout" hidden>
       <aside class="q-progress-card">
         <div class="q-progress-title" data-i18n="p4_progress">PROGRESS</div>
         <div class="q-progress" id="q-progress"></div>
@@ -50,6 +61,7 @@
             <span><span id="q-score" class="q-score">0</span> <span class="dim-text">/ 100</span></span>
           </div>
           <p class="q-score-msg" id="q-score-msg"></p>
+          <p class="q-save" id="q-save"></p>
           <div class="q-score-btns">
             <button type="button" id="q-retry" class="q-btn-sec" data-i18n="p4_retry">Ulangi Quiz</button>
             <button type="button" id="q-finish" class="q-btn-done" disabled data-i18n="p4_finish">Selesai</button>
