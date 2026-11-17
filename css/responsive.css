@@ -194,3 +194,57 @@ img { max-width: 100%; }
   .page { animation: none; }
   * { transition-duration: 0.01ms !important; }
 }
+
+/* =====================================================
+   PAGE 1 (INTRO) RESPONSIF
+   Sebelumnya Page 1 tidak punya aturan responsif sama sekali,
+   jadi dua kolom + kartu parameter tetap lebar dan keluar layar.
+   ===================================================== */
+
+/* Tablet / layar sempit: kolom kiri-kanan ditumpuk jadi satu kolom */
+@media (max-width: 1000px) {
+  .top-section,
+  .bottom-content-wrapper { flex-direction: column; }
+
+  .left-card,
+  .right-column { width: 100%; flex: none; }
+
+  .left-sim,
+  .right-info { width: 100%; flex: none; min-width: 0; }
+}
+
+/* HP */
+@media (max-width: 600px) {
+  .page1-container.page { padding: 16px 12px; }      /* kurangi ruang kosong di tepi */
+
+  .page1-container .card { padding: 16px; }
+
+  /* tiga ikon (E, B, tanpa medium) boleh turun baris */
+  .feature-horizontal-card { flex-wrap: wrap; }
+  .feature-item-h { flex: 1 1 90px; }
+
+  /* foto Maxwell di atas teks */
+  .concept-content { flex-direction: column; align-items: center; text-align: left; }
+
+  /* rumus c = f × λ, lingkaran, dan legenda saling turun */
+  .rumus-container { justify-content: center; padding: 0; }
+  .highlight-rumus { font-size: 1.8em; padding: 8px 14px; letter-spacing: 1px; }
+  .rumus-legend { width: 100%; }
+
+  /* angka besar dikecilkan supaya tidak melebar */
+  .val-display { font-size: 1.5em !important; word-break: break-word; }
+  #display-f { padding: 8px 14px; }
+
+  .slider-container { padding: 18px 14px; }
+  .control-box.constant-box { padding: 14px; }
+
+  /* kamus istilah ditumpuk */
+  .kamus-istilah-bawah { flex-direction: column; align-items: stretch; padding: 12px; }
+  .kamus-istilah-bawah p { margin: 4px 0; text-align: left; }
+
+  /* navigasi bawah: spacer kosong dibuang, tombol & titik muat satu layar */
+  .page1-container .bottom-nav { flex-wrap: wrap; justify-content: center; gap: 12px; padding: 14px; }
+  .page1-container .bottom-nav > div[style] { display: none; }
+  .page1-container .pagination { gap: 8px; }
+  .page1-container .line { width: 18px; }
+}

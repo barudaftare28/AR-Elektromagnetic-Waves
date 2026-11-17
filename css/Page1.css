@@ -307,8 +307,8 @@
 
 /* Sorotan Khusus untuk Angka Frekuensi */
 #display-f {
-    background: rgba(249, 115, 22, 0.12); /* Background biru transparan */
-    color: var(--cyan) !important;
+    background: rgba(249, 115, 22, 0.12); /* latar oranye transparan */
+    color: var(--f-color) !important;
     padding: 10px 30px;
     border-radius: 8px;
     border: 2px solid rgba(249, 115, 22, 0.4);
@@ -339,11 +339,11 @@
     justify-content: center;
 }
 
-.box-lambda { border-left: 6px solid var(--primary-text); }
+.box-lambda { border-left: 6px solid var(--l-color); }
 .box-c { border-left: 6px solid var(--c-color); }
 
 /* Warna khusus angka di dalam kartu parameter */
-.box-lambda .val-display { color: var(--primary-text); }
+.box-lambda .val-display { color: var(--l-color); }
 .box-c .val-display { color: var(--c-color); margin-top: 5px; }
 
 /* --- ATURAN MAIN & APLIKASI --- */
