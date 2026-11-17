@@ -88,8 +88,10 @@
 #page-3 .meter { position: relative; padding-top: 18px; }
 #page-3 .meter-bar { height: 16px; border-radius: 8px; background: linear-gradient(90deg, #22c55e 0%, #22c55e 40%, #eab308 62%, #f97316 72%, #ef4444 85%, #9f1239 100%); }
 #page-3 .meter-tick { position: absolute; top: 16px; bottom: -4px; width: 2px; background: var(--text-main); }
-#page-3 .meter-tick span { position: absolute; top: 26px; left: 6px; font-size: 0.8rem; color: var(--text-muted); white-space: nowrap; }
-#page-3 .safe-box { margin-top: 26px; }
+/* Label "pengion (≈10 eV)": diturunkan ke bawah baris Aman/Waspada/Sangat berbahaya
+   dan di-tengah-kan pada garis, supaya tidak menimpa tulisan lain */
+#page-3 .meter-tick span { position: absolute; top: 52px; left: 1px; transform: translateX(-50%); font-size: 0.85rem; font-weight: 600; color: var(--primary-text); white-space: nowrap; }
+#page-3 .safe-box { margin-top: 52px; }
 #page-3 .tag-pill { display: inline-block; padding: 3px 12px; border-radius: 99px; font-weight: 700; font-size: 0.85rem; color: #000; margin-right: 6px; }
 
 /* Contoh nyata */

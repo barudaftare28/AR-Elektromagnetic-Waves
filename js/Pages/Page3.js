@@ -37,7 +37,7 @@ export const i18n = {
     p3_lg_E: "Energi Foton", 
     p3_lg_h: "Konstanta Planck",
     p3_safety: "Meter Keamanan", 
-    p3_ion: "pengion (≈10 eV)",
+    p3_ion: "Batas pengion (≈10 eV)",
     lv0: "Aman", 
     lv1: "Waspada", 
     lv2: "Berbahaya", 
@@ -95,7 +95,7 @@ export const i18n = {
     p3_lg_E: "Photon Energy", 
     p3_lg_h: "Planck Constant",
     p3_safety: "Safety Meter", 
-    p3_ion: "ionizing (≈10 eV)",
+    p3_ion: "Ionizing threshold (≈10 eV)",
     lv0: "Safe", 
     lv1: "Caution", 
     lv2: "Dangerous", 
@@ -197,7 +197,7 @@ function refresh() {
   el.mark.style.left = el.meterMark.style.left = (u / 7) * 100 + "%";
   const ion = E >= ION_EV;
   el.safe.innerHTML = `<span class="tag-pill" style="background:${LVCOL[w.lv]}">${T("lv" + w.lv)}</span>` +
-    `<span class="tag-pill" style="background:${ion ? "#dc2626" : "#78716c"}">${ion ? T("p3_ionY") : T("p3_ionN")}</span>` +
+    `<span class="tag-pill" style="background:${ion ? "#b91c1c" : "#7C4A21"};color:#fff">${ion ? T("p3_ionY") : T("p3_ionN")}</span>` +
     `<p style="margin-top:.6rem"><b>${P2(w.n)}:</b> ${P2(w.sf)}</p>`;
   if (mode === "cmp") { renderTable(); fillCard("ca", WV[selA.value], "A"); fillCard("cb", WV[selB.value], "B"); }
 }
