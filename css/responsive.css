@@ -1,0 +1,196 @@
+/* =====================================================================
+   RESPONSIVE.CSS  -  EM WAVE LAB
+   ---------------------------------------------------------------------
+   - Simpan di folder css/ (sejajar dengan base.css, page1.css, dst.)
+   - Panggil PALING AKHIR di index.html, setelah semua file CSS lain,
+     supaya aturan di sini menimpa aturan lama:
+       <link rel="stylesheet" href="css/responsive.css" />
+   - Satu file ini berlaku untuk SEMUA halaman (Page 1 sampai Page 4),
+     karena CSS dimuat sekali di index.html, bukan per halaman.
+   - Pendekatan desktop-first: makin kecil layar, makin banyak yang
+     disederhanakan.
+
+   Daftar bagian:
+     0. Dasar (semua ukuran)
+     1. maks 1600px : header jadi 2 baris
+     2. maks 1200px : Box Medan Listrik dan Medan Magnet jadi 1 kolom
+     3. maks 1100px : mode "Bandingkan 2 Gelombang" (Page 3) jadi 1 kolom
+     4. maks  900px : tablet
+     5. maks  720px : HP
+     6. maks  520px : HP kecil
+     7. Layar sentuh
+     8. Kurangi gerakan (aksesibilitas)
+   ===================================================================== */
+
+
+/* ---------- 0. DASAR (semua ukuran) ---------- */
+img { max-width: 100%; }
+.page { padding: clamp(14px, 4vw, 40px); }
+.container > * { min-width: 0; }
+.reference a { overflow-wrap: anywhere; }
+
+/* Label tombol dan judul logo tidak boleh patah baris */
+.nav-btn, .action-btn, .logo-text h1 { white-space: nowrap; }
+
+/* Modal tidak boleh lebih lebar dari layar */
+.modal-content {
+  min-width: min(400px, calc(100vw - 32px));
+  max-width: min(600px, calc(100vw - 32px));
+  padding: clamp(16px, 4vw, 30px);
+  max-height: 85vh;
+}
+.setting-item { flex-wrap: wrap; }
+
+/* Page 3: peta spektrum bisa digeser ke samping di layar sempit */
+#page-3 .spec-scroll { overflow-x: auto; padding: 2px 2px 8px; }
+
+/* Page 3: kartu contoh nyata menyesuaikan jumlah kolom otomatis */
+#page-3 .ex-pair { grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); }
+
+
+/* ---------- 1. MAKS 1600px: HEADER JADI 2 BARIS ---------- */
+/* Baris 1: logo (kiri) + tombol aksi (kanan). Baris 2: navigasi halaman. */
+@media (max-width: 1600px) {
+  .top-header { flex-wrap: wrap; padding: 14px 24px; row-gap: 12px; }
+  .logo { order: 1; flex: 1 1 auto; }
+  .top-actions { order: 2; gap: 10px; }
+  .nav-links { order: 3; width: 100%; justify-content: center; gap: 16px; }
+}
+
+
+/* ---------- 2. MAKS 1200px: BOX MEDAN LISTRIK + MAGNET JADI 1 KOLOM ---------- */
+@media (max-width: 1200px) {
+  .p2-fields { grid-template-columns: 1fr; }
+}
+
+
+/* ---------- 3. MAKS 1100px: MODE BANDINGKAN (PAGE 3) JADI 1 KOLOM ---------- */
+@media (max-width: 1100px) {
+  #page-3 #box-spec.is-cmp .wave-grid { grid-template-columns: 1fr; }
+  #page-3 #box-spec.is-cmp #wrap-a,
+  #page-3 #box-spec.is-cmp #wrap-b,
+  #page-3 #box-spec.is-cmp .wave-controls,
+  #page-3 #side-cmp .values-card.dynamic-card,
+  #page-3 #side-cmp .values-card.dynamic-card:nth-child(1),
+  #page-3 #side-cmp .values-card.dynamic-card:nth-child(2),
+  #page-3 .cmp-warn { grid-column: 1; grid-row: auto; }
+  #page-3 #box-spec.is-cmp .canvas-wrapper { height: 220px; min-height: 220px; }
+}
+
+
+/* ---------- 4. MAKS 900px: TABLET ---------- */
+@media (max-width: 900px) {
+  .container { gap: 28px; }
+  .p2-box { padding: 22px; }
+  .wave-visual-container { height: 320px; }
+
+  /* Header: tombol aksi hanya ikon, navigasi membagi lebar rata */
+  .action-btn { padding: 8px 12px; }
+  .action-btn > span:last-child { display: none; }
+  .nav-links { gap: 6px; justify-content: space-between; }
+  .nav-btn { flex: 1; justify-content: center; padding: 10px 12px; }
+
+  /* Page 3: peta spektrum digeser ke samping */
+  #page-3 .spec-map { min-width: 640px; }
+}
+
+
+/* ---------- 5. MAKS 720px: HP ---------- */
+@media (max-width: 720px) {
+  :root { --base-font: 16px; }
+
+  /* Header ringkas: tidak menempel di atas, nav hanya angka (yang aktif tetap berlabel) */
+  .top-header { position: static; padding: 12px 16px; }
+  .pulse-icon { width: 36px; height: 36px; }
+  .logo { gap: 10px; }
+  .logo-text h1 { font-size: 1.15rem; letter-spacing: 1px; }
+  .logo-text p { display: none; }
+  .nav-links { padding: 6px; gap: 4px; }
+  .nav-btn { flex: 0 0 auto; padding: 8px 14px; font-size: 0.95rem; }
+  .nav-btn.active { flex: 1; }
+  .nav-btn:not(.active) > span:not(.badge) { display: none; }
+
+  /* Judul halaman dan navigasi bawah (Page 2, 3, 4) */
+  .p2-header { padding: 16px; }
+  .tag-header { flex-wrap: wrap; }
+  .p2-title { font-size: 1.25rem; }
+  .p2-subtitle { font-size: 0.95rem; }
+  .bottom-nav { flex-direction: column; gap: 14px; padding: 16px; }
+  .bottom-nav .btn-text { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 10px; }
+  .pagination { order: -1; gap: 8px; }
+  .pagination .line { width: 20px; }
+  .dot { width: 28px; height: 28px; }
+
+  /* Page 1 */
+  .main-title { font-size: 2rem; }
+  .wave-visual-container { height: 260px; }
+  .formula-card { padding: 20px; }
+  .formula { font-size: 2.2rem; margin: 16px 0; }
+  .feature-list .icon { flex: 0 0 48px; width: 48px; height: 48px; font-size: 1.4rem; }
+  .maxwell-card { flex-direction: column; align-items: flex-start; padding: 16px; }
+  .maxwell-img { width: 72px; }
+  .maxwell-card p { text-indent: 0; text-align: left; }
+  .btn-primary { padding: 14px 20px; font-size: 1.05rem; }
+
+  /* Page 2 */
+  .p2-box { padding: 18px; }
+  .sub-card { padding: 14px; }
+  .formula-pair { grid-template-columns: 1fr; gap: 10px; }
+  .wave-sliders { grid-template-columns: 1fr; gap: 14px; }
+  .toolbar-sep { display: none; }
+  .canvas-wrapper { height: 260px; }
+  .val-number { font-size: 1.8rem; }
+
+  /* Kotak di atas kanvas simulasi pindah ke bawah kanvas */
+  .sim-overlay, .sim-overlay.overlay-b { position: static; width: 100%; margin-top: 10px; }
+  .sim-charge {
+    position: static; margin-top: 10px;
+    flex-direction: row; align-items: center; justify-content: space-between;
+  }
+  #e-canvas { height: 270px; }
+  #b-canvas { height: 300px; }
+
+  /* Page 3 */
+  #page-3 .p3-arrows { flex-wrap: wrap; font-size: 0.8rem; }
+  #page-3 .canvas-wrapper { min-height: 220px; }
+  #page-3 th, #page-3 td { padding: 6px 8px; font-size: 0.85rem; }
+
+  /* Page 4 */
+  .q-container, .q-layout, .q-center, .q-right { gap: 16px; }
+  .q-card, .q-progress-card { padding: 16px; }
+  .q-progress { justify-content: center; }
+  .q-step { width: 38px; height: 38px; font-size: 1rem; margin: 0 14px 0 0; }
+  .q-step:not(:last-child)::after { width: 14px; }
+  .q-opt { padding: 10px 12px; }
+  #q-canvas { height: 220px; }
+  .q-score-btns { flex-direction: column; }
+}
+
+
+/* ---------- 6. MAKS 520px: HP KECIL ---------- */
+@media (max-width: 520px) {
+  /* Tabel keterangan rumus: satuan pindah ke baris bawah */
+  .legend li { grid-template-columns: 44px 1fr; row-gap: 2px; padding: 10px 2px; }
+  .leg-unit { grid-column: 2; text-align: left; font-size: 0.9rem; white-space: normal; }
+  .formula-eq { font-size: 1.25rem; }
+  .main-title { font-size: 1.7rem; }
+  .zoom-presets { margin: 0; }
+}
+
+
+/* ---------- 7. LAYAR SENTUH: TARGET SENTUH LEBIH BESAR ---------- */
+@media (pointer: coarse) {
+  .p2-slider { height: 8px; }
+  .p2-slider::-webkit-slider-thumb { width: 26px; height: 26px; }
+  .p2-slider::-moz-range-thumb { width: 22px; height: 22px; }
+  #page-3 .step-btn { width: 42px; height: 42px; }
+  .charge-btn { width: 44px; height: 38px; }
+  .zoom-btn, .wave-tab { min-height: 40px; }
+}
+
+
+/* ---------- 8. KURANGI GERAKAN (pengguna yang mematikan animasi di perangkatnya) ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .page { animation: none; }
+  * { transition-duration: 0.01ms !important; }
+}

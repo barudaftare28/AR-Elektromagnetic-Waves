@@ -9,6 +9,7 @@ const dict = {
     modal_guide_title: "Panduan Penggunaan",
     modal_guide_p1: "Page 1 (Intro):", modal_guide_d1: "Pahami konsep dasar, arah rambat, dan komponen medan listrik & magnet.",
     modal_guide_p2: "Page 2 (Wave Lab):", modal_guide_d2: "Pelajari medan listrik dan medan magnet lewat simulasi (geser jarak dan arus), lalu amati gelombang elektromagnetik. Gunakan tombol E, B, atau E + B, Pause, Zoom, dan dua slider.",
+    modal_guide_p3: "Page 3 (Spectrum):", modal_guide_d3: "Pilih jenis gelombang lalu ubah frekuensi dan amplitudonya.",
     modal_guide_p4: "Page 4 (Challenge):", modal_guide_d4: "Jawab 5 soal untuk menguji pemahamanmu.",
     
     glo_freq_title: "Frekuensi (f):", glo_freq_desc: "Jumlah getaran dalam satu detik (Hertz).",

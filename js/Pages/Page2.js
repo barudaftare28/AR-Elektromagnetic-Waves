@@ -28,11 +28,14 @@ export const i18n = {
     p2_e_r: "Jarak (r)",
     p2_e_out: "Kuat medan E",
     p2_e_q: "Muatan",
-    p2_e_qlabel: "Muatan sumber",
-    p2_e_note: "(besarnya tetap). Tombol + dan − mengganti jenis muatan, tanda − pada nilai E berarti arah medan menuju muatan sedangkan + (tidak ada tanda) pada nilai E berarti arah medan menjauhi muatan . Panjang panah bersifat skematis, sedangkan angka hasil dihitung dengan rumus.",
+    p2_e_pt1: "Kamu bisa mengganti jenis muatan, yaitu (+) atau (−), dan mengubah jarak r dengan slider.",
+    p2_e_pt2: "Muatan (+) membuat arah medan menjauhi muatan, dan nilai E bertanda positif. Muatan (−) membuat arah medan menuju muatan, dan nilai E bertanda negatif.",
+    p2_e_pt3: "Panjang panah pada gambar hanya untuk gambaran. Nilai E yang tertulis dihitung dari rumus.",
+
     p2_e_mat_1: "Semakin jauh jarak suatu titik dari muatan sumber, semakin kecil kuat medan listriknya. Tetapi semakin dekat suatu titik dari muatan sumber, makin besar pula kuat medan listriknya.",
     p2_e_mat_2: "Muatan listrik positif menghasilkan medan listrik yang arahnya menjauhi muatan. Sebaliknya, muatan listrik negatif menghasilkan medan listrik yang arahnya menuju muatan.",
     p2_e_mat_3: "Besar kuat medan listrik sebanding dengan besar muatan sumber.",
+    p2_e_mat_4: "Kuat medan listrik E tidak bergantung pada besar muatan uji (q). Jika q diperbesar atau diperkecil, gaya F ikut membesar atau mengecil mengikuti q",
       // Box 2: Medan Magnet
     p2_b_title: "Medan Magnet (B)",
     p2_b_intro: "Medan magnet adalah daerah di sekitar magnet atau arus listrik tempat muncul gaya magnetik. Di sekitar kawat lurus berarus, garis medan magnet berbentuk lingkaran yang mengelilingi kawat.",
@@ -43,7 +46,9 @@ export const i18n = {
     p2_b_i: "Arus (I)",
     p2_b_r: "Jarak (r)",
     p2_b_out: "Kuat medan B",
-    p2_b_note: "Arus mengalir keluar dari layar (⊙), sehingga garis medan berputar berlawanan arah jarum jam (kaidah tangan kanan). Tanda panah yang bergerak hanya ilustrasi arah medan, dan makin cepat saat arus makin besar atau titik makin dekat kawat. Panjang panah bersifat skematis.",
+    p2_b_pt1: "Arus keluar layar (⊙) membuat garis medan berputar berlawanan arah jarum jam, sedangkan arus masuk layar (⊗) membuat garis medan berputar searah jarum jam (kaidah tangan kanan).",
+    p2_b_pt2: "Panah yang bergerak hanya menunjukkan arah medan magnet. Semakin besar arus, semakin cepat geraknya.",
+    p2_b_pt3: "Gerak panah hanyalah efek animasi, bukan medan yang benar-benar mengalir, dan bukan berarti medan bergerak lebih cepat. Panjang panah juga hanya gambaran, bukan ukuran sebenarnya.",
     p2_b_dir: "Arah arus",
     p2_b_dir_out: "Keluar layar",
     p2_b_dir_in: "Masuk layar",
@@ -51,7 +56,7 @@ export const i18n = {
     p2_b_mat_1: "Semakin jauh jarak suatu titik dari sumber magnet, semakin lemah kuat medan magnetnya. Tetapi semakin dekat jarak suatu titik dari sumber magnet, semakin kuat medan magnetnya.",
     p2_b_mat_2: "Semakin besar arusnya, semakin besar medan magnetnya. Tetapi semakin kecil arusnya, semakin kecil medan magnetnya.",
     p2_b_mat_3: "Semakin banyak lilitan kawat pada elektromagnet, semakin kuat medan magnet yang dihasilkan. Tetapi semakin sedikit lilitannya, semakin lemah medan magnetnya.",
-    p2_b_mat_4: "Jika arah arus listrik di balik, arah putaran medan magnet di sekitar kawat juga akan ikut berputar.",
+    p2_b_mat_4: "Jika arah arus listrik dibalik, arah putaran medan magnet di sekitar kawat juga akan ikut berbalik.",
     // Tombol header dan kontrol bersama
     btn_pause: "PAUSE",
     btn_play: "PLAY",
@@ -77,6 +82,7 @@ export const i18n = {
     p2_how_1: "Perubahan medan listrik menghasilkan medan magnet. Ketika medan listrik berubah terhadap waktu, perubahan tersebut menghasilkan medan magnet yang juga berubah.",
     p2_how_2: "Perubahan medan magnet menghasilkan medan listrik. Medan magnet yang berubah terhadap waktu dapat menghasilkan medan listrik melalui proses induksi elektromagnetik.",
     p2_how_3: "Kedua medan saling berkaitan. Medan listrik dan medan magnet yang berubah secara terus-menerus saling mendukung dalam pembentukan dan perambatan gelombang elektromagnetik.",
+    p2_how_4: "Gelombang elektromagnetik tidak bermuatan listrik, sehingga tidak mengalami gaya dari medan magnet.",
   },
   en: {
     p2_sim: "(SIMULATION)",
@@ -99,11 +105,13 @@ export const i18n = {
     p2_e_r: "Distance (r)",
     p2_e_out: "Field strength E",
     p2_e_q: "Charge",
-    p2_e_qlabel: "Source charge",
-    p2_e_note: "(the magnitude remains constant). The + and − buttons change the type of charge; a − sign for the value of E indicates that the field is directed toward the charge, while a + sign (or the absence of a sign) for the value of E indicates that the field is directed away from the charge. The length of the arrow is schematic, whereas the numerical result is calculated using a formula.",
+    p2_e_pt1: "You can switch the charge type, (+) or (−), and change the distance r with the slider.",
+    p2_e_pt2: "A (+) charge makes the field point away from the charge, and E is positive. A (−) charge makes the field point toward the charge, and E is negative.",
+    p2_e_pt3: "Arrow lengths in the picture are only for illustration. The E value shown is calculated from the formula.",
     p2_e_mat_1: "The further a point is from a source charge, the weaker the electric field strength at that point. Conversely, the closer a point is to a source charge, the greater the electric field strength.",
     p2_e_mat_2: "A positive electric charge produces an electric field directed away from the charge. Conversely, a negative electric charge produces an electric field directed toward the charge.",
     p2_e_mat_3: "The magnitude of the electric field strength is proportional to the magnitude of the source charge.",
+    p2_e_mat_4: "The electric field strength E does not depend on the size of the test charge (q). If q is made larger or smaller, the force F grows or shrinks along with q",
       // Box 2: Magnetic field
     p2_b_title: "Magnetic Field (B)",
     p2_b_intro: "A magnetic field is the region around a magnet or an electric current where magnetic forces appear. Around a straight current-carrying wire, the magnetic field lines form circles around the wire.",
@@ -114,7 +122,9 @@ export const i18n = {
     p2_b_i: "Current (I)",
     p2_b_r: "Distance (r)",
     p2_b_out: "Field strength B",
-    p2_b_note: "The current flows out of the screen, so the field lines circle counterclockwise (right-hand rule). The moving arrows only illustrate the field direction, and they speed up as the current grows or the point gets closer to the wire. Arrow length is schematic.",
+    p2_b_pt1: "A current out of the screen (⊙) makes the field lines circle counterclockwise, while a current into the screen (⊗) makes them circle clockwise (right-hand rule).",
+    p2_b_pt2: "The moving arrows only show the direction of the magnetic field. The larger the current, the faster they move.",
+    p2_b_pt3: "The arrow motion is just an animation effect. It does not mean the field is really flowing or moving faster. Arrow length is also only an illustration, not the true size.",
     p2_b_dir: "Current direction",
     p2_b_dir_out: "Out of screen",
     p2_b_dir_in: "Into screen",
@@ -122,7 +132,8 @@ export const i18n = {
     p2_b_mat_1: "The further a point is from a magnetic source, the weaker its magnetic field strength becomes. Conversely, the closer a point is to a magnetic source, the stronger its magnetic field becomes.",
     p2_b_mat_2: "The greater the current, the stronger the magnetic field. Conversely, the smaller the current, the weaker the magnetic field.",
     p2_b_mat_3: "The more turns of wire an electromagnet has, the stronger the magnetic field it produces. Conversely, the fewer the turns, the weaker the magnetic field.",
-    p2_b_mat_4: "If the direction of the electric current is reversed, the direction of the magnetic field's rotation around the wire will also change.",
+    p2_b_mat_4: "If the direction of the electric current is reversed, the direction in which the magnetic field circles the wire is also reversed.",
+
     // Header buttons and shared controls
     btn_pause: "PAUSE",
     btn_play: "PLAY",
@@ -148,6 +159,7 @@ export const i18n = {
     p2_how_1: "A changing electric field produces a magnetic field. When an electric field changes over time, this change generates a magnetic field that also varies.",
     p2_how_2: "A changing magnetic field produces an electric field. A magnetic field that varies over time can generate an electric field through the process of electromagnetic induction.",
     p2_how_3: "The two fields are interrelated. Continuously changing electric and magnetic fields support one another in the formation and propagation of electromagnetic waves.",
+    p2_how_4: "An electromagnetic wave carries no electric charge, so it does not experience a force from a magnetic field.",
   },
 };
 
@@ -296,7 +308,8 @@ function drawE() {
   const reach = PULSE.reachMin + (PULSE.reachMax - PULSE.reachMin) * tR;
 
   // sumbu digeser ke bawah supaya kotak di kanan atas tidak menutupi
-  const cx = 120, cy = h - 105;
+  const narrow = w < 420;
+  const cx = narrow ? Math.max(48, w * 0.2) : 120, cy = h - 105;
 
   // Panah dinamis dari muatan
   pulses.forEach((p) => {
@@ -317,7 +330,7 @@ function drawE() {
   label(ctx, S.sign > 0 ? "+" : "−", cx, cy + 1, "#fff", 20);
 
   // Titik uji P pada jarak r
-  const x0 = cx + 70, x1 = w - 70;
+  const x0 = cx + (narrow ? 45 : 70), x1 = w - (narrow ? 55 : 70);
   const px = x0 + ((S.r - R_MIN) / (R_MAX - R_MIN)) * Math.max(0, x1 - x0);
 
   ctx.setLineDash([5, 4]); ctx.strokeStyle = P.dim; ctx.lineWidth = 1;
@@ -346,8 +359,7 @@ function drawE() {
 function updateE() {
   const E = fieldE(S.r) * S.sign;
   $("e-r-val").textContent = `${S.r.toFixed(1)} m`;
-  $("e-out").innerHTML = `${fmtSci(E)} N/C`;
-  $("e-q-val").textContent = `${S.sign > 0 ? "" : "−"}1 µC`; 
+  $("e-out").innerHTML = `${fmtSci(E)} N/C`; 
   drawE();
 }
 

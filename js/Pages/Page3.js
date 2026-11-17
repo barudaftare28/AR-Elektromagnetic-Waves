@@ -175,6 +175,15 @@ function setU(v) { u = Math.max(0, Math.min(U_MAX, v)); sFreq.value = u; refresh
 function pickType(i) { baseF = fAt(i); setU(i); }
 
 // ---------- PANEL ----------
+
+// Tampilkan contoh nyata hanya untuk jenis gelombang yang sedang dipilih (i = indeks di WV)
+function showExamples(i) {
+  const key = WV[i].k;
+  el.exList.querySelectorAll(".ex-grp").forEach((g) => {
+    g.hidden = g.dataset.band !== key;
+  });
+}
+
 function refresh() {
   const f = fAt(u), i = typeOf(u), w = WV[i], E = H_EV * f;
   el.valF.textContent = el.infoFreq.textContent = fmtF(f);
@@ -184,6 +193,7 @@ function refresh() {
   el.infoName.textContent = P2(w.n); el.infoName.style.color = w.col;
   el.infoRange.textContent = w.rg;
   segBtns.forEach((b, k) => b.classList.toggle("on", k === i));
+  showExamples(i);
   el.mark.style.left = el.meterMark.style.left = (u / 7) * 100 + "%";
   const ion = E >= ION_EV;
   el.safe.innerHTML = `<span class="tag-pill" style="background:${LVCOL[w.lv]}">${T("lv" + w.lv)}</span>` +
@@ -215,6 +225,7 @@ function renderExamples() {
   el.exList.innerHTML = "";
   WV.forEach((w) => {
     const g = document.createElement("div"); g.className = "ex-grp"; g.style.setProperty("--c", w.col);
+    g.dataset.band = w.k;
     g.innerHTML = `<h4>${P2(w.n)} <small style="color:var(--text-muted)">${w.rg}</small></h4><div class="ex-pair"></div>`;
     [0, 1].forEach((j) => {
       const d = document.createElement("article"); d.className = "ex-card";
@@ -252,10 +263,7 @@ function setMode(m) {
   $("wrap-b").hidden = $("side-cmp").hidden = !cmp;
   $("side-one").hidden = cmp;
   sFreq.disabled = $("btn-f-minus").disabled = $("btn-f-plus").disabled = cmp;
-  ["box-map", "box-safety", "box-ex"].forEach((id) => {
-    const b = $(id);
-    b.classList.toggle("is-disabled", cmp); b.inert = cmp; b.setAttribute("aria-disabled", String(cmp));
-  });
+  ["box-map", "box-safety", "box-ex"].forEach((id) => { $(id).hidden = cmp; });
 
   refresh();
 }

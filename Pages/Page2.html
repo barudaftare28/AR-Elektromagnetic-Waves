@@ -96,10 +96,11 @@
             </div>
           </div>
 
-          <p class="text-sm">
-            <span data-i18n="p2_e_qlabel">Muatan sumber</span> Q = <strong id="e-q-val">1 µC</strong>
-            <span data-i18n="p2_e_note">(besarnya tetap). Tombol + dan − mengganti jenis muatan, tanda − pada nilai E berarti arah medan menuju muatan sedangkan + (tidak ada tanda) pada nilai E berarti arah medan menjauhi muatan . Panjang panah bersifat skematis, sedangkan angka hasil dihitung dengan rumus.</span>
-          </p>
+          <ul class="sim-notes">
+            <li data-i18n="p2_e_pt1">Kamu bisa mengganti jenis muatan, yaitu (+) atau (−), dan mengubah jarak r dengan slider.</li>
+            <li data-i18n="p2_e_pt2">Muatan (+) membuat arah medan menjauhi muatan, dan nilai E bertanda positif. Muatan (−) membuat arah medan menuju muatan, dan nilai E bertanda negatif.</li>
+            <li data-i18n="p2_e_pt3">Panjang panah pada gambar hanya untuk gambaran. Nilai E yang tertulis dihitung dari rumus.</li>
+          </ul>
         </div>
 
         <!-- Kartu materi -->
@@ -109,6 +110,7 @@
           <p class="text-lg" data-i18n="p2_e_mat_1">E = F/q berarti kuat medan adalah gaya yang dialami setiap satu satuan muatan uji.</p>
           <p class="text-lg" data-i18n="p2_e_mat_2">Pada E = k·Q/r², jarak dua kali lebih jauh membuat E menjadi seperempatnya, sehingga medan melemah dengan cepat saat menjauh.</p>
           <p class="text-lg" data-i18n="p2_e_mat_3">Medan listrik yang berubah terhadap waktu menimbulkan medan magnet. Inilah salah satu dasar terbentuknya gelombang elektromagnetik.</p>
+          <p class="text-lg" data-i18n="p2_e_mat_4">Kuat medan listrik E tidak bergantung pada besar muatan uji (q). Jika q diperbesar atau diperkecil, gaya F ikut membesar atau mengecil mengikuti q, sehingga hasil F/q tetap sama.</p>
         </div>
       </article>
 
@@ -186,7 +188,11 @@
             </div>
           </div>
           
-          <p class="text-sm" id="b-note" data-i18n="p2_b_note">Arus mengalir keluar dari layar, sehingga garis medan berputar berlawanan arah jarum jam (kaidah tangan kanan). Tanda panah yang bergerak hanya ilustrasi arah medan, dan makin cepat saat arus makin besar atau titik makin dekat kawat. Panjang panah bersifat skematis.</p>
+          <ul class="sim-notes notes-b">
+            <li data-i18n="p2_b_pt1">Arus keluar layar (⊙) membuat garis medan berputar berlawanan arah jarum jam, sedangkan arus masuk layar (⊗) membuat garis medan berputar searah jarum jam (kaidah tangan kanan).</li>
+            <li data-i18n="p2_b_pt2">Panah yang bergerak hanya menunjukkan arah medan magnet. Semakin besar arus, semakin cepat geraknya.</li>
+            <li data-i18n="p2_b_pt3">Gerak panah hanyalah efek animasi, bukan medan yang benar-benar mengalir, dan bukan berarti medan bergerak lebih cepat. Panjang panah juga hanya gambaran, bukan ukuran sebenarnya.</li>
+          </ul>
         </div>
 
         <div class="sub-card mat-card">
@@ -194,7 +200,7 @@
           <p class="text-lg" data-i18n="p2_b_mat_1">Arus yang lebih besar menghasilkan medan yang lebih kuat: I dua kali lipat membuat B dua kali lipat.</p>
           <p class="text-lg" data-i18n="p2_b_mat_2">Semakin jauh dari kawat, medan semakin lemah: jarak dua kali lebih jauh membuat B menjadi setengahnya.</p>
           <p class="text-lg" data-i18n="p2_b_mat_3">Sebaliknya, medan magnet yang berubah terhadap waktu menimbulkan medan listrik (induksi Faraday). Keduanya saling melengkapi.</p>
-          <p class="text-lg" data-i18n="p2_b_mat_4"></p>
+          <p class="text-lg" data-i18n="p2_b_mat_4">Jika arah arus listrik dibalik, arah putaran medan magnet di sekitar kawat juga akan ikut berbalik.</p>
         </div>
       </article>
     </div>
@@ -291,6 +297,7 @@
         <p class="text-lg" data-i18n="p2_how_1">Perubahan medan listrik menghasilkan medan magnet. Ketika medan listrik berubah terhadap waktu, perubahan tersebut menghasilkan medan magnet yang juga berubah.</p>
         <p class="text-lg" data-i18n="p2_how_2">Perubahan medan magnet menghasilkan medan listrik. Medan magnet yang berubah terhadap waktu dapat menghasilkan medan listrik melalui proses induksi elektromagnetik.</p>
         <p class="text-lg" data-i18n="p2_how_3">Kedua medan saling berkaitan. Medan listrik dan medan magnet yang berubah secara terus-menerus saling mendukung dalam pembentukan dan perambatan gelombang elektromagnetik.</p>
+        <p class="text-lg" data-i18n="p2_how_4">Gelombang elektromagnetik tidak bermuatan listrik, sehingga tidak mengalami gaya dari medan magnet.</p>
       </div>
     </article>
 
