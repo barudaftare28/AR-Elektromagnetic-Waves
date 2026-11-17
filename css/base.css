@@ -1,22 +1,34 @@
 /* ===== VARIABEL, RESET, HEADER, MODAL, KOMPONEN BERSAMA ===== */
 :root {
-  --bg-color: #0a0f1d; --card-bg: #111827; --card-bg-light: #1f2937;
-  --primary: #2563eb; --primary-hover: #1d4ed8;
-  --cyan: #06b6d4; --orange: #f59e0b; --purple: #8b5cf6; --green: #10b981;
-  --text-main: #f9fafb; --text-muted: #9ca3af; --text-highlight: #ffffff;
-  --border: rgba(255, 255, 255, 0.15); --border-light: rgba(255, 255, 255, 0.25);
-  --modal-bg: rgba(0, 0, 0, 0.8);
-  --locked-bg: linear-gradient(135deg, rgba(29, 78, 216, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
-  --locked-border: rgba(139, 92, 246, 0.4); --locked-title: #e9d5ff;
+  /* ===== PALET TUNGGAL: KREM + ORANYE (tanpa dark mode) ===== */
+  --bg-color: #FBF4E8;        /* krem hangat: latar halaman */
+  --card-bg: #FFFDF8;         /* krem sangat terang: latar kartu */
+  --card-bg-light: #F3E7D3;   /* krem lebih tua: aksen, tombol nonaktif */
+
+  --primary: #F97316;         /* oranye: tombol, garis, latar aktif */
+  --primary-hover: #EA580C;   /* oranye tua: hover */
+  --primary-text: #B8410A;    /* oranye gelap: KHUSUS teks (kontras >5:1 di atas krem) */
+
+  --cyan: #B8410A;            /* nama lama; dipakai untuk Medan Listrik (E) */
+  --orange: #D97706;
+  --purple: #6D28D9;          /* Medan Magnet (B), ungu tua agar terbaca */
+  --green: #15803D;
+
+  --text-main: #2B2118;       /* cokelat hampir hitam: teks utama (kontras >14:1) */
+  --text-muted: #5E5043;      /* cokelat sedang: teks sekunder (kontras >7:1) */
+  --text-highlight: #1A120B;
+
+  --border: rgba(80, 50, 20, 0.16);
+  --border-light: rgba(80, 50, 20, 0.28);
+  --border-color: var(--border);   /* alias: Page1.css memakai nama ini */
+  --text-color: var(--text-main);  /* alias: Page1.css memakai nama ini */
+  --modal-bg: rgba(43, 33, 24, 0.55);
+
+  --locked-bg: linear-gradient(135deg, rgba(249,115,22,0.08) 0%, rgba(217,119,6,0.08) 100%);
+  --locked-border: rgba(249, 115, 22, 0.35);
+  --locked-title: #B8410A;
+
   --base-font: 18px;
-}
-body.light-mode {
-  --bg-color: #f3f4f6; --card-bg: #ffffff; --card-bg-light: #e5e7eb;
-  --text-main: #111827; --text-muted: #4b5563; --text-highlight: #111827;
-  --border: rgba(0, 0, 0, 0.1); --border-light: rgba(0, 0, 0, 0.2);
-  --modal-bg: rgba(0, 0, 0, 0.5);
-  --locked-bg: linear-gradient(135deg, rgba(29, 78, 216, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
-  --locked-border: rgba(139, 92, 246, 0.2); --locked-title: #6d28d9;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
@@ -38,7 +50,7 @@ body {
 .mb-4 { margin-bottom: 20px; }
 .text-sm { font-size: 0.95rem; line-height: 1.6; color: var(--text-muted); }
 .text-lg { font-size: 1.1rem; line-height: 1.6; color: var(--text-muted); }
-.bg-blue { background: var(--primary); }
+.bg-blue { background: var(--primary); } /* Kelas bernama bg-blue sekarang akan memunculkan warna Oranye */
 
 /* ---- Modal ---- */
 .modal-overlay {
@@ -56,7 +68,7 @@ body {
   display: flex; justify-content: space-between; align-items: center;
   margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px;
 }
-.modal-header h3 { font-size: 1.4rem; color: var(--cyan); }
+.modal-header h3 { font-size: 1.4rem; color: var(--primary-text); }
 .close-btn { background: transparent; border: none; color: var(--text-main); font-size: 1.5rem; cursor: pointer; }
 .modal-body p { margin-bottom: 10px; font-size: 1.1rem; line-height: 1.6; color: var(--text-muted); }
 .modal-body ul { margin-left: 20px; line-height: 1.8; color: var(--text-muted); }
@@ -68,11 +80,11 @@ body {
 }
 .setting-item:last-child { border-bottom: none; }
 .toggle-btn {
-  padding: 8px 20px; border-radius: 20px; border: 2px solid var(--cyan);
-  background: rgba(6, 182, 212, 0.1); color: var(--text-main); font-weight: bold;
+  padding: 8px 20px; border-radius: 20px; border: 2px solid var(--primary);
+  background: rgba(249, 115, 22, 0.1); color: var(--text-main); font-weight: bold;
   cursor: pointer; font-size: 1rem; transition: 0.3s; width: 120px;
 }
-.toggle-btn:hover { background: var(--cyan); color: white; }
+.toggle-btn:hover { background: var(--primary-hover); color: white; }
 
 /* ---- Header ---- */
 .top-header {
@@ -81,7 +93,7 @@ body {
   position: sticky; top: 0; z-index: 100; transition: background-color 0.3s;
 }
 .logo { display: flex; align-items: center; gap: 15px; }
-.pulse-icon { width: 50px; height: 50px; color: var(--cyan); }
+.pulse-icon { width: 50px; height: 50px; color: var(--primary); }
 .logo-text h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: 1.5px; }
 .logo-text p { font-size: 0.9rem; color: var(--text-muted); }
 .nav-links {
@@ -93,24 +105,22 @@ body {
   border-radius: 25px; cursor: pointer; transition: 0.3s; font-size: 1.05rem; font-weight: 500;
   display: flex; align-items: center; gap: 8px;
 }
-.nav-btn.active { background: var(--primary); color: white; }
+.nav-btn.active { background: var(--primary-hover); color: white; }
 .badge {
   background: var(--card-bg); 
-  /* Paksa warna teks menggunakan --text-main agar selalu kontras dengan card-bg */
   color: var(--text-main) !important; 
   border-radius: 50%; width: 24px; height: 24px;
   display: inline-flex; justify-content: center; align-items: center; 
   font-size: 0.85rem;
-  /* Tambahkan sedikit border agar batas lingkaran tegas di light mode */
   border: 1px solid var(--border); 
 }
 
-/* Saat menu aktif (biru), teks badge kembali disesuaikan */
+/* Saat menu aktif, teks badge mengikuti oranye */
 .nav-btn.active .badge { 
   background: white !important; 
   color: var(--primary) !important; 
   font-weight: bold; 
-  border: none; /* Hilangkan border saat aktif */
+  border: none; 
 }
 .top-actions { display: flex; gap: 15px; }
 .action-btn {
@@ -129,7 +139,7 @@ body {
 .tag-header { display: flex; align-items: center; gap: 15px; margin-bottom: 5px; }
 .tag-header.no-margin { margin-bottom: 0; }
 .tag { padding: 6px 16px; border-radius: 8px; font-size: 1rem; font-weight: 700; color: white; }
-.tag-text { color: var(--cyan); font-weight: 600; letter-spacing: 1px; font-size: 1.1rem; }
+.tag-text { color: var(--primary-text); font-weight: 600; letter-spacing: 1px; font-size: 1.1rem; }
 
 /* Header judul Page 2, 3, 4 */
 .p2-header {
@@ -146,7 +156,7 @@ body {
   margin-top: 15px; transition: background-color 0.3s;
 }
 .btn-text { background: transparent; border: none; color: var(--text-main); cursor: pointer; font-size: 1.1rem; font-weight: 600; transition: 0.2s; }
-.btn-text:hover { color: var(--cyan); }
+.btn-text:hover { color: var(--primary-text); }
 .pagination { display: flex; align-items: center; gap: 15px; }
 .pagination [data-goto] { cursor: pointer; transition: 0.2s; }
 .pagination [data-goto]:hover { transform: scale(1.1); }
@@ -154,9 +164,9 @@ body {
   width: 32px; height: 32px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
   font-size: 0.9rem; font-weight: bold; background: var(--card-bg-light); color: var(--text-muted);
 }
-.dot.active { background: var(--cyan); color: #fff; }
-.dot.current { border: 2px solid var(--text-main); box-shadow: 0 0 10px var(--cyan); transform: scale(1.1); }
-.line { width: 40px; height: 3px; background: var(--cyan); }
+.dot.active { background: var(--primary); color: #fff; }
+.dot.current { border: 2px solid var(--text-main); box-shadow: 0 0 10px var(--primary); transform: scale(1.1); }
+.line { width: 40px; height: 3px; background: var(--primary); }
 .line.dim { background: var(--card-bg-light); }
 
 @media (max-width: 900px) {
@@ -164,11 +174,6 @@ body {
   .top-header { flex-wrap: wrap; gap: 20px; }
 }
 
-/* Status halaman yang sedang dibuka */
-.nav-btn.active .badge {
-  background-color: #3b82f6; 
-  color: white;
-}
 
 /* Status halaman yang sudah dilewati */
 /* .nav-btn.completed .badge {

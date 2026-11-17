@@ -12,7 +12,7 @@ export const i18n = {
     p2_desc: "Pelajari medan listrik dan medan magnet, lalu lihat bagaimana keduanya membentuk gelombang elektromagnetik.",
     btn_reset: "RESET",
     btn_back: "Kembali ke Intro",
-    btn_next: "Lanjut ke Spectrum (AR)",
+    btn_next: "Lanjut ke Spectrum",
     p2_formula: "Rumus",
     p2_sim_title: "Simulasi",
     p2_mat_title: "Memahami rumus",
@@ -89,7 +89,7 @@ export const i18n = {
     p2_desc: "Learn about electric and magnetic fields, then see how together they form an electromagnetic wave.",
     btn_reset: "RESET",
     btn_back: "Back to Intro",
-    btn_next: "Next to Spectrum (AR)",
+    btn_next: "Next to Spectrum",
     p2_formula: "Formula",
     p2_sim_title: "Simulation",
     p2_mat_title: "Understanding the formula",
@@ -181,7 +181,6 @@ const ZOOM_IDS = ["z-05", "z-1", "z-2"];
 const DEFAULTS = { r: 1, i: 5, R: 0.1, mode: "eb", zoom: 1, freq: 1, speed: 1, sign: 1, dir: 1 }; 
 const S = { ...DEFAULTS, time: 0, paused: false };
 const $ = (id) => document.getElementById(id);
-const isLight = () => document.body.classList.contains("light-mode");
 
 // ---------- HELPER UMUM ----------
 // Kuat medan listrik (N/C) pada jarak r (m)
@@ -200,11 +199,9 @@ function fmtSci(v) {
   return `${m} × 10<sup>${parseInt(e, 10)}</sup>`;
 }
 
-// Warna kanvas mengikuti tema
+// Warna kanvas (satu tema krem + oranye)
 function pal() {
-  return isLight()
-    ? { text: "#111827", dim: "rgba(0,0,0,0.5)", e: "#0891b2", b: "#7c3aed", pos: "#dc2626", neg: "#2563eb", bg: "#ffffff", hi: "#111827", blue: "#2563eb", outline: "#000000", wire: "#374151", axis: "rgba(0,0,0,0.35)", grid: "rgba(0,0,0,0.12)" }
-    : { text: "#f9fafb", dim: "rgba(255,255,255,0.55)", e: "#06b6d4", b: "#8b5cf6", pos: "#ef4444", neg: "#3b82f6", bg: "#111827", hi: "#ffffff", blue: "#3b82f6", outline: "#000000", wire: "#e5e7eb", axis: "rgba(255,255,255,0.4)", grid: "rgba(255,255,255,0.12)" };
+  return { text: "#2B2118", dim: "rgba(43,33,24,0.6)", e: "#EA580C", b: "#6D28D9", pos: "#DC2626", neg: "#2563EB", bg: "#FFFDF8", hi: "#2B2118", blue: "#2563EB", outline: "#2B2118", wire: "#4B3F35", axis: "rgba(43,33,24,0.45)", grid: "rgba(43,33,24,0.18)" };
 }
 
 // Samakan ukuran gambar kanvas dengan ukuran tampilnya
@@ -522,7 +519,7 @@ function setDir(d) {
     b.setAttribute("aria-pressed", String(on));
   });
   [["b-note", d > 0 ? "p2_b_note" : "p2_b_note_in"], ["b-dir-cap", d > 0 ? "p2_b_dir_out" : "p2_b_dir_in"]].forEach(([id, k]) => {
-    const n = $(id); n.dataset.i18n = k; n.textContent = t(k);   // ikut berganti saat bahasa diganti
+    const n = $(id); if (!n) return; n.dataset.i18n = k; n.textContent = t(k);   // ikut berganti saat bahasa diganti
   });
   updateB();
 }
@@ -714,7 +711,6 @@ export function init() {
 
   const redraw = () => { drawE(); drawB(); };
   window.addEventListener("resize", redraw);
-  window.addEventListener("themeChanged", redraw);
 
   resetFields();
   resetWave();

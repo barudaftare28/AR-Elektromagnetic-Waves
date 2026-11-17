@@ -62,9 +62,9 @@
 }
 .sim-result strong { font-size: 1.3rem; text-align: right; }
 .sim-result strong sup { font-size: 0.65em; }
-.res-cyan { background: rgba(6, 182, 212, 0.1); border-color: var(--cyan); }
+.res-cyan { background: rgba(249, 115, 22, 0.1); border-color: var(--cyan); }
 .res-cyan strong { color: var(--cyan); }
-.res-purple { background: rgba(139, 92, 246, 0.1); border-color: var(--purple); }
+.res-purple { background: rgba(109, 40, 217, 0.1); border-color: var(--purple); }
 .res-purple strong { color: var(--purple); }
 
 /* kolom kanan atas: kotak hasil + slider, selebar sama */
@@ -78,10 +78,10 @@
 .sim-overlay .sim-control { width: 100%; box-sizing: border-box; }   /* padding tidak mengubah lebar */
 .sim-overlay .sim-result {
   padding: 14px 18px;
-  background: linear-gradient(rgba(6, 182, 212, 0.1), rgba(6, 182, 212, 0.1)), var(--card-bg);
+  background: linear-gradient(rgba(249, 115, 22, 0.1), rgba(249, 115, 22, 0.1)), var(--card-bg);
 }
 .sim-overlay .sim-result.res-purple {
-  background: linear-gradient(rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.1)), var(--card-bg);
+  background: linear-gradient(rgba(109, 40, 217, 0.1), rgba(109, 40, 217, 0.1)), var(--card-bg);
 }
 .sim-overlay .sim-result span { white-space: nowrap; }   /* label tidak turun baris */
 .sim-overlay .sim-result strong { font-size: 1.2rem; white-space: nowrap; }
@@ -172,7 +172,7 @@
   padding: 8px 18px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: 0.2s;
 }
 .wave-tab:hover { background: var(--card-bg-light); color: var(--text-main); }
-.wave-tab.active { background: rgba(6, 182, 212, 0.2); border-color: var(--cyan); color: var(--cyan); }
+.wave-tab.active { background: rgba(249, 115, 22, 0.2); border-color: var(--cyan); color: var(--cyan); }
 .wave-tab:focus-visible, .zoom-btn:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
 
 .wave-grid { display: grid; grid-template-columns: 1fr 300px; gap: 30px; align-items: start; }
@@ -206,13 +206,13 @@
 }
 .zoom-btn.action { border: 1px solid var(--border-light); color: var(--text-main); background: var(--card-bg-light); }
 .zoom-btn:hover { background: var(--card-bg-light); color: var(--text-main); }
-.zoom-btn.active { background: rgba(6, 182, 212, 0.2); border: 1px solid var(--cyan); color: var(--cyan); }
+.zoom-btn.active { background: rgba(249, 115, 22, 0.2); border: 1px solid var(--cyan); color: var(--cyan); }
 .zoom-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .zoom-btn:disabled:hover { background: var(--card-bg-light); color: var(--text-main); }
 
 /* ---- Sensor real-time dan kotak catatan ---- */
 .values-card { background: var(--card-bg); padding: 25px; border-radius: 16px; border: 1px solid var(--border); transition: background-color 0.3s; }
-.dynamic-card { border: 2px solid var(--cyan); box-shadow: 0 0 15px rgba(6, 182, 212, 0.1); }
+.dynamic-card { border: 2px solid var(--cyan); box-shadow: 0 0 15px rgba(249, 115, 22, 0.1); }
 .value-item { display: flex; flex-direction: column; gap: 4px; margin-bottom: 20px; }
 .val-label { font-size: 1rem; color: var(--text-muted); }
 .val-number { font-size: 2.2rem; font-weight: 700; }

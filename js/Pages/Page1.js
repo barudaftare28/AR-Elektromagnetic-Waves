@@ -1,5 +1,3 @@
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.module.js";
-
 export const i18n = {
   id: {
     p1_title: "APA ITU <br><span class='highlight'>GELOMBANG ELEKTROMAGNETIK?</span>",
@@ -92,25 +90,17 @@ export const i18n = {
     if (window.waveAnimFrame) cancelAnimationFrame(window.waveAnimFrame);
 
  
-function drawSimulation() {
+// Menulis teks dengan lingkar krem tipis agar tetap terbaca di atas garis gelombang
+    function drawLabel(t, x, y) { ctx.strokeText(t, x, y); ctx.fillText(t, x, y); }
+
+    function drawSimulation() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // 1. CEK LIGHT MODE (Berdasarkan CSS yang kamu pakai)
-    // Jika body memiliki class 'light-mode', berarti sedang mode terang.
-    let isLight = document.body.classList.contains('light-mode') || 
-                  document.documentElement.classList.contains('light-mode');
-                  
-    // Karena default CSS-mu adalah dark mode, maka isDark kebalikan dari isLight
-    let isDark = !isLight;
-
-    // 2. SET WARNA (Light mode = teks hitam, Dark mode = teks putih)
-    let textColor = isDark ? "#ffffff" : "#000000"; 
-    
-    // Warna untuk Garis Sumbu (Tengah)
-    let axisColor = isDark ? "rgba(255, 255, 255, 0.4)" : "rgba(0, 0, 0, 0.4)";
-    
-    // Warna untuk Grid Kotak-Kotak (Gunakan opacity rendah agar tidak menutupi gelombang)
-    let gridColor = isDark ? "rgba(255, 255, 255, 0.15)" : "rgba(0, 0, 0, 0.15)";
+    // Satu palet krem + oranye: teks gelap supaya terbaca di latar krem
+    const textColor = "#2B2118";
+    const axisColor = "rgba(43, 33, 24, 0.55)";
+    const gridColor = "rgba(120, 80, 30, 0.14)";
+    const waveColor = "#EA580C";
 
     const midY = canvas.height / 2;
     const midX = canvas.width / 2;
@@ -129,7 +119,7 @@ function drawSimulation() {
 
         // 3. GAMBAR GELOMBANG MERAH
         ctx.beginPath();
-        ctx.strokeStyle = "#ff4757"; 
+        ctx.strokeStyle = waveColor; 
         ctx.lineWidth = 4;
         let visualFreq = (Math.PI * 2 * currentFreq) / 100000; 
         for(let x = 0; x <= canvas.width; x++) {
@@ -161,29 +151,30 @@ function drawSimulation() {
         }
         ctx.stroke();
 
-        // 5. TEKS KOORDINAT (Warna dipaksa Solid Putih)
+        // 5. TEKS KOORDINAT (warna gelap, solid)
         ctx.globalAlpha = 1.0; // Pastikan teks tidak ikut transparan
         ctx.fillStyle = textColor; 
+        ctx.lineJoin = "round"; ctx.lineWidth = 4; ctx.strokeStyle = "#FFFDF8"; // lingkar krem supaya angka tidak tertutup gelombang
         ctx.font = "bold 13px Arial"; 
         
         ctx.textAlign = "right";
         ctx.textBaseline = "middle";
-        ctx.fillText("1", midX - 10, midY - amplitude);
-        ctx.fillText("-1", midX - 10, midY + amplitude);
+        drawLabel("1", midX - 10, midY - amplitude);
+        drawLabel("-1", midX - 10, midY + amplitude);
         
         ctx.textAlign = "center";
         ctx.textBaseline = "top";
-        ctx.fillText("0 m", midX + 15, midY + 10); 
+        drawLabel("0 m", midX + 15, midY + 10); 
 
         let distance = meterPerStep;
         for(let x = midX + stepX; x < canvas.width; x += stepX) {
-            ctx.fillText(distance + " m", x, midY + 10); 
+            drawLabel(distance + " m", x, midY + 10); 
             distance += meterPerStep;
         }
         
         distance = -meterPerStep;
         for(let x = midX - stepX; x > 0; x -= stepX) {
-            ctx.fillText(distance + " m", x, midY + 10); 
+            drawLabel(distance + " m", x, midY + 10); 
             distance -= meterPerStep;
         }
 

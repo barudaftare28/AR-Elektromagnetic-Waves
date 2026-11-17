@@ -1,3 +1,11 @@
+/* Warna rumus c = f × λ: tiga warna berbeda supaya mudah dibedakan.
+   Ungu hanya satu (λ, versi muda); Medan Magnet (B) tetap ungu tua di Page 2. */
+.page1-container {
+    --c-color: #B45309;   /* c  : cokelat keemasan */
+    --f-color: #EA580C;   /* f  : oranye */
+    --l-color: #8B5CF6;   /* λ  : ungu muda */
+}
+
 .page1-container {
     max-width: 1400px; /* Dikunci agar lebarnya sama persis dengan halaman lain */
     margin: 0 auto;
@@ -22,6 +30,11 @@
     flex-direction: column;
 }
 
+.left-card.fact-box h2, 
+.left-card.fact-box h2 .text-e {
+    color: var(--primary-text) !important;
+}
+
 .right-column {
     flex: 1;
     width: 50%; /* Membagi rata lebar kolom kanan */
@@ -41,8 +54,8 @@
 }
 
 /* Teks spesifik yang butuh penyesuaian warna */
-.text-e { color: #0984e3; } /* Biru */
-.text-b { color: #d63031; } /* Merah */
+.text-e { color: var(--cyan); } /* Medan listrik = oranye (sama dgn Page 2) */
+.text-b { color: var(--purple); } /* Medan magnet = ungu (sama dgn Page 2) */
 
 /* --- IKON HORIZONTAL --- */
 .feature-horizontal-card {
@@ -100,7 +113,7 @@
     font-size: 0.85em;
 }
 .concept-ref a {
-    color: #0984e3;
+    color: var(--primary-text);
     text-decoration: none;
     font-weight: bold;
 }
@@ -115,7 +128,7 @@
 
 /* --- KOTAK RUMUS --- */
 .note-box {
-    border-left: 6px solid #f39c12; /* Aksen oranye tetap dipertahankan */
+    border-left: 6px solid var(--primary); /* Aksen oranye tetap dipertahankan */
 }
 
 .rumus-title-header {
@@ -135,8 +148,8 @@
 .highlight-rumus {
     font-size: 2.2em;
     font-weight: 900;
-    color: #d35400; /* Warna oranye agar terbaca di dark mode */
-    background-color: rgba(255, 255, 255, 0.1); /* Background transparan */
+    color: var(--text-highlight); /* Warna oranye agar terbaca di dark mode */
+    background-color: var(--card-bg-light); /* krem solid agar teks jelas */
     padding: 10px 20px;
     border-radius: 12px;
     display: inline-block;
@@ -149,7 +162,7 @@
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    border: 3px solid #f39c12;
+    border: 3px solid var(--primary);
     background-color: var(--card-bg); /* Mengikuti tema background kartu */
     display: flex;
     flex-direction: column;
@@ -161,11 +174,11 @@
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    border-bottom: 3px solid #f39c12;
+    border-bottom: 3px solid var(--primary);
     padding-bottom: 2px;
     font-weight: 900;
     font-size: 1.3em;
-    color: #6c5ce7;
+    color: var(--c-color);
 }
 
 .magic-bottom {
@@ -185,12 +198,12 @@
 }
 
 .magic-bottom .magic-f {
-    border-right: 3px solid #f39c12;
-    color: #0984e3;
+    border-right: 3px solid var(--primary);
+    color: var(--f-color);
 }
 
 .magic-bottom .magic-l {
-    color: #d63031;
+    color: var(--l-color);
 }
 
 /* --- LEGENDA RUMUS --- */
@@ -213,9 +226,9 @@
     font-weight: bold;
     margin-right: 10px;
 }
-.badge-c { background: #6c5ce7; }
-.badge-f { background: #0984e3; }
-.badge-l { background: #d63031; }
+.badge-c { background: var(--c-color); }
+.badge-f { background: var(--f-color); }
+.badge-l { background: var(--l-color); }
 
 /* --- BAGIAN BAWAH (SIMULASI) --- */
 .bottom-content-wrapper {
@@ -294,12 +307,12 @@
 
 /* Sorotan Khusus untuk Angka Frekuensi */
 #display-f {
-    background: rgba(9, 132, 227, 0.1); /* Background biru transparan */
-    color: #0984e3 !important;
+    background: rgba(249, 115, 22, 0.12); /* Background biru transparan */
+    color: var(--cyan) !important;
     padding: 10px 30px;
     border-radius: 8px;
-    border: 2px solid rgba(9, 132, 227, 0.3);
-    box-shadow: inset 0 0 10px rgba(9,132,227,0.1);
+    border: 2px solid rgba(249, 115, 22, 0.4);
+    box-shadow: inset 0 0 10px rgba(249,115,22,0.1);
 }
 
 /* --- KOTAK PARAMETER (PANJANG GELOMBANG & KECEPATAN) --- */
@@ -326,25 +339,25 @@
     justify-content: center;
 }
 
-.box-lambda { border-left: 6px solid #ff4757; }
-.box-c { border-left: 6px solid #6c5ce7; }
+.box-lambda { border-left: 6px solid var(--primary-text); }
+.box-c { border-left: 6px solid var(--c-color); }
 
 /* Warna khusus angka di dalam kartu parameter */
-.box-lambda .val-display { color: #ff4757; }
-.box-c .val-display { color: #6c5ce7; margin-top: 5px; }
+.box-lambda .val-display { color: var(--primary-text); }
+.box-c .val-display { color: var(--c-color); margin-top: 5px; }
 
 /* --- ATURAN MAIN & APLIKASI --- */
 .highlight-aturan {
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
-    border-left: 6px solid #f1c40f;
+    border-left: 6px solid var(--primary);
     border-radius: 12px;
     padding: 20px;
 }
 
 .aturan-title {
     margin: 0 0 10px 0;
-    color: #f39c12;
+    color: var(--primary-text);
     font-size: 1.1em;
     font-weight: bold;
 }
@@ -358,7 +371,7 @@
 .fun-fact-box {
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
-    border-left: 6px solid #0984e3;
+    border-left: 6px solid var(--cyan);
     padding: 20px;
     border-radius: 12px;
     margin-top: auto; 
@@ -374,7 +387,7 @@
     margin-top: 25px;
     padding: 15px 20px;
     background-color: var(--card-bg);
-    border-left: 6px solid #0984e3;
+    border-left: 6px solid var(--cyan);
     border-radius: 8px;
     box-sizing: border-box;
     border: 1px solid var(--border-color);
@@ -386,3 +399,8 @@
     flex: 1;
     text-align: center;
 }
+/* Slider mengikuti warna oranye */
+.slider-container input[type=range] { accent-color: var(--primary); }
+
+/* Huruf c / f / λ di legenda harus putih (base.css memaksa teks gelap untuk badge navbar) */
+.rumus-legend .badge { color: #fff !important; border: none; }

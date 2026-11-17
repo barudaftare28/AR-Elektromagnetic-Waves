@@ -384,12 +384,10 @@ function render() {
 }
 
 // ---------- VISUALISASI (CANVAS) ----------
-const palette = () =>
-  document.body.classList.contains("light-mode")
-    ? { text: "#111827", dim: "rgba(0,0,0,0.45)", grid: "rgba(0,0,0,0.07)", axis: "rgba(0,0,0,0.3)",
-        blue: "#0891b2", red: "#dc2626", green: "#16a34a", orange: "#d97706", purple: "#7c3aed" }
-    : { text: "#f9fafb", dim: "rgba(255,255,255,0.5)", grid: "rgba(255,255,255,0.06)", axis: "rgba(255,255,255,0.3)",
-        blue: "#06b6d4", red: "#f87171", green: "#34d399", orange: "#fbbf24", purple: "#a78bfa" };
+const palette = () => ({
+  text: "#2B2118", dim: "rgba(43,33,24,0.55)", grid: "rgba(43,33,24,0.10)", axis: "rgba(43,33,24,0.4)",
+  blue: "#EA580C", red: "#DC2626", green: "#15803D", orange: "#B45309", purple: "#6D28D9",
+});
 
 // y = mid - amp * cos(2π (x - x0 - ph) / lam)  → puncak di x0 + ph + n·lam
 function wave(x0, x1, mid, amp, lam, ph, color) {
