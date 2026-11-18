@@ -58,9 +58,25 @@ img { max-width: 100%; }
 }
 
 
-/* ---------- 2. MAKS 1200px: BOX MEDAN LISTRIK + MAGNET JADI 1 KOLOM ---------- */
+/* ---------- 2. MAKS 900px: BOX MEDAN LISTRIK + MAGNET JADI 1 KOLOM ----------
+   Dulu 1200px sehingga di laptop kecil/tablet halaman jadi sangat panjang.
+   Di 900-1200px kedua kotak tetap berdampingan dengan jarak/huruf lebih ringkas. */
 @media (max-width: 1200px) {
+  .p2-fields { gap: 18px; }
+  .p2-fields .p2-box { padding: 20px; gap: 14px; }
+  .p2-fields .sub-card { padding: 14px; }
+  .p2-fields .formula-pair { grid-template-columns: 1fr; gap: 8px; }
+  .p2-fields .legend li { padding: 8px 2px; column-gap: 10px; grid-template-columns: 44px 1fr auto; }
+}
+@media (max-width: 900px) {
   .p2-fields { grid-template-columns: 1fr; }
+}
+/* 901-1100px: kolom sempit, kotak hasil/slider pindah ke bawah kanvas (seperti di HP) agar tidak menimpa gambar */
+@media (min-width: 901px) and (max-width: 1100px) {
+  .p2-fields .sim-overlay, .p2-fields .sim-overlay.overlay-b { position: static; width: 100%; margin-top: 10px; }
+  .p2-fields .sim-charge { position: static; margin-top: 10px; flex-direction: row; align-items: center; justify-content: space-between; }
+  .p2-fields #e-canvas { height: 270px; }
+  .p2-fields #b-canvas { height: 300px; }
 }
 
 

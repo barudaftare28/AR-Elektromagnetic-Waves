@@ -138,7 +138,7 @@ body {
 
 .tag-header { display: flex; align-items: center; gap: 15px; margin-bottom: 5px; }
 .tag-header.no-margin { margin-bottom: 0; }
-.tag { padding: 6px 16px; border-radius: 8px; font-size: 1rem; font-weight: 700; color: white; }
+.tag { white-space: nowrap; padding: 6px 16px; border-radius: 8px; font-size: 1rem; font-weight: 700; color: white; }
 .tag-text { color: var(--primary-text); font-weight: 600; letter-spacing: 1px; font-size: 1.1rem; }
 
 /* Header judul Page 2, 3, 4 */

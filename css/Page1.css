@@ -159,8 +159,9 @@
 
 /* --- LINGKARAN AJAIB --- */
 .magic-circle {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
     border-radius: 50%;
     border: 3px solid var(--primary);
     background-color: var(--card-bg); /* Mengikuti tema background kartu */
@@ -172,10 +173,10 @@
 .magic-top {
     flex: 1;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     justify-content: center;
     border-bottom: 3px solid var(--primary);
-    padding-bottom: 2px;
+    padding-top: 6px;
     font-weight: 900;
     font-size: 1.3em;
     color: var(--c-color);
@@ -190,9 +191,9 @@
 .magic-bottom .magic-l {
     flex: 1;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
-    padding-top: 2px;
+    padding: 0 0 8px;      /* naik sedikit: kuadran bawah sempit karena melengkung */
     font-weight: 900;
     font-size: 1.3em;
 }

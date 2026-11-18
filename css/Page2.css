@@ -25,7 +25,18 @@
   display: flex; flex-direction: column; gap: 14px; transition: background-color 0.3s;
 }
 .sub-card h4 { font-size: 1.05rem; }
-.mat-card { gap: 18px; }
+/* Kartu "Memahami rumus" bisa dilipat (tag <details>) supaya halaman tidak terlalu panjang */
+details.mat-card { display: block; }
+.mat-card > summary {
+  cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.mat-card > summary::-webkit-details-marker { display: none; }
+.mat-card > summary::after {
+  content: "▾"; font-size: 1.1rem; color: var(--primary-text); transition: transform 0.2s;
+}
+.mat-card:not([open]) > summary::after { transform: rotate(-90deg); }
+.mat-card > summary:focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; border-radius: 6px; }
+.mat-body { display: flex; flex-direction: column; gap: 18px; margin-top: 14px; }
 
 /* ---- Rumus dan keterangan ---- */
 .formula-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
@@ -241,7 +252,7 @@
 
 /* ---- Responsif (harus paling bawah) ---- */
 @media (max-width: 1100px) {
-  .p2-fields, .wave-grid { grid-template-columns: 1fr; }
+  .wave-grid { grid-template-columns: 1fr; }
   #box-wave .wave-grid { align-items: start; }
   #box-wave .wave-side .values-card { height: auto; }
 }

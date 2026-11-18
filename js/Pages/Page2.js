@@ -690,6 +690,11 @@ function resetFields() {
 export function init() {
   if (!$("e-canvas")) return;
 
+  // Di layar sempit kartu "Memahami rumus" dilipat dulu supaya halaman tidak terlalu panjang
+  if (window.matchMedia("(max-width: 900px)").matches) {
+    document.querySelectorAll("#page-2 details.mat-card").forEach((d) => (d.open = false));
+  }
+
   // Box 1 dan Box 2
   $("e-r").addEventListener("input", (e) => { S.r = parseFloat(e.target.value); updateE(); });
   $("b-i").addEventListener("input", (e) => { S.i = parseFloat(e.target.value); updateB(); });
