@@ -37,7 +37,7 @@ export const i18n = {
     p3_lg_E: "Energi Foton", 
     p3_lg_h: "Konstanta Planck",
     p3_safety: "Meter Keamanan", 
-    p3_ion: "pengion (≈10 eV)",
+    p3_ion: "Batas pengion (≈10 eV)",
     lv0: "Aman", 
     lv1: "Waspada", 
     lv2: "Berbahaya", 
@@ -97,7 +97,7 @@ export const i18n = {
     p3_lg_E: "Photon Energy", 
     p3_lg_h: "Planck Constant",
     p3_safety: "Safety Meter", 
-    p3_ion: "ionizing (≈10 eV)",
+    p3_ion: "Ionizing threshold (≈10 eV)",
     lv0: "Safe", 
     lv1: "Caution", 
     lv2: "Dangerous", 
@@ -202,7 +202,7 @@ function refresh() {
   el.mark.style.left = el.meterMark.style.left = (u / 7) * 100 + "%";
   const ion = E >= ION_EV;
   el.safe.innerHTML = `<span class="tag-pill" style="background:${LVCOL[w.lv]}">${T("lv" + w.lv)}</span>` +
-    `<span class="tag-pill" style="background:${ion ? "#fff" : "#94a3b8"}">${ion ? T("p3_ionY") : T("p3_ionN")}</span>` +
+    `<span class="tag-pill" style="background:${ion ? "#b91c1c" : "#7C4A21"};color:#fff">${ion ? T("p3_ionY") : T("p3_ionN")}</span>` +
     `<p style="margin-top:.6rem"><b>${P2(w.n)}:</b> ${P2(w.sf)}</p>`;
   if (mode === "cmp") { renderTable(); fillCard("ca", WV[selA.value], "A"); fillCard("cb", WV[selB.value], "B"); }
 }
@@ -299,10 +299,7 @@ function stepAmp(dir) {
 
 // ---------- CANVAS ----------
 function updatePalette() {
-  const light = document.body.classList.contains("light-mode");
-  PAL = light
-    ? { grid: "rgba(0,0,0,0.12)", axis: "rgba(0,0,0,0.35)", text: "#111827", glow: 4 }
-    : { grid: "rgba(255,255,255,0.12)", axis: "rgba(255,255,255,0.4)", text: "#f9fafb", glow: 12 };
+  PAL = { grid: "rgba(43,33,24,0.15)", axis: "rgba(43,33,24,0.45)", text: "#2B2118", glow: 3 };
 }
 function prep(cv, cx) {
   const dpr = window.devicePixelRatio || 1, w = cv.clientWidth, h = cv.clientHeight;
@@ -383,7 +380,6 @@ export function init() {
   canvas = $("spectrum-canvas"); ctxA = canvas.getContext("2d");
   canvasB = $("spectrum-canvas-b"); ctxB = canvasB.getContext("2d");
   updatePalette();
-  window.addEventListener("themeChanged", updatePalette);
   window.addEventListener("langChanged", applyLang);
   sFreq.value = u; applyLang();
 }

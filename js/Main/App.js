@@ -9,11 +9,11 @@ const running = {};   // modul page yang sudah di-init (dipakai loop)
 
 async function loadPage(n) {
   const [html, mod] = await Promise.all([
-    fetch(`pages/page${n}.html`).then((r) => {
-      if (!r.ok) throw new Error(`pages/page${n}.html tidak ditemukan`);
+    fetch(`Pages/Page${n}.html`).then((r) => {
+      if (!r.ok) throw new Error(`Pages/Page${n}.html tidak ditemukan`);
       return r.text();
     }),
-    import(`../pages/page${n}.js`),
+    import(`../Pages/Page${n}.js`),
   ]);
   document.getElementById("app").insertAdjacentHTML("beforeend", html);
   registerI18n(mod.i18n, document.getElementById(`page-${n}`));
@@ -40,12 +40,7 @@ window.navigateToPage = navigateToPage; // dipakai tombol "Selesai" di quiz
 const openModal = (id) => document.getElementById(id)?.classList.add("active");
 const closeModals = () => document.querySelectorAll(".modal-overlay.active").forEach((m) => m.classList.remove("active"));
 
-// ---------- TEMA & FPS ----------
-function toggleTheme() {
-  const light = document.body.classList.toggle("light-mode");
-  document.getElementById("btn-theme").textContent = light ? "☀️ Light" : "🌙 Dark";
-  window.dispatchEvent(new Event("themeChanged"));
-}
+// ---------- FPS ----------
 function toggleFPS() {
   window.fpsLimit = window.fpsLimit === 60 ? 30 : 60;
   document.getElementById("btn-fps").textContent = `${window.fpsLimit} FPS`;
@@ -62,7 +57,6 @@ document.addEventListener("click", (e) => {
 document.addEventListener("keydown", (e) => e.key === "Escape" && closeModals());
 
 document.getElementById("btn-lang").addEventListener("click", toggleLang);
-document.getElementById("btn-theme").addEventListener("click", toggleTheme);
 document.getElementById("btn-fps").addEventListener("click", toggleFPS);
 
 // ---------- START ----------

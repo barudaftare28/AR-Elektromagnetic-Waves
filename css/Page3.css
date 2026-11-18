@@ -1,4 +1,4 @@
-/* ===== PAGE 3: SPECTRUM (AR) =====
+/* ===== PAGE 3: SPECTRUM =====
    GANTI seluruh CSS Page 3 lama dengan file ini. Layout utama memakai kelas Page 2
    (p2-box, sub-card, wave-*, values-card, note-card, p2-slider, legend, dst). */
 #page-3 [hidden] { display: none !important; }
