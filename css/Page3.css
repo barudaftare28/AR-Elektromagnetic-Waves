@@ -38,7 +38,7 @@
 }
 
 /* Peta spektrum + penanda */
-#page-3 .spec-map { position: relative; display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; padding-top: 20px; }
+#page-3 .spec-map { position: relative; display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; padding-top: 30px; }
 #page-3 .spec-map button {
   border: 2px solid transparent; 
   border-bottom: 5px solid var(--c);
@@ -53,8 +53,8 @@
 #page-3 .spec-map button.on { background: var(--card-bg-light); border-color: var(--c); }
 #page-3 .spec-map button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
 #page-3 .spec-mark {
-  position: absolute; top: 2px; width: 0; height: 0; transform: translateX(-50%); transition: left 0.15s;
-  border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 10px solid var(--text-main);
+  position: absolute; top: 4px; width: 0; height: 0; transform: translateX(-50%); transition: left 0.15s;
+  border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 18px solid var(--text-main);
 }
 
 /* Canvas */
@@ -85,9 +85,9 @@
 #page-3 th { background: var(--card-bg-light); }
 
 /* Meter keamanan */
-#page-3 .meter { position: relative; padding-top: 18px; }
+#page-3 .meter { position: relative; padding-top: 28px; }
 #page-3 .meter-bar { height: 16px; border-radius: 8px; background: linear-gradient(90deg, #22c55e 0%, #22c55e 40%, #eab308 62%, #f97316 72%, #ef4444 85%, #9f1239 100%); }
-#page-3 .meter-tick { position: absolute; top: 16px; bottom: -4px; width: 2px; background: var(--text-main); }
+#page-3 .meter-tick { position: absolute; top: 26px; bottom: -4px; width: 2px; background: var(--text-main); }
 #page-3 .meter-tick span { position: absolute; top: 26px; left: 6px; font-size: 0.8rem; color: var(--text-muted); white-space: nowrap; }
 #page-3 .safe-box { margin-top: 26px; }
 #page-3 .tag-pill { display: inline-block; padding: 3px 12px; border-radius: 99px; font-weight: 700; font-size: 0.85rem; color: #000; margin-right: 6px; }
@@ -101,6 +101,26 @@
 #page-3 .ex-pic img { width: 100%; height: 100%; object-fit: cover; }
 #page-3 .ex-txt { padding: 12px 14px; font-size: 0.95rem; color: var(--text-muted); line-height: 1.5; }
 #page-3 .ex-txt strong { display: block; color: var(--text-main); margin-bottom: 2px; }
+
+/* Navigasi jenis gelombang di Contoh Nyata */
+#page-3 .ex-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+#page-3 .ex-nav-title { flex: 1; text-align: center; font-weight: 700; font-size: 1.15rem; }
+#page-3 .ex-nav-title small { margin-left: 8px; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+#page-3 .ex-arrow {
+  width: 44px; height: 44px; flex-shrink: 0; border-radius: 50%; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; padding-bottom: 3px;
+  font: 700 1.6rem/1 Poppins, sans-serif;
+  background: var(--card-bg-light); border: 1px solid var(--border-light); color: var(--text-main);
+  transition: 0.2s;
+}
+#page-3 .ex-arrow:hover:not(:disabled) { border-color: var(--cyan); }
+#page-3 .ex-arrow:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+#page-3 .ex-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
+
+/* Judul grup pindah ke tengah di antara panah, jadi judul bawaan di dalam grup disembunyikan */
+#page-3 .ex-grp > h4 { display: none; }
+
+#page-3 .ex-nav-title small { display: block; margin-left: 0; }
 
 /* Canvas B ikut memenuhi kotaknya (sebelumnya tidak punya ukuran) */
 #spectrum-canvas, #spectrum-canvas-b { width: 100%; height: 100%; display: block; }

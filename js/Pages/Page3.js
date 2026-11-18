@@ -46,6 +46,8 @@ export const i18n = {
     p3_ionN: "Non-pengion",
     p3_safe_hint: "Makin tinggi f, makin besar energi tiap foton (E = h·f). Foton ≥ ~10 eV dapat mengionisasi atom dan merusak sel. Bahaya juga bergantung pada intensitas dan lama paparan.",
     p3_ex: "Contoh di Kehidupan Nyata", 
+    p3_ex_prev: "Jenis gelombang sebelumnya",
+    p3_ex_next: "Jenis gelombang berikutnya",
     p3_quiz: "Cek Pemahaman", 
     p3_score: (s, n) => `Skor kamu: ${s} dari ${n}`,
     p3_ok: "Benar. ", 
@@ -104,6 +106,8 @@ export const i18n = {
     p3_ionN: "Non-ionizing",
     p3_safe_hint: "Higher f means more energy per photon (E = h·f). Photons ≥ ~10 eV can ionize atoms and damage cells. Risk also depends on intensity and exposure time.",
     p3_ex: "Real-life Examples", 
+    p3_ex_prev: "Previous wave type",
+    p3_ex_next: "Next wave type",
     p3_quiz: "Check Your Understanding", 
     p3_score: (s, n) => `Your score: ${s} of ${n}`,
     p3_ok: "Correct. ", 
@@ -178,10 +182,11 @@ function pickType(i) { baseF = fAt(i); setU(i); }
 
 // Tampilkan contoh nyata hanya untuk jenis gelombang yang sedang dipilih (i = indeks di WV)
 function showExamples(i) {
-  const key = WV[i].k;
-  el.exList.querySelectorAll(".ex-grp").forEach((g) => {
-    g.hidden = g.dataset.band !== key;
-  });
+  const w = WV[i];
+  el.exList.querySelectorAll(".ex-grp").forEach((g) => { g.hidden = g.dataset.band !== w.k; });
+  $("ex-title").innerHTML = `<span style="color:${w.col}">${P2(w.n)}</span><small>${w.rg}</small>`;
+  $("ex-prev").disabled = i === 0;                 // Radio: tidak ada yang lebih rendah
+  $("ex-next").disabled = i === WV.length - 1;     // Gamma: tidak ada yang lebih tinggi
 }
 
 function refresh() {
@@ -222,6 +227,8 @@ function renderTable() {
 
 // ---------- CONTOH & KUIS ----------
 function renderExamples() {
+  $("ex-prev").setAttribute("aria-label", T("p3_ex_prev"));
+  $("ex-next").setAttribute("aria-label", T("p3_ex_next"));
   el.exList.innerHTML = "";
   WV.forEach((w) => {
     const g = document.createElement("div"); g.className = "ex-grp"; g.style.setProperty("--c", w.col);
@@ -366,6 +373,11 @@ export function init() {
   setupStepper("btn-a-minus", "btn-a-plus", stepAmp);
   $("btn-p3-pause").onclick = () => { playing = !playing; renderPause(); };
   $("btn-p3-reset").onclick = resetAll;
+
+  const goType = (d) => { const j = typeOf(u) + d; if (j >= 0 && j < WV.length) pickType(j); };
+  $("ex-prev").onclick = () => goType(-1);
+  $("ex-next").onclick = () => goType(1);
+
   document.querySelectorAll("#page-3 .wave-tab[data-mode]").forEach((b) => (b.onclick = () => setMode(b.dataset.mode)));
 
   canvas = $("spectrum-canvas"); ctxA = canvas.getContext("2d");
